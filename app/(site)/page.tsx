@@ -1,3 +1,4 @@
+import { ImagesFlowDemo } from "@/components/ImagesFlowDemo";
 import ArtSnippet from "@/components/landing/ArtSnippet";
 import HeroSection from "@/components/landing/HeroSection";
 import TextMask from "@/components/landing/TextMask";
@@ -16,6 +17,7 @@ export default function Home() {
       <VideoSnippets/>
       <ArtSnippet/>
       <ArtSnippet/>
+
      
     </div>
   );
