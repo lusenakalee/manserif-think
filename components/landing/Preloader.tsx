@@ -4,16 +4,21 @@ import gsap from "gsap";
 import { useRef, useState, useEffect } from "react";
 
 const PRELOADER_IMAGE_URLS = [
-  "https://i.pinimg.com/control1/1200x/e7/da/49/e7da4986508ff3fabc24912a1725f145.jpg",
-  "https://i.pinimg.com/1200x/ad/7e/77/ad7e770d17d41b35f08553cf1643f8fe.jpg",
-  "https://i.pinimg.com/736x/7d/de/59/7dde590afad25352375fe600f67cc237.jpg",
-  "https://i.pinimg.com/1200x/ea/22/c9/ea22c928595fda1f39abf5a3b84c8573.jpg",
-  "https://i.pinimg.com/control1/1200x/7d/4f/a0/7d4fa0d720fa7f49dded1e854599c4e0.jpg",
-  "https://i.pinimg.com/736x/9a/cd/c5/9acdc5e6672acb43c4648a0d2fce3a52.jpg",
-  "https://i.pinimg.com/control1/1200x/b5/6b/c3/b56bc393269820b4ebf7dadc1fd72881.jpg",
-  "https://i.pinimg.com/1200x/55/37/d3/5537d33b83fd8cecba407d5c52ae52cf.jpg",
-  "https://i.pinimg.com/control1/1200x/14/8e/48/148e480c706e82cfa578b96819db6574.jpg",
-  "https://i.pinimg.com/control1/1200x/3e/fe/ad/3efeadb61d5e07a56f7f6e8d3e6fd3e9.jpg",
+  "/images/charcoal1.webp",
+  "/images/forgive1.webp",
+  "/images/general1.webp",
+  "/images/poetic1.webp",
+  "/images/charcoal2.webp",
+  "/images/forgive2.webp",
+  "/images/general2.webp",
+  "/images/poetic2.webp",
+  "/images/charcoal3.webp",
+  "/images/forgive3.webp",
+  "/images/general3.webp",
+  "/images/poetic3.webp",
+  
+
+
 ] as const;
 
 const PAD = 20;

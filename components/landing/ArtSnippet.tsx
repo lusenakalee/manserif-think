@@ -7,7 +7,7 @@ const artworks = [
     href: '#',
     imageSrc: 'https://images.unsplash.com/photo-1549490349-8643362247b5?w=800&auto=format&fit=crop',
     imageAlt: 'Abstract oil painting with deep blues and fractured golden lines across a dark horizon.',
-    price: '$1,200',
+    price: '€1,200',
     medium: 'Oil on Canvas',
   },
   {
@@ -16,7 +16,7 @@ const artworks = [
     href: '#',
     imageSrc: 'https://images.unsplash.com/photo-1552084117-56a987666449?w=800&auto=format&fit=crop',
     imageAlt: 'Minimalist charcoal drawing of a lone figure against a pale textured background.',
-    price: '$850',
+    price: '€850',
     medium: 'Charcoal on Paper',
   },
   {
@@ -25,7 +25,7 @@ const artworks = [
     href: '#',
     imageSrc: 'https://images.unsplash.com/photo-1605721911519-3dfeb3be25e7?w=800&auto=format&fit=crop',
     imageAlt: 'Vivid acrylic painting of an abstracted floral form in warm reds, oranges and yellows.',
-    price: '$2,400',
+    price: '€2,400',
     medium: 'Acrylic on Board',
   },
   {
@@ -34,7 +34,7 @@ const artworks = [
     href: '#',
     imageSrc: 'https://images.unsplash.com/photo-1549490349-8643362247b5?w=800&auto=format&fit=crop',
     imageAlt: 'Watercolour landscape of a misty valley rendered in soft greys and sage greens.',
-    price: '$640',
+    price: '€640',
     medium: 'Watercolour',
   },
 ]

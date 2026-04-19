@@ -67,8 +67,8 @@ export const projects: Project[] = [
   },
   {
     slug: 'the-12',
-    title: "Weren't There 12 with You?",
-    subtitle: 'The Ten Lepers',
+    title: "The 12 ",
+    subtitle: "Weren't There 12 with You?",
     heroImage: '/images/poetic1.webp',
     alt: "Weren't There 12 with You — The Ten Lepers",
     location: 'Conceptual Installation',
