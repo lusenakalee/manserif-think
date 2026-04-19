@@ -25,7 +25,7 @@ export default function HeroSection() {
             <span className="text-stone-600">Design with <br /> Intent.</span>
           </h1>
           <p className="mt-12 max-w-[18rem] border-l border-stone-500/35 pl-5 font-mono text-sm leading-relaxed text-stone-600">
-            Code as craft — structure, clarity, and the space between.
+           Multidisciplinary - artist sharing evolving work, products, and journey.
           </p>
         </main>
 

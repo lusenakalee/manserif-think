@@ -14,7 +14,7 @@
     align-items: center;
     justify-content: center;
     mask-image: url('/images/mask.svg');
-    mask-position: 50.35% center;
+    mask-position: 50% center;
     mask-repeat: no-repeat;
     mask-size: 80%;
 }
