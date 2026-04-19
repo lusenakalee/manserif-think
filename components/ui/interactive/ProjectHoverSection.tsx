@@ -147,7 +147,7 @@ const ProjectHoverSection: React.FC<ProjectHoverSectionProps> = ({
               </h2>
               <p
                 className={cn(
-                  'text-sm md:text-base text-white/70 transition-transform duration-500 ease-out',
+                  'text-sm md:text-base text-neutral-600 transition-transform duration-500 ease-out',
                   modal.active && modal.index === index && 'translate-x-4'
                 )}
               >
@@ -219,8 +219,8 @@ const ProjectHoverSection: React.FC<ProjectHoverSectionProps> = ({
             onClick={() => setExpandedIndex(expandedIndex === index ? null : index)}
             className="w-full flex items-center justify-between px-4 py-5 text-left active:opacity-80 transition-opacity"
           >
-            <h2 className="text-xl font-medium text-white">{project.title}</h2>
-            <p className="text-sm text-white/70">{project.subtitle}</p>
+            <h2 className="text-xl font-medium text-neutral-800">{project.title}</h2>
+            <p className="text-sm text-neutral-600">{project.subtitle}</p>
             <span className="ml-2 text-white/50 text-lg">
               {expandedIndex === index ? '−' : '+'}
             </span>

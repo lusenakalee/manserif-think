@@ -2,40 +2,39 @@
 import Lenis from 'lenis';
 import React, { useEffect } from 'react'
 import Section from './Section';
-import BgOverview from "@/public/images/bg-overview.jpeg";
-import Symphony1 from "@/public/images/symphony1.png";
-import Wilma1 from "@/public/images/wilma1.png";
 
 export default function VideoSnippets() {
-
-    useEffect(() => {
+  useEffect(() => {
     const lenis = new Lenis();
-    function raf(time: any) {
+    function raf(time: number) {
       lenis.raf(time);
       requestAnimationFrame(raf);
     }
     requestAnimationFrame(raf);
   }, []);
 
-
-
   return (
     <div>
-       <Section
-        image={Symphony1}
-        tag="Latest Developments and New Launches"
-        title="Stay updated with our latest projects and property launches."
-        description="From exciting new residential communities to cutting-edge commercial developments and prime land acquisitions, Mugwere Real Estate is constantly evolving to bring you the best in real estate opportunities. Explore our newest additions below."
+      <Section
+        video="/videos/exhibit2.mp4"
+        tag="Now On View · Main Gallery"
+        title="Echoes of the Unseen"
+        description="A sweeping retrospective spanning three decades of work by artist Naledi Osei, exploring the interplay between memory, landscape, and identity through large-scale oil and mixed-media installations."
       />
-      
-     
-          <Section
-        image={Wilma1}
-        tag="Featured Development"
-        title="Wilma Towers"
-        description=" The Wilma Towers creates an inviting living atmosphere that fulfills all wishes. The external Architecture and the interior designs are perfectly combined to create an oasis of calmness in a busy world."
+
+      <Section
+        video="/videos/exhibit3.mp4"
+        tag="New Exhibition · East Wing"
+        title="Fractures of Light"
+        description="An immersive group show uniting seven contemporary photographers whose works interrogate how artificial illumination reshapes urban space, human behavior, and the boundary between day and night."
       />
-      
+
+      <Section
+        video="/videos/exhibit4.mp4"
+        tag="Opening Soon · Sculpture Court"
+        title="The Weight of Silence"
+        description="Sculptor Tomás Vega presents monumental bronze and reclaimed-steel forms that confront themes of displacement, collective grief, and resilience — inviting viewers to move through and around each piece as living architecture."
+      />
     </div>
-  )
+  );
 }
