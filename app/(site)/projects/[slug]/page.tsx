@@ -171,11 +171,11 @@ export default function ProjectPage({ params }: PageProps) {
         ))}
 
         {/* Footer */}
-        <footer className="h-screen w-screen shrink-0 bg-white text-[#1A1A1A] flex flex-col justify-center px-6 md:px-12 lg:px-24">
+        <footer className="h-screen w-screen shrink-0 bg-white text-[#1A1A1A] flex flex-col justify-center px-6  py-12  md:px-12 lg:px-24">
           <div className="w-full max-w-7xl mx-auto">
             <div className="overflow-hidden mb-16 md:mb-24">
-              <h2 className="reveal-text font-serif text-3xl md:text-5xl lg:text-7xl font-light leading-tight max-w-4xl">
-                Nous concevons des lieux uniques, pensés pour être vécus, et dessinés pour traverser le temps.
+              <h2 className="reveal-text pt-24 font-serif text-3xl md:text-5xl lg:text-7xl font-light leading-tight max-w-4xl">
+               {project.title} <br /> — {project.subtitle}
               </h2>
             </div>
 
@@ -185,7 +185,7 @@ export default function ProjectPage({ params }: PageProps) {
                   <h3 className="reveal-text text-xs uppercase tracking-[0.2em] text-gray-500">Contact</h3>
                 </div>
                 <ul className="space-y-2 text-sm font-light">
-                  <li className="overflow-hidden"><a href="mailto:hello@mersi-architecture.com" className="reveal-text block hover:opacity-70 transition-opacity">hello@mersi-architecture.com</a></li>
+                  <li className="overflow-hidden"><a href="mailto:warrenkamau.art@outlook.com" className="reveal-text block hover:opacity-70 transition-opacity">warrenkamau.art@outlook.com</a></li>
                   <li className="overflow-hidden"><a href="tel:+33172682228" className="reveal-text block hover:opacity-70 transition-opacity">+33 1 72 68 22 28</a></li>
                   <li className="overflow-hidden"><a href="https://wa.me/+33609872775" className="reveal-text block hover:opacity-70 transition-opacity">WhatsApp</a></li>
                 </ul>
@@ -193,7 +193,7 @@ export default function ProjectPage({ params }: PageProps) {
 
               <div>
                 <div className="overflow-hidden mb-4">
-                  <h3 className="reveal-text text-xs uppercase tracking-[0.2em] text-gray-500">Réseaux</h3>
+                  <h3 className="reveal-text text-xs uppercase tracking-[0.2em] text-gray-500">Socials</h3>
                 </div>
                 <ul className="space-y-2 text-sm font-light">
                   <li className="overflow-hidden"><a href="#" className="reveal-text block hover:opacity-70 transition-opacity">Instagram</a></li>

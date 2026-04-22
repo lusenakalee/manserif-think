@@ -30,7 +30,7 @@ export default function HeroSection() {
         </main>
 
         <a
-          href="mailto:hello@dimaac.com"
+          href="mailto:warrenkamau.art@outlook.com"
           className="relative z-10 mt-auto font-mono text-sm text-stone-600 underline decoration-stone-400/50 underline-offset-4 transition-colors hover:text-stone-900 hover:decoration-stone-600/60"
         >
           warrenkamau.art@outlook.com
