@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
+      unoptimized: true,
     remotePatterns: [
       {
         protocol: 'https',
@@ -13,6 +14,10 @@ const nextConfig = {
         hostname: 'images.unsplash.com',
         port: '',
         pathname: '/**',
+      },
+     {
+        protocol: "https",
+        hostname: "cdn.sanity.io",
       },
     ],
   },
