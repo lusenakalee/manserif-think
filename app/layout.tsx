@@ -2,11 +2,12 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
-import { CinematicFooter } from "@/components/motion-footer";
-import { TooltipProvider } from "@/components/ui/tooltip"
+import { TooltipProvider } from "@/components/ui/tooltip";
 
-
-const jetbrainsMono = JetBrains_Mono({subsets:['latin'],variable:'--font-mono'});
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+});
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,7 +21,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "Manserif.Think",
-  description: "Manserif.Think is a digital sanctuary where art and design converge. Explore a curated collection of projects that reflect a unique blend of creativity and thoughtfulness. From captivating visuals to innovative concepts, each piece invites you to experience the world through a lens of artistic expression. Join us on this journey of inspiration and discovery at Manserif.Think.",
+  description:
+    "Manserif.Think is a digital sanctuary where art and design converge. Explore a curated collection of projects that reflect a unique blend of creativity and thoughtfulness. From captivating visuals to innovative concepts, each piece invites you to experience the world through a lens of artistic expression. Join us on this journey of inspiration and discovery at Manserif.Think.",
 };
 
 export default function RootLayout({
@@ -31,12 +33,20 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cn("h-full", "antialiased", geistSans.variable, geistMono.variable, "font-mono", jetbrainsMono.variable)}
+      className={cn(
+        "h-full",
+        "antialiased",
+        geistSans.variable,
+        geistMono.variable,
+        "font-mono",
+        jetbrainsMono.variable,
+      )}
     >
-      <body className="">
-        <TooltipProvider>{children}</TooltipProvider>
-
-      </body>
+        <body>
+      <TooltipProvider>
+          {children} {/* no wrapper divs with positioning */}
+      </TooltipProvider>
+        </body>
     </html>
   );
 }

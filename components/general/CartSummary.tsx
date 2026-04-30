@@ -44,7 +44,7 @@ export function CartSummary({ hasStockIssues = false }: CartSummaryProps) {
       </div>
       <div className="mt-3 text-center">
         <Link
-          href="/"
+          href="/products"
           className="text-sm text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200"
         >
           Continue Shopping →

@@ -17,7 +17,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
       {/* Category */}
       {product.category && (
         <Link
-          href={`/?category=${product.category.slug}`}
+          href={`/products/?category=${product.category.slug}`}
           className="text-sm text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200"
         >
           {product.category.title}

@@ -96,7 +96,7 @@ export function ProductFilters({ categories }: ProductFiltersProps) {
   };
 
   const handleClearFilters = () => {
-    router.push("/", { scroll: false });
+    router.push("/products", { scroll: false });
   };
 
   const clearSingleFilter = (key: string) => {

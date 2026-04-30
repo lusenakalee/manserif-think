@@ -7,7 +7,7 @@ export default function HeroSection() {
     <div className="h-screen w-screen relative">
       <Preloader />
 
-      <div className="relative z-10 flex h-screen w-screen flex-col overflow-hidden bg-[#E0DCD7] pl-20 pt-24 pr-12 pb-16 md:pl-28 md:pt-32">
+      <div className="relative  flex h-screen w-screen flex-col overflow-hidden bg-[#E0DCD7] pl-20 pt-24 pr-12 pb-16 md:pl-28 md:pt-32">
         {/* Grid lines */}
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute top-14 left-0 right-0 h-px bg-[#c9c4c4]/80" />
@@ -15,9 +15,9 @@ export default function HeroSection() {
         </div>
 
         {/* Hero text */}
-        <main className="relative z-10 max-w-xl">
+        <main className="relative  max-w-xl">
           <p className="font-mono text-[10px] uppercase tracking-[0.42em] text-stone-600/90">
-            Art | Garments | Furniture | Photographs | Sculptures
+            Art | Garments  | Photographs | Sculptures
           </p>
           <h1 className="mt-6 text-4xl font-medium leading-[1.12] tracking-tight text-stone-900 md:text-5xl">
             ManSerif.Think
@@ -31,7 +31,7 @@ export default function HeroSection() {
 
         <a
           href="mailto:warrenkamau.art@outlook.com"
-          className="relative z-10 mt-auto font-mono text-sm text-stone-600 underline decoration-stone-400/50 underline-offset-4 transition-colors hover:text-stone-900 hover:decoration-stone-600/60"
+          className="relative  mt-auto font-mono text-sm text-stone-600 underline decoration-stone-400/50 underline-offset-4 transition-colors hover:text-stone-900 hover:decoration-stone-600/60"
         >
           warrenkamau.art@outlook.com
         </a>

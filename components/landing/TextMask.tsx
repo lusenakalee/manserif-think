@@ -13,14 +13,16 @@ export default function TextMask() {
   let easedScrollProgress = 0;
 
   useEffect(() => {
-    requestAnimationFrame(animate);
+    const animationId = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animationId);
   }, []);
 
   const animate = () => {
     if (stickyMask.current) {
       const maskSizeProgress = targetMaskSize * getScrollProgress();
-      stickyMask.current.style.webkitMaskSize =
-        `${(initialMaskSize + maskSizeProgress) * 100}%`;
+      const size = `${(initialMaskSize + maskSizeProgress) * 100}%`;
+      stickyMask.current.style.webkitMaskSize = size;
+      stickyMask.current.style.maskSize = size;
       requestAnimationFrame(animate);
     }
   };
@@ -38,14 +40,16 @@ export default function TextMask() {
   };
 
   return (
-    <main className="main bg-white ">
-      <div ref={container} className="container ">
+    <div className="w-full relative left-1/2 right-1/2 -mx-[50vw]">
+    <main className=" w-full min-h-screen">
+      <div ref={container} className="container">
         <div ref={stickyMask} className="stickyMask">
           <video autoPlay muted loop>
-            <source src="/images/exhibit.mp4" type="video/mp4" />
+            <source src="/images/exhibit.mp4" type="video/mp4" className="w-full h-full object-cover" />
           </video>
         </div>
       </div>
     </main>
+    </div>
   );
 }

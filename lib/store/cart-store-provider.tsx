@@ -3,16 +3,16 @@
 import {
   createContext,
   useContext,
-  useRef,
   useEffect,
+  useRef,
   type ReactNode,
 } from "react";
 import { useStore } from "zustand";
 import {
   createCartStore,
-  type CartStore,
-  type CartState,
   defaultInitState,
+  type CartState,
+  type CartStore,
 } from "./cart-store";
 
 // Store API type

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Package, ShoppingBag, User } from "lucide-react";
+import { Package, ShoppingBag, User , ShoppingCart } from "lucide-react";
 import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import { useCartActions, useTotalItems } from "@/lib/store/cart-store-provider";
@@ -24,6 +24,12 @@ export function Header() {
         {/* Actions */}
         <div className="flex items-center gap-2">
           {/* Wait until Clerk is loaded to avoid flicker */}
+           <Button asChild>
+                  <Link href="/products" className="flex items-center gap-2">
+                    <ShoppingCart className="h-5 w-5" />
+                    <span className="text-sm font-medium">Shop</span>
+                  </Link>
+                </Button>
           {isLoaded && (
             <>
               {/* My Orders */}
@@ -35,6 +41,8 @@ export function Header() {
                   </Link>
                 </Button>
               )}
+
+              
 
               {/* Cart */}
               <Button
@@ -64,6 +72,13 @@ export function Header() {
                     },
                   }}
                 >
+                  <UserButton.MenuItems>
+                    <UserButton.Link
+                      label="Shop"
+                      labelIcon={<Package className="h-4 w-4" />}
+                      href="/products"
+                    />
+                  </UserButton.MenuItems>
                   <UserButton.MenuItems>
                     <UserButton.Link
                       label="My Orders"

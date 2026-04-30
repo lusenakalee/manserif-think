@@ -4,6 +4,7 @@ import HeroSection from "@/components/landing/HeroSection";
 import SculpturesSnippet from "@/components/landing/SculpturesSnippet";
 import TextMask from "@/components/landing/TextMask";
 import VideoSnippets from "@/components/landing/VideoSnippets";
+import { CinematicFooter } from "@/components/motion-footer";
 import { ProjectHoverSectionDemo } from "@/components/Projecthoversectiondemo";
 
 export default function Home() {
@@ -12,10 +13,11 @@ export default function Home() {
       <HeroSection/>
       <ArtSnippet/>
       <ProjectHoverSectionDemo/>
-      <TextMask/>
+    <TextMask/>
       <VideoSnippets/>
       <SculpturesSnippet/>
-      <GarmentsSnippet/>     
+      <GarmentsSnippet/>    
+      <CinematicFooter/> 
     </div>
   );
 }
