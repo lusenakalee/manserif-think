@@ -1,14 +1,14 @@
 'use client';
 
-import { useRef, use } from 'react';
 import ProjectDetails from '@/components/projects/ProjectDetails';
-import Image from 'next/image';
+import { getProjectBySlug } from '@/data/projects-data';
+import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useGSAP } from '@gsap/react';
+import Image from 'next/image';
 import Link from 'next/link';
-import { getProjectBySlug } from '@/data/projects-data';
 import { notFound } from 'next/navigation';
+import { use, useRef } from 'react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -206,20 +206,7 @@ export default function ProjectPage({ params }: PageProps) {
                 <div className="overflow-hidden mb-4">
                   <h3 className="reveal-text text-xs uppercase tracking-[0.2em] text-gray-500">Projets Suivants</h3>
                 </div>
-                <div className="flex flex-col gap-4">
-                  <div className="overflow-hidden">
-                    <Link href="#" className="reveal-text group flex justify-between items-end border-b border-gray-200 pb-4 hover:border-gray-400 transition-colors">
-                      <span className="font-serif text-2xl group-hover:italic transition-all">Maurice Cafe St-Honore</span>
-                      <span className="text-xs uppercase tracking-widest text-gray-500">Hospitality</span>
-                    </Link>
-                  </div>
-                  <div className="overflow-hidden">
-                    <Link href="#" className="reveal-text group flex justify-between items-end border-b border-gray-200 pb-4 hover:border-gray-400 transition-colors">
-                      <span className="font-serif text-2xl group-hover:italic transition-all">Berri</span>
-                      <span className="text-xs uppercase tracking-widest text-gray-500">Résidentiel</span>
-                    </Link>
-                  </div>
-                </div>
+               
               </div>
             </div>
 

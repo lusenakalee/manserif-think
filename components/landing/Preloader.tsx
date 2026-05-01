@@ -3,28 +3,25 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { useRef, useState, useEffect } from "react";
 
-const PRELOADER_IMAGE_URLS = [
-  "/images/charcoal1.webp",
-  "/images/forgive1.webp",
-  "/images/general1.webp",
-  "/images/poetic1.webp",
-  "/images/charcoal2.webp",
-  "/images/forgive2.webp",
-  "/images/general2.webp",
-  "/images/poetic2.webp",
-  "/images/charcoal3.webp",
-  "/images/forgive3.webp",
-  "/images/general3.webp",
-  "/images/poetic3.webp",
-  
+// ─── Types ────────────────────────────────────────────────────────────────────
 
+interface PreloaderProps {
+  /**
+   * Ordered list of image URLs to display during the preloader animation.
+   * Passed in from HeroSection after resolving Sanity asset references.
+   * Falls back to an empty array (no images shown) if omitted.
+   */
+  imageUrls?: string[];
+}
 
-] as const;
+// ─── Constants ────────────────────────────────────────────────────────────────
 
 const PAD = 20;
 const SESSION_KEY = "preloader_shown";
 
-const Preloader = () => {
+// ─── Component ────────────────────────────────────────────────────────────────
+
+const Preloader = ({ imageUrls = [] }: PreloaderProps) => {
   const root = useRef<HTMLDivElement>(null);
   // null = not yet determined (SSR), true = show, false = skip
   const [shouldRender, setShouldRender] = useState<boolean | null>(null);
@@ -64,7 +61,6 @@ const Preloader = () => {
 
       const tl = gsap.timeline({
         onComplete: () => {
-          // Hide the preloader container after animation finishes
           if (el) el.style.display = "none";
         },
       });
@@ -82,7 +78,6 @@ const Preloader = () => {
       tl.call(() => {
         const containerRect = el.getBoundingClientRect();
         const rect = firstImage.getBoundingClientRect();
-        // Move images to bottom-right corner of the HeroSection container
         dx = containerRect.right - rect.right - PAD;
         dy = containerRect.bottom - rect.bottom - PAD;
       });
@@ -145,17 +140,19 @@ const Preloader = () => {
   // Don't render anything until we know (avoids SSR mismatch)
   if (shouldRender === null || !shouldRender) return null;
 
+  // Nothing to animate if no images were provided
+  if (!imageUrls.length) return null;
+
   return (
     <div
       ref={root}
-      // absolute instead of fixed — scoped to HeroSection's relative container
       className="pointer-events-none absolute inset-0 z-50 overflow-hidden"
     >
       <div
         className="preloader-backdrop absolute inset-x-0 bottom-0 bg-[#F3F0E7]"
         style={{ height: "100%" }}
       />
-      {PRELOADER_IMAGE_URLS.map((src, i) => (
+      {imageUrls.map((src, i) => (
         <img
           key={`${src}-${i}`}
           src={src}

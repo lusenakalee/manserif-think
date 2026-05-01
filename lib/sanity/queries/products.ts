@@ -355,3 +355,58 @@ export const AI_SEARCH_PRODUCTS_QUERY = defineQuery(`*[
   featured,
   assemblyRequired
 }`);
+
+
+// ============================================
+// Landing Page Snippet Queries
+// Featured products surface first; capped at 4 cards per section.
+// Used by ArtSnippet, GarmentsSnippet, SculpturesSnippet.
+// ============================================
+ 
+/**
+ * Shared type returned by SNIPPET_PRODUCTS_BY_CATEGORY_QUERY
+ */
+export interface SnippetProduct {
+  _id: string;
+  name: string;
+  slug: string;
+  price: number;
+  featured: boolean;
+  material: string | null;
+  color: string | null;
+  dimensions: string | null;
+  image: {
+    url: string;
+    alt?: string;
+  } | null;
+}
+ 
+/**
+ * Fetch up to 4 products for a landing-page snippet section.
+ *
+ * Ordering: featured products always appear first, then by name.
+ * Pass the category slug as $categorySlug (e.g. "art", "garments", "sculptures").
+ *
+ * @example
+ * const products = await client.fetch(SNIPPET_PRODUCTS_BY_CATEGORY_QUERY, {
+ *   categorySlug: "art",
+ * });
+ */
+export const SNIPPET_PRODUCTS_BY_CATEGORY_QUERY = defineQuery(`*[
+  _type == "product"
+  && category->slug.current == $categorySlug
+  && stock > 0
+] | order(featured desc, name asc) [0...4] {
+  _id,
+  name,
+  "slug": slug.current,
+  price,
+  featured,
+  material,
+  color,
+  dimensions,
+  "image": images[0]{
+    "url": asset->url,
+    "alt": coalesce(asset->altText, name)
+  }
+}`);

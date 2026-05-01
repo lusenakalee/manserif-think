@@ -31,7 +31,7 @@ export function CheckoutClient() {
             Add some items to your cart before checking out.
           </p>
           <Button asChild className="mt-8">
-            <Link href="/">Continue Shopping</Link>
+            <Link href="/products">Continue Shopping</Link>
           </Button>
         </div>
       </div>
