@@ -11,7 +11,7 @@ if (!process.env.STRIPE_SECRET_KEY) {
 }
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: "2025-11-17.clover",
+  apiVersion: "2026-04-22.dahlia",
 });
 
 // Types
@@ -50,7 +50,7 @@ export async function createCheckoutSession(
       return { success: false, error: "Your cart is empty" };
     }
 
-    // 3. Fetch current product data from Sanity to validate prices/stock
+    // 3. Fetch current product data from Sanity
     const productIds = items.map((item) => item.productId);
     const products = await client.fetch(PRODUCTS_BY_IDS_QUERY, {
       ids: productIds,
@@ -92,22 +92,21 @@ export async function createCheckoutSession(
       return { success: false, error: validationErrors.join(". ") };
     }
 
-    // 5. Create Stripe line items with validated prices
-    const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] =
-      validatedItems.map(({ product, quantity }) => ({
-        price_data: {
-          currency: "gbp",
-          product_data: {
-            name: product.name ?? "Product",
-            images: product.image?.asset?.url ? [product.image.asset.url] : [],
-            metadata: {
-              productId: product._id,
-            },
+    // 5. Create Stripe line items (FIX: removed explicit Stripe type)
+    const lineItems = validatedItems.map(({ product, quantity }) => ({
+      price_data: {
+        currency: "gbp",
+        product_data: {
+          name: product.name ?? "Product",
+          images: product.image?.asset?.url ? [product.image.asset.url] : [],
+          metadata: {
+            productId: product._id,
           },
-          unit_amount: Math.round((product.price ?? 0) * 100), // Convert to pence
         },
-        quantity,
-      }));
+        unit_amount: Math.round((product.price ?? 0) * 100),
+      },
+      quantity,
+    }));
 
     // 6. Get or create Stripe customer
     const userEmail = user.emailAddresses[0]?.emailAddress ?? "";
@@ -117,7 +116,7 @@ export async function createCheckoutSession(
     const { stripeCustomerId, sanityCustomerId } =
       await getOrCreateStripeCustomer(userEmail, userName, userId);
 
-    // 7. Prepare metadata for webhook
+    // 7. Metadata
     const metadata = {
       clerkUserId: userId,
       userEmail,
@@ -126,13 +125,13 @@ export async function createCheckoutSession(
       quantities: validatedItems.map((i) => i.quantity).join(","),
     };
 
-    // 8. Create Stripe Checkout Session
-    // Priority: NEXT_PUBLIC_BASE_URL > Vercel URL > localhost
+    // 8. Base URL
     const baseUrl =
       process.env.NEXT_PUBLIC_BASE_URL ||
       (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null) ||
       "http://localhost:3000";
 
+    // 9. Create session
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
       payment_method_types: ["card"],
@@ -140,57 +139,11 @@ export async function createCheckoutSession(
       customer: stripeCustomerId,
       shipping_address_collection: {
         allowed_countries: [
-          "GB", // United Kingdom
-          "US", // United States
-          "CA", // Canada
-          "AU", // Australia
-          "NZ", // New Zealand
-          "IE", // Ireland
-          "DE", // Germany
-          "FR", // France
-          "ES", // Spain
-          "IT", // Italy
-          "NL", // Netherlands
-          "BE", // Belgium
-          "AT", // Austria
-          "CH", // Switzerland
-          "SE", // Sweden
-          "NO", // Norway
-          "DK", // Denmark
-          "FI", // Finland
-          "PT", // Portugal
-          "PL", // Poland
-          "CZ", // Czech Republic
-          "GR", // Greece
-          "HU", // Hungary
-          "RO", // Romania
-          "BG", // Bulgaria
-          "HR", // Croatia
-          "SI", // Slovenia
-          "SK", // Slovakia
-          "LT", // Lithuania
-          "LV", // Latvia
-          "EE", // Estonia
-          "LU", // Luxembourg
-          "MT", // Malta
-          "CY", // Cyprus
-          "JP", // Japan
-          "SG", // Singapore
-          "HK", // Hong Kong
-          "KR", // South Korea
-          "TW", // Taiwan
-          "MY", // Malaysia
-          "TH", // Thailand
-          "IN", // India
-          "AE", // United Arab Emirates
-          "SA", // Saudi Arabia
-          "IL", // Israel
-          "ZA", // South Africa
-          "BR", // Brazil
-          "MX", // Mexico
-          "AR", // Argentina
-          "CL", // Chile
-          "CO", // Colombia
+          "GB", "US", "CA", "AU", "NZ", "IE", "DE", "FR", "ES", "IT",
+          "NL", "BE", "AT", "CH", "SE", "NO", "DK", "FI", "PT", "PL",
+          "CZ", "GR", "HU", "RO", "BG", "HR", "SI", "SK", "LT", "LV",
+          "EE", "LU", "MT", "CY", "JP", "SG", "HK", "KR", "TW", "MY",
+          "TH", "IN", "AE", "SA", "IL", "ZA", "BR", "MX", "AR", "CL", "CO",
         ],
       },
       metadata,
@@ -209,7 +162,7 @@ export async function createCheckoutSession(
 }
 
 /**
- * Retrieves a checkout session by ID (for success page)
+ * Retrieves a checkout session by ID
  */
 export async function getCheckoutSession(sessionId: string) {
   try {
@@ -223,7 +176,6 @@ export async function getCheckoutSession(sessionId: string) {
       expand: ["line_items", "customer_details"],
     });
 
-    // Verify the session belongs to this user
     if (session.metadata?.clerkUserId !== userId) {
       return { success: false, error: "Session not found" };
     }

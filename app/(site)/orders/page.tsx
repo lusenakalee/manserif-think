@@ -1,3 +1,5 @@
+// app/(site)/orders/page.tsx
+
 import { StackedProductImages } from "@/components/general/StackedProductImages";
 import { Badge } from "@/components/ui/badge";
 import { EmptyState } from "@/components/ui/empty-state";
@@ -14,13 +16,30 @@ export const metadata = {
   description: "View your order history",
 };
 
+/**
+ * ✅ Matches ORDERS_BY_USER_QUERY exactly
+ */
+type OrdersListItem = {
+  _id: string;
+  orderNumber?: string;
+  total?: number;
+  status?: "paid" | "shipped" | "delivered" | "cancelled";
+  createdAt?: string;
+  itemCount?: number;
+  itemNames?: (string | null)[];
+  itemImages?: (string | null)[];
+};
+
 export default async function OrdersPage() {
   const { userId } = await auth();
 
-  const { data: orders } = await sanityFetch({
+  // ✅ Live API (no generics)
+  const { data } = await sanityFetch({
     query: ORDERS_BY_USER_QUERY,
     params: { clerkUserId: userId ?? "" },
   });
+
+  const orders = (data ?? []) as OrdersListItem[];
 
   if (orders.length === 0) {
     return (
@@ -48,11 +67,12 @@ export default async function OrdersPage() {
       </div>
 
       <div className="space-y-4">
-        {orders.map((order) => {
+        {orders.map((order: OrdersListItem) => {
           const status = getOrderStatus(order.status);
           const StatusIcon = status.icon;
+
           const images = (order.itemImages ?? []).filter(
-            (url): url is string => url !== null,
+            (url: string | null): url is string => Boolean(url)
           );
 
           return (
@@ -62,16 +82,16 @@ export default async function OrdersPage() {
               className="group block rounded-xl border border-zinc-200 bg-white transition-all hover:border-zinc-300 hover:shadow-lg dark:border-zinc-800 dark:bg-zinc-950 dark:hover:border-zinc-700"
             >
               <div className="flex gap-5 p-5">
-                {/* Left: Product Images Stack */}
+                {/* Images */}
                 <StackedProductImages
                   images={images}
                   totalCount={order.itemCount ?? 0}
                   size="lg"
                 />
 
-                {/* Right: Order Details */}
+                {/* Details */}
                 <div className="flex min-w-0 flex-1 flex-col justify-between">
-                  {/* Top: Order Info + Status */}
+                  {/* Top */}
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
                       <p className="font-semibold text-zinc-900 dark:text-zinc-100">
@@ -81,6 +101,7 @@ export default async function OrdersPage() {
                         {formatDate(order.createdAt)}
                       </p>
                     </div>
+
                     <Badge
                       className={`${status.color} shrink-0 flex items-center gap-1`}
                     >
@@ -89,25 +110,30 @@ export default async function OrdersPage() {
                     </Badge>
                   </div>
 
-                  {/* Bottom: Items + Total */}
+                  {/* Bottom */}
                   <div className="mt-2 flex items-end justify-between">
                     <p className="text-sm text-zinc-500 dark:text-zinc-400">
-                      {order.itemCount}{" "}
+                      {order.itemCount ?? 0}{" "}
                       {order.itemCount === 1 ? "item" : "items"}
                     </p>
+
                     <p className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
-                      {formatPrice(order.total)}
+                      {formatPrice(order.total ?? 0)}
                     </p>
                   </div>
                 </div>
               </div>
 
-              {/* Footer: View Details */}
+              {/* Footer */}
               <div className="flex items-center justify-between border-t border-zinc-100 px-5 py-3 dark:border-zinc-800">
                 <p className="truncate text-sm text-zinc-500 dark:text-zinc-400">
-                  {order.itemNames?.slice(0, 2).filter(Boolean).join(", ")}
+                  {order.itemNames
+                    ?.slice(0, 2)
+                    .filter(Boolean)
+                    .join(", ")}
                   {(order.itemNames?.length ?? 0) > 2 && "..."}
                 </p>
+
                 <span className="flex shrink-0 items-center gap-1 text-sm font-medium text-zinc-500 transition-colors group-hover:text-zinc-900 dark:text-zinc-400 dark:group-hover:text-zinc-100">
                   View order
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
