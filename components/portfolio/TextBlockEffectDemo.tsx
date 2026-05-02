@@ -4,7 +4,7 @@ const TextBlockEffectDemo = () => (
     <TextBlockEffect>
         <section className="min-h-screen flex items-center justify-center">
             <TextBlock>
-My name is Warren Gathigi Kamau, and this is the official page of my thought bubble, Man Serif.Think .            </TextBlock>
+My name is Warren Gathigi Kamau, and this is the official showcase of my thought bubble, Man Serif.Think .            </TextBlock>
         </section>
          <section className="min-h-screen flex items-center justify-center">
   <TextBlock>
