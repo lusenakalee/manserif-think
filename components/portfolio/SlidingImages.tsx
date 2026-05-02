@@ -38,17 +38,17 @@ export default function SlidingImages() {
   return (
     <div
       ref={container}
-      className="relative z-10 mt-[200px] flex flex-col gap-[3vw] bg-white"
+      className="relative z-10 my-12  md:mt-[200px] overflow-x-hidden flex flex-col gap-[3vw] bg-white"
     >
       {/* Slider 1 — moves right on scroll */}
       <motion.div
         style={{ x: x1 }}
-        className="relative left-[-10vw] flex w-[120vw] gap-[3vw]"
+        className="relative  md:left-[-10vw] flex w-[120vw] gap-[3vw]"
       >
         {slider1.map((project, index) => (
           <div
             key={index}
-            className="flex h-[20vw] w-1/4 shrink-0 items-center justify-center"
+            className="flex  h-[80vw] md:h-[20vw] w-1/2 md:w-1/4 shrink-0 items-center justify-center"
             style={{ backgroundColor: project.color }}
           >
             <div className="relative h-4/5 w-4/5">
@@ -71,7 +71,7 @@ export default function SlidingImages() {
         {slider2.map((project, index) => (
           <div
             key={index}
-            className="flex h-[20vw] w-1/4 shrink-0 items-center justify-center"
+            className="flex  h-[80vw] md:h-[20vw] w-1/2 md:w-1/4 shrink-0 items-center justify-center"
             style={{ backgroundColor: project.color }}
           >
             <div className="relative h-4/5 w-4/5">
@@ -87,15 +87,15 @@ export default function SlidingImages() {
       </motion.div>
 
       {/* Circle container — shrinks as you scroll */}
-      <motion.div
+      {/* <motion.div
         style={{ height }}
-        className="relative mt-[100px] bg-red-600 hidden md:block"
+        className="relative mt-[100px] bg-red-600"
       >
         <div
           className="absolute left-[-10%] z-10 h-[1550%] w-[120%] rounded-b-[50%] bg-white"
           style={{ boxShadow: '0px 60px 50px rgba(0,0,0,0.748)' }}
         />
-      </motion.div>
+      </motion.div> */}
     </div>
   );
 }
