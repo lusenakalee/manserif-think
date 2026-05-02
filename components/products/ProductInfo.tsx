@@ -54,6 +54,18 @@ export function ProductInfo({ product }: ProductInfoProps) {
 
       {/* Metadata */}
       <div className="mt-6 space-y-2 border-t border-zinc-200 pt-6 dark:border-zinc-800">
+        
+
+          <div className="flex justify-between text-sm">
+            <span className="text-zinc-500 dark:text-zinc-400">Price</span>
+            <span className="font-medium capitalize text-zinc-900 dark:text-zinc-100">
+{formatPrice(product.price)}            </span>
+          </div>
+
+
+
+
+
         {product.material && (
           <div className="flex justify-between text-sm">
             <span className="text-zinc-500 dark:text-zinc-400">Material</span>

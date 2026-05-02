@@ -109,7 +109,7 @@ export default function SiteNav() {
                             </div>
                             {isSignedIn && (
                                 <div className="flow-root">
-                                    <a href="/orders" className="-m-2 block p-2 font-medium text-gray-900">
+                                    <a href="/orders" className=" block p-2 font-medium text-gray-900">
                                         My Orders
                                     </a>
                                 </div>
