@@ -23,13 +23,19 @@ export function Header() {
 
         {/* Actions */}
         <div className="flex items-center gap-2">
-          {/* Wait until Clerk is loaded to avoid flicker */}
+           <Button asChild>
+                  <Link href="/portfolio" className="flex items-center gap-2">
+                    <ShoppingCart className="h-5 w-5" />
+                    <span className="text-sm font-medium">Portfolio</span>
+                  </Link>
+                </Button>
            <Button asChild>
                   <Link href="/products" className="flex items-center gap-2">
                     <ShoppingCart className="h-5 w-5" />
                     <span className="text-sm font-medium">Shop</span>
                   </Link>
                 </Button>
+          {/* Wait until Clerk is loaded to avoid flicker */}
           {isLoaded && (
             <>
               {/* My Orders */}
