@@ -1,4 +1,5 @@
 import PortfolioHeader from '@/components/portfolio/PortfolioHeader'
+import ProjectsList from '@/components/portfolio/ProjectsList'
 import { TextBlockEffectDemo } from '@/components/portfolio/TextBlockEffectDemo'
 
 export default function page() {
@@ -6,6 +7,7 @@ export default function page() {
     <div>
            <PortfolioHeader/>
            <TextBlockEffectDemo/>
+           <ProjectsList/>
 
     </div>
   )
