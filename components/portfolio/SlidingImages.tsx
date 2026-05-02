@@ -89,7 +89,7 @@ export default function SlidingImages() {
       {/* Circle container — shrinks as you scroll */}
       <motion.div
         style={{ height }}
-        className="relative mt-[100px] bg-red-600"
+        className="relative mt-[100px] bg-red-600 hidden md:block"
       >
         <div
           className="absolute left-[-10%] z-10 h-[1550%] w-[120%] rounded-b-[50%] bg-white"
