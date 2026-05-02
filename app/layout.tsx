@@ -3,6 +3,7 @@ import { Geist, Geist_Mono, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import CookieConsent from "@/components/general/CookieConsent";
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
@@ -44,7 +45,9 @@ export default function RootLayout({
     >
         <body>
       <TooltipProvider>
-          {children} {/* no wrapper divs with positioning */}
+          {children}
+                  <CookieConsent />
+ {/* no wrapper divs with positioning */}
       </TooltipProvider>
         </body>
     </html>
