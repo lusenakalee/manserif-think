@@ -74,7 +74,7 @@ export default function Home() {
         fill
         alt="background"
         priority
-        className="object-cover"
+        className="object-cover object-top"
       />
 
       <div className="absolute top-[calc(100vh-200px)] md:top-[calc(100vh-300px)] lg:top-[calc(100vh-350px)]">

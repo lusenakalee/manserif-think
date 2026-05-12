@@ -114,7 +114,7 @@ export default function ProjectPage({ params }: PageProps) {
   }, { scope: containerRef });
 
   return (
-    <main ref={containerRef} className="h-screen w-full overflow-hidden bg-[#F5F2ED]">
+    <main ref={containerRef} className="h-[100vh] w-full overflow-hidden bg-[#F5F2ED]">
       {/* Scroll Progress Indicator */}
       <div className="progress-bar fixed top-0 left-0 h-1.5 bg-[#1A1A1A] z-[100] w-full origin-left scale-x-0 mix-blend-difference" />
 
