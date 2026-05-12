@@ -4,8 +4,8 @@ import React, { useRef, useState, useEffect } from 'react';
 import { gsap } from 'gsap';
 import { useGSAP } from '@gsap/react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import Link from 'next/link';
 
 export interface ProjectItem {
   title: string;
@@ -31,11 +31,14 @@ const ProjectHoverSection: React.FC<ProjectHoverSectionProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const thumbnailRef = useRef<HTMLDivElement>(null);
   const sliderRef = useRef<HTMLDivElement>(null);
+
   const [isDesktop, setIsDesktop] = useState(true);
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
-  const [modal, setModal] = useState<{ active: boolean; index: number }>({ active: false, index: 0 });
+  const [modal, setModal] = useState<{ active: boolean; index: number }>({
+    active: false,
+    index: 0,
+  });
 
-  // Detect desktop vs mobile
   useEffect(() => {
     const checkDesktop = () => setIsDesktop(window.innerWidth >= 768);
     checkDesktop();
@@ -43,7 +46,6 @@ const ProjectHoverSection: React.FC<ProjectHoverSectionProps> = ({
     return () => window.removeEventListener('resize', checkDesktop);
   }, []);
 
-  // GSAP: position follows mouse relative to container
   useGSAP(
     () => {
       if (!isDesktop || !thumbnailRef.current || !sliderRef.current || !containerRef.current) return;
@@ -54,10 +56,18 @@ const ProjectHoverSection: React.FC<ProjectHoverSectionProps> = ({
         yPercent: -50,
         force3D: true,
       });
+
       gsap.set(sliderRef.current, { y: 0 });
 
-      const xTo = gsap.quickTo(thumbnailRef.current, 'x', { duration: 0.5, ease: 'power3.out' });
-      const yTo = gsap.quickTo(thumbnailRef.current, 'y', { duration: 0.5, ease: 'power3.out' });
+      const xTo = gsap.quickTo(thumbnailRef.current, 'x', {
+        duration: 0.5,
+        ease: 'power3.out',
+      });
+
+      const yTo = gsap.quickTo(thumbnailRef.current, 'y', {
+        duration: 0.5,
+        ease: 'power3.out',
+      });
 
       let hasPosition = false;
 
@@ -81,7 +91,6 @@ const ProjectHoverSection: React.FC<ProjectHoverSectionProps> = ({
     { dependencies: [isDesktop] }
   );
 
-  // GSAP: animate scale + slider when modal state changes
   useGSAP(
     () => {
       if (!isDesktop || !thumbnailRef.current || !sliderRef.current) return;
@@ -95,6 +104,7 @@ const ProjectHoverSection: React.FC<ProjectHoverSectionProps> = ({
           ease: 'power2.out',
           overwrite: 'auto',
         });
+
         gsap.to(sliderRef.current, {
           y: -modal.index * thumbnailHeight,
           duration: 0.4,
@@ -114,7 +124,7 @@ const ProjectHoverSection: React.FC<ProjectHoverSectionProps> = ({
         });
       }
     },
-    { dependencies: [modal.active, modal.index, isDesktop, thumbnailHeight, projects.length] }
+    { dependencies: [modal.active, modal.index, isDesktop, thumbnailHeight] }
   );
 
   if (isDesktop) {
@@ -146,9 +156,10 @@ const ProjectHoverSection: React.FC<ProjectHoverSectionProps> = ({
               >
                 {project.title}
               </h2>
+
               <p
                 className={cn(
-                  'text-sm md:text-base text-neutral-600 transition-transform duration-500 ease-out',
+                  'text-sm md:text-base text-neutral-800 transition-transform duration-500 ease-out',
                   modal.active && modal.index === index && 'translate-x-4'
                 )}
               >
@@ -156,82 +167,68 @@ const ProjectHoverSection: React.FC<ProjectHoverSectionProps> = ({
               </p>
             </Link>
           ))}
-          {/* Bottom border */}
+
           <div className="w-full h-px bg-white/20" />
         </div>
 
-        {/* Thumbnail — clicking it also navigates to the active project */}
         <div
           ref={thumbnailRef}
-          className="absolute top-0 left-0 z-50 overflow-hidden rounded-lg border border-white/20 shadow-2xl"
+          className="absolute top-0 left-0 z-50 overflow-hidden rounded-lg border border-white/20 shadow-2xl pointer-events-none"
           style={{
             width: thumbnailWidth,
             height: thumbnailHeight,
             opacity: 0,
-            visibility: 'hidden' as const,
+            visibility: 'hidden',
           }}
         >
-          <Link
-            href={modal.active ? `/projects/${projects[modal.index].slug}` : '#'}
-            tabIndex={-1}
-            aria-hidden="true"
-            className="block w-full h-full"
+          <div
+            ref={sliderRef}
+            className="relative w-full"
+            style={{
+              height: thumbnailHeight * projects.length,
+            }}
           >
-            <div
-              ref={sliderRef}
-              className="relative w-full"
-              style={{
-                height: thumbnailHeight * projects.length,
-                pointerEvents: 'none',
-              }}
-            >
-              {projects.map((project, index) => (
-                <div
-                  key={index}
-                  className="absolute left-0 w-full flex items-center justify-center"
-                  style={{
-                    top: index * thumbnailHeight,
-                    width: thumbnailWidth,
-                    height: thumbnailHeight,
-                    pointerEvents: 'none',
-                  }}
-                >
-                  <Image
-                    src={project.image}
-                    alt={project.alt ?? project.title}
-                    width={thumbnailWidth}
-                    height={thumbnailHeight}
-                    className="w-full h-full object-cover object-top"
-                    style={{ pointerEvents: 'none' }}
-                  />
-                </div>
-              ))}
-            </div>
-          </Link>
+            {projects.map((project, index) => (
+              <div
+                key={index}
+                className="absolute left-0 w-full"
+                style={{
+                  top: index * thumbnailHeight,
+                  width: thumbnailWidth,
+                  height: thumbnailHeight,
+                }}
+              >
+                <Image
+                  src={project.image}
+                  alt={project.alt ?? project.title}
+                  width={thumbnailWidth}
+                  height={thumbnailHeight}
+                  className="w-full h-full object-cover object-top"
+                />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     );
   }
 
-  // Mobile: Clean stacked version with tap-to-expand
   return (
     <div className={cn('flex flex-col w-full max-w-[1000px] mx-auto py-6', className)}>
       {projects.map((project, index) => (
-        <div
-          key={index}
-          className="border-b border-white/20 last:border-b-0"
-        >
+        <div key={index} className="border-b border-white/20 last:border-b-0">
           <button
             type="button"
             onClick={() => setExpandedIndex(expandedIndex === index ? null : index)}
             className="w-full flex items-center justify-between px-4 py-5 text-left active:opacity-80 transition-opacity"
           >
             <h2 className="text-xl font-medium text-neutral-800">{project.title}</h2>
-            <p className="text-sm text-neutral-600">{project.subtitle}</p>
-            <span className="ml-2 text-white/50 text-lg">
+            <p className="text-sm text-neutral-500">{project.subtitle}</p>
+            <span className="ml-2 text-neutral-800 text-lg">
               {expandedIndex === index ? '−' : '+'}
             </span>
           </button>
+
           <div
             className={cn(
               'overflow-hidden transition-all duration-300 ease-out',
@@ -239,7 +236,7 @@ const ProjectHoverSection: React.FC<ProjectHoverSectionProps> = ({
             )}
           >
             <div className="px-4 pb-4">
-              <Link href={`/projects/${project.slug}`} className="block">
+              <Link href={`/projects/${project.slug}`}>
                 <div className="relative w-full aspect-[4/3] rounded-lg overflow-hidden border border-white/20">
                   <Image
                     src={project.image}

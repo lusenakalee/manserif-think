@@ -11,12 +11,12 @@ export default function Home() {
   return (
     <div >
       <HeroSection/>
-      <ArtSnippet/>
+      {/* <ArtSnippet/> */}
       <ProjectHoverSectionDemo/>
     <TextMask/>
       <VideoSnippets/>
-      <SculpturesSnippet/>
-      <GarmentsSnippet/>    
+      {/* <SculpturesSnippet/> */}
+      {/* <GarmentsSnippet/>     */}
       <CinematicFooter/> 
     </div>
   );

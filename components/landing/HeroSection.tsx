@@ -37,7 +37,7 @@ const HERO_QUERY = groq`
 
 const FALLBACK: HeroSectionData = {
   name: "ManSerif.Think",
-  tagline: "Art | Garments | Photographs | Sculptures",
+  tagline: "Art | Fashion | Installations",
   subtitle: "Design with Intent.",
   description:
     "Multidisciplinary artist sharing evolving work, products, and journey.",
@@ -71,10 +71,10 @@ export default async function HeroSection() {
     : "/images/manserif-man.svg";
 
   return (
-    <div className="min-h-screen w-full relative">
+    <div className="min-h-[80vh]  w-full relative">
       <Preloader imageUrls={preloaderUrls} />
 
-      <div className="relative flex min-h-screen w-full flex-col overflow-hidden bg-[#E0DCD7] px-4 py-12 sm:px-6 sm:py-16 md:px-8 md:py-20 lg:pl-28 lg:pt-32 lg:pr-12 lg:pb-16">
+      <div className="relative flex min-h-[80vh] md:min-h-[80vh] w-full flex-col overflow-hidden bg-[#E0DCD7] px-4 py-12 sm:px-6 sm:py-16 md:px-8 md:py-20 lg:pl-28 lg:pt-32 lg:pr-12 lg:pb-16">
         {/* Grid lines - hidden on mobile, visible on md and up */}
         <div className="pointer-events-none absolute inset-0 hidden md:block">
           <div className="absolute top-14 left-0 right-0 h-px bg-[#c9c4c4]/80" />
@@ -104,7 +104,7 @@ export default async function HeroSection() {
         </a>
 
         {/* Decorative figure — bottom-right, hidden on small screens */}
-        <div className="pointer-events-none absolute bottom-0 right-0 z-10 hidden sm:block h-[35vh] sm:h-[40vh]">
+        <div className="pointer-events-none absolute bottom-0 right-0 z-10  md:block h-[15vh] md:h-[35vh]">
           <Image
             src={figureSrc}
             alt="ManSerif figure"
