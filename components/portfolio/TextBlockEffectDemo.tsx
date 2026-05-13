@@ -1,17 +1,38 @@
-import TextBlockEffect, { TextBlock } from '@/components/ui/TextBlockEffect';
+export default function TextBlockEffectDemo() {
+  return (
+    <section className="relative isolate overflow-hidden bg-gray-900 px-6 py-24 sm:py-32 lg:px-8">
+      <div className="absolute inset-0 -z-10 bg-[radial-gradient(45rem_50rem_at_top,var(--color-gray-200),transparent)] opacity-10" />
+      <div className="absolute inset-y-0 right-1/2 -z-10 mr-16 w-[200%] origin-bottom-left skew-x-[-30deg] bg-gray-900 shadow-xl ring-1 shadow-indigo-500/5 ring-white/5 sm:mr-28 lg:mr-0 xl:mr-16 xl:origin-center" />
+      <div className="mx-auto max-w-2xl lg:max-w-4xl">
+        <img
+          alt=""
+          src="/images/manserif-man.svg"
+          className="mx-auto h-12"
+        />
+        <figure className="mt-10">
+          <blockquote className="text-center text-xl/8 font-semibold text-white sm:text-2xl/9">
+            <p>
+          A huge Welcome to everyone who is reading this as the first post, you are most likely part of my audience from my main page and first community, you don't know it, but I love you guys, you make the work worthwhile to showcase! Mungu awabariki :)
 
-const TextBlockEffectDemo = () => (
-    <TextBlockEffect>
-        <section className="h-1/2 md:min-h-1/2 py-8 flex items-center justify-center">
-            <TextBlock>
-                My name is Warren Gathigi Kamau, and this is the official showcase of my thought bubble, Man Serif.Think .            </TextBlock>
-        </section>
-        <section className="h-1/2 md:min-h-1/2 py-8 md:py-12 flex items-center justify-center">
-            <TextBlock>
-                Now, we begin a new journey, I don't know where or how far this will go, but I trust that God is with me in the beginning, and so I am sure of it's works completion.  </TextBlock>
-        </section>
-
-    </TextBlockEffect>
-);
-
-export { TextBlockEffectDemo };
+Now, we begin a new journey, I don't know where or how far this will go, but I trust that God is with me in the beginning, and so I am sure of it's works completion.
+            </p>
+          </blockquote>
+          <figcaption className="mt-10">
+            <img
+              alt=""
+              src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+              className="mx-auto size-10 rounded-full"
+            />
+            <div className="mt-4 flex items-center justify-center space-x-3 text-base">
+              <div className="font-semibold text-white">Judith Black</div>
+              <svg width={3} height={3} viewBox="0 0 2 2" aria-hidden="true" className="fill-white">
+                <circle r={1} cx={1} cy={1} />
+              </svg>
+              <div className="text-gray-400">CEO of Workcation</div>
+            </div>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+  )
+}
