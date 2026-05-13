@@ -16,25 +16,20 @@ export default function VideoSnippets() {
   return (
     <div>
       <Section
-        video="/videos/exhibit2.mp4"
-        tag="Now On View · Main Gallery"
-        title="Echoes of the Unseen"
-        description="A sweeping retrospective spanning three decades of work by artist Naledi Osei, exploring the interplay between memory, landscape, and identity through large-scale oil and mixed-media installations."
+        video="/videos/garment.mp4"
+        tag="RAW FILES* "
+        title="GARMENT 001"
+        description="Unedited Raw Footage of Toile fittings circa 2022, files that had no date of when they'd see the light.We decided to keep it as raw as possible, as if you were alongside us, only with inserted texts that give context and information on the project as a whole.."
       />
 
       <Section
-        video="/videos/exhibit3.mp4"
-        tag="New Exhibition · East Wing"
-        title="Fractures of Light"
-        description="An immersive group show uniting seven contemporary photographers whose works interrogate how artificial illumination reshapes urban space, human behavior, and the boundary between day and night."
+        video="/videos/merchant.mp4"
+        tag="Short Film"
+        title="THE MERCHANT IS COMING"
+        description="This short film is based on a poem written by The Poet Michael, following a caged bird&apos;s longing to be freed by The Merchant, that is, Christ, and how she will no longer be overlooked, her insights not considered, but will be weighed.This short film was re-scripted and shot within 4 hours by the Project OCTOBER* team. This is the first of our short film series to be released on this page. SUBSCRIBE to follow on the creative journey."
       />
 
-      <Section
-        video="/videos/exhibit4.mp4"
-        tag="Opening Soon · Sculpture Court"
-        title="The Weight of Silence"
-        description="Sculptor Tomás Vega presents monumental bronze and reclaimed-steel forms that confront themes of displacement, collective grief, and resilience — inviting viewers to move through and around each piece as living architecture."
-      />
+   
     </div>
   );
 }
