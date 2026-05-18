@@ -4,9 +4,7 @@ import InstagramFeed from '@/components/portfolio/InstagramFeed'
 import PinSection from '@/components/portfolio/PinSection'
 import PortfolioHeader from '@/components/portfolio/PortfolioHeader'
 import PortfolioVideos  from '@/components/portfolio/PortfolioVideos'
-import ProjectsList from '@/components/portfolio/ProjectsList'
 import SlidingImages from '@/components/portfolio/SlidingImages'
-import  TextBlockEffectDemo  from '@/components/portfolio/TextBlockEffectDemo'
 
 const instagramPosts = [
   "https://www.instagram.com/p/DW4Cgm8jGSR/?img_index=1",
