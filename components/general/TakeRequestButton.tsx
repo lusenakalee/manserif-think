@@ -39,8 +39,11 @@ export function TakeRequestButton({
       <Button
         variant="outline"
         className={cn("h-11 w-full", className)}
-        onClick={() => openSignIn({ afterSignInUrl: window.location.href })}
-      >
+        onClick={() =>
+          openSignIn({
+            fallbackRedirectUrl: window.location.href,
+          })
+        }      >
         <Mail className="mr-2 h-4 w-4" />
         Sign in to Request Quote
       </Button>
