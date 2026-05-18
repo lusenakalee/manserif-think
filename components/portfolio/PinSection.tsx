@@ -11,13 +11,13 @@ import Link from "next/link"
 
 const COPY = {
   titleLight:
-    "text-xl! font-semibold tracking-tight text-white drop-shadow-md sm:text-3xl!",
+    "text-xl! font-semibold tracking-tight text-white drop-shadow-md md:text-3xl!",
   bodyLight:
-    "mt-auto text-sm! font-serif font-normal text-zinc-200 drop-shadow-sm sm:text-xl!",
+    "mt-auto hidden md:block text-sm! font-serif font-normal text-zinc-200 drop-shadow-sm sm:text-xl!",
   titleStone:
     "text-xl! font-semibold tracking-tight text-stone-100 drop-shadow-md sm:text-3xl!",
   bodyStone:
-    "mt-auto text-sm! font-serif font-normal text-stone-200 drop-shadow-sm sm:text-xl!",
+    "mt-auto hidden md:block text-sm! font-serif font-normal text-stone-200 drop-shadow-sm sm:text-xl!",
 } as const
 
 const PinSection = () => {
@@ -160,12 +160,11 @@ const PinSection = () => {
           <Text className="mt-auto mb-6 text-5xl! opacity-50"> (01) </Text>
           <Link href="/home">
           <Text className={COPY.titleLight}>
-            Scroll-told motion with a deliberate finish
+           Fashion
           </Text>
           </Link>
           <Text className={COPY.bodyLight}>
-            Pin sections, choreograph reveals, and let the page breathe as
-            people move through it.
+         Wearable art that blends design, identity, and storytelling through bold contemporary pieces.
           </Text>
         </PinCard>
 
@@ -176,11 +175,10 @@ const PinSection = () => {
         >
           <Text className="mt-auto mb-6 text-5xl! opacity-50"> (02) </Text>
           <Text className={COPY.titleLight}>
-            Textures that breathe when everything slows down
+           Art
           </Text>
           <Text className={COPY.bodyLight}>
-            Rich backgrounds and contrast keep the layout from feeling flat when
-            things sit still.
+         A visual exploration of faith, symbolism, and contemporary expression through paintings, prints, and mixed media.
           </Text>
         </PinCard>
 
@@ -191,11 +189,10 @@ const PinSection = () => {
         >
           <Text className="mt-auto mb-6 text-5xl! opacity-50"> (03) </Text>
           <Text className={COPY.titleStone}>
-            Room to experiment and space to play
+           Installations
           </Text>
           <Text className={COPY.bodyStone}>
-            Treat the viewport like a stage—swap panels, tune timing, and see
-            what sticks.
+            Immersive works that transform space into experiences of reflection, meaning, and connection.
           </Text>
         </PinCard>
       </div>

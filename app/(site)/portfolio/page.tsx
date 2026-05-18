@@ -1,4 +1,5 @@
 import { CinematicFooter } from '@/components/motion-footer'
+import { AboutMeSec } from '@/components/portfolio/AboutMeSec'
 import InstagramFeed from '@/components/portfolio/InstagramFeed'
 import PinSection from '@/components/portfolio/PinSection'
 import PortfolioHeader from '@/components/portfolio/PortfolioHeader'
@@ -17,8 +18,10 @@ export default function page() {
   return (
     <div>
            <PortfolioHeader/>
-           <TextBlockEffectDemo/>
+       <div className='pb-24'>  <AboutMeSec/></div>
+         <div className="relative mt-20">
                    <PinSection />
+                   </div>
 
            {/* <ProjectsList/> */}
            <SlidingImages/>
