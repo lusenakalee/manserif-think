@@ -211,18 +211,8 @@ export const exhibitType = defineType({
     }),
 
     // ── Meta ───────────────────────────────────────────────────────────────────
-    defineField({
-      name: 'location',
-      title: 'Location / Medium',
-      type: 'string',
-      description: 'e.g. "Editorial Study", "Mixed Media", "Limited Edition Print — A4"',
-    }),
-    defineField({
-      name: 'note',
-      title: 'Note',
-      type: 'string',
-      description: 'Optional callout note, e.g. edition size or availability.',
-    }),
+   
+   
     defineField({
       name: 'isFeatured',
       title: 'Featured Exhibit',
