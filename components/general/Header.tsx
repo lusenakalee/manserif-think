@@ -51,7 +51,7 @@ export function Header() {
               
 
               {/* Cart */}
-              <Button
+              {/* <Button
                 variant="ghost"
                 size="icon"
                 className="relative"
@@ -66,7 +66,7 @@ export function Header() {
                 <span className="sr-only">
                   Open cart ({totalItems} items)
                 </span>
-              </Button>
+              </Button> */}
 
               {/* User Section */}
               {isSignedIn ? (

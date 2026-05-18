@@ -86,11 +86,11 @@ export default function SiteNav() {
                                             />
                                         </UserButton.MenuItems>
                                         <UserButton.MenuItems>
-                                            <UserButton.Link
+                                            {/* <UserButton.Link
                                                 label="My Orders"
                                                 labelIcon={<Package className="h-4 w-4" />}
                                                 href="/orders"
-                                            />
+                                            /> */}
                                         </UserButton.MenuItems>
                                     </UserButton>
                                 ) : (
@@ -107,13 +107,13 @@ export default function SiteNav() {
 
 
                             </div>
-                            {isSignedIn && (
+                            {/* {isSignedIn && (
                                 <div className="flow-root">
                                     <a href="/orders" className=" block p-2 font-medium text-gray-900">
                                         My Orders
                                     </a>
                                 </div>
-                            )}
+                            )} */}
                         </div>
 
                         <div className="border-t border-gray-200 px-4 py-6">
@@ -194,11 +194,11 @@ export default function SiteNav() {
                                                 />
                                             </UserButton.MenuItems>
                                             <UserButton.MenuItems>
-                                                <UserButton.Link
+                                                {/* <UserButton.Link
                                                     label="My Orders"
                                                     labelIcon={<Package className="h-4 w-4" />}
                                                     href="/orders"
-                                                />
+                                                /> */}
                                             </UserButton.MenuItems>
                                         </UserButton>
                                     ) : (
@@ -210,24 +210,23 @@ export default function SiteNav() {
                                     )}
 
                                     <span aria-hidden="true" className="h-6 w-px bg-gray-200" />
-                                    {isSignedIn && (
+                                    {/* {isSignedIn && (
 
                                         <a href="/orders" className="text-sm font-medium text-gray-700 hover:text-gray-800">
                                             My Orders
                                         </a>
-                                    )}
+                                    )} */}
                                 </div>
 
 
 
 
                                 {/* Cart */}
-                                <Button
+                                {/* <Button
                                     variant="ghost"
                                     size="icon"
                                     className="relative"
-                                    onClick={openCart}
-                                >
+                                    onClick={openCart}                                >
                                     <ShoppingBagIcon className="size-6 shrink-0 text-gray-400 group-hover:text-gray-500"
                                     />
                                     {totalItems > 0 && (
@@ -238,7 +237,7 @@ export default function SiteNav() {
                                     <span className="sr-only">
                                         Open cart ({totalItems} items)
                                     </span>
-                                </Button>
+                                </Button> */}
 
 
                             </div>

@@ -283,7 +283,7 @@ export function ProductFilters({ categories }: ProductFiltersProps) {
       </div>
 
       {/* Price Range */}
-      <div>
+      {/* <div>
         <FilterLabel isActive={isPriceActive} filterKey="price">
           Price Range: £{priceRange[0]} - £{priceRange[1]}
         </FilterLabel>
@@ -301,7 +301,7 @@ export function ProductFilters({ categories }: ProductFiltersProps) {
           }
           className={`mt-4 ${isPriceActive ? "[&_[role=slider]]:border-amber-500 [&_[role=slider]]:ring-amber-500" : ""}`}
         />
-      </div>
+      </div> */}
 
       {/* In Stock Only */}
       <div>

@@ -3,6 +3,7 @@ import { formatPrice } from "@/lib/utils";
 import type { PRODUCT_BY_SLUG_QUERYResult } from "@/sanity.types";
 import { StockBadge } from "../general/StockBadge";
 import { AddToCartButton } from "../general/AddToCartButton";
+import { TakeRequestButton } from "../general/TakeRequestButton";
 
 interface ProductInfoProps {
   product: NonNullable<PRODUCT_BY_SLUG_QUERYResult>;
@@ -29,9 +30,9 @@ export function ProductInfo({ product }: ProductInfoProps) {
       </h1>
 
       {/* Price */}
-      <p className="mt-4 text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
+      {/* <p className="mt-4 text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
         {formatPrice(product.price)}
-      </p>
+      </p> */}
 
       {/* Description */}
       {product.description && (
@@ -41,7 +42,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
       )}
 
       {/* Stock & Add to Cart */}
-      <div className="mt-6 flex flex-col gap-3">
+      {/* <div className="mt-6 flex flex-col gap-3">
         <StockBadge productId={product._id} stock={product.stock ?? 0} />
         <AddToCartButton
           productId={product._id}
@@ -50,17 +51,28 @@ export function ProductInfo({ product }: ProductInfoProps) {
           image={imageUrl ?? undefined}
           stock={product.stock ?? 0}
         />
+      </div> */}
+      <div className="mt-6 flex flex-col gap-3">
+        <StockBadge productId={product._id} stock={product.stock ?? 0} />
+
+        <TakeRequestButton
+          productId={product._id}
+          name={product.name ?? "Unknown Product"}
+          price={product.price ?? 0}
+          image={imageUrl ?? undefined}
+          slug={product._id}
+        />
       </div>
 
       {/* Metadata */}
       <div className="mt-6 space-y-2 border-t border-zinc-200 pt-6 dark:border-zinc-800">
-        
 
-          <div className="flex justify-between text-sm">
-            <span className="text-zinc-500 dark:text-zinc-400">Price</span>
-            <span className="font-medium capitalize text-zinc-900 dark:text-zinc-100">
-{formatPrice(product.price)}            </span>
-          </div>
+
+        {/* <div className="flex justify-between text-sm">
+          <span className="text-zinc-500 dark:text-zinc-400">Price</span>
+          <span className="font-medium capitalize text-zinc-900 dark:text-zinc-100">
+            {formatPrice(product.price)}            </span>
+        </div> */}
 
 
 

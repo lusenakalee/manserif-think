@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { AddToCartButton } from "../general/AddToCartButton";
 import { StockBadge } from "../general/StockBadge";
+import { TakeRequestButton } from "../general/TakeRequestButton";
 
 type Product = FILTER_PRODUCTS_BY_NAME_QUERYResult[number];
 
@@ -122,20 +123,27 @@ export function ProductCard({ product }: ProductCardProps) {
           </h3>
         </Link>
         <div className="flex items-baseline justify-between gap-2">
-          <p className="text-xl font-bold tracking-tight text-zinc-900 dark:text-white">
+          {/* <p className="text-xl font-bold tracking-tight text-zinc-900 dark:text-white">
             {formatPrice(product.price)}
-          </p>
+          </p> */}
           <StockBadge productId={product._id} stock={stock} />
         </div>
       </CardContent>
 
       <CardFooter className="mt-auto p-5 pt-0">
-        <AddToCartButton
+        {/* <AddToCartButton
           productId={product._id}
           name={product.name ?? "Unknown Product"}
           price={product.price ?? 0}
           image={mainImageUrl ?? undefined}
           stock={stock}
+        /> */}
+        <TakeRequestButton
+          productId={product._id}
+          name={product.name ?? "Unknown Product"}
+          price={product.price ?? 0}
+          image={mainImageUrl ?? undefined}
+          slug={product._id}
         />
       </CardFooter>
     </Card>
