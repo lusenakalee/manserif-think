@@ -2,7 +2,7 @@
 
 import ExhibitDetails from '@/components/exhibits/ExhibitDetails';
 import { urlFor } from '@/sanity/lib/image';
-import { EXHIBIT_BY_SLUG_QUERYResult } from '@/sanity.types';
+import { EXHIBIT_BY_SLUG_QUERY_RESULT } from '@/sanity.types';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -13,7 +13,7 @@ import { useRef } from 'react';
 gsap.registerPlugin(ScrollTrigger);
 
 interface ExhibitPageClientProps {
-  exhibit: NonNullable<EXHIBIT_BY_SLUG_QUERYResult>;
+  exhibit: NonNullable<EXHIBIT_BY_SLUG_QUERY_RESULT>;
   heroImageUrl: string | null;
 }
 
