@@ -38,7 +38,7 @@ const FlowingMenu: React.FC<FlowingMenuProps> = ({
   borderColor = '#fff'
 }) => {
   return (
-    <div className="w-full h-full overflow-hidden" style={{ backgroundColor: bgColor }}>
+    <div className="w-full h-1/2 overflow-hidden" style={{ backgroundColor: bgColor }}>
       <nav className="flex flex-col h-full m-0 p-0">
         {items.map((item, idx) => (
           <MenuItem
