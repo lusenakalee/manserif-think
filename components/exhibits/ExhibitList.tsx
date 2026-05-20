@@ -6,11 +6,13 @@ import FlowingMenu from "../ui/interactive/FlowingMenu";
 const ExhibitList = async () => {
   const exhibits = await client.fetch(FEATURED_EXHIBITS_QUERY);
 
-  const items = exhibits.map((exhibit) => ({
-    link: `/exhibits/${exhibit.slug?.current}`,
-    text: exhibit.title,
-    image: urlFor(exhibit.heroImage).width(800).height(600).url(),
-  }));
+  const items = exhibits
+    .filter((exhibit) => exhibit.heroImage !== null)
+    .map((exhibit) => ({
+      link: `/exhibits/${exhibit.slug?.current}`,
+      text: exhibit.title ?? '',
+      image: urlFor(exhibit.heroImage!).width(800).height(600).url(),
+    }));
 
   return (
     <div>
