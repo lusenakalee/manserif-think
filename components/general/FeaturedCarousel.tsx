@@ -1,27 +1,27 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-import Image from "next/image";
-import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+    Carousel,
+    CarouselContent,
+    CarouselItem,
+    CarouselNext,
+    CarouselPrevious,
+    type CarouselApi,
+} from "@/components/ui/carousel";
+import { cn } from "@/lib/utils";
+import type { FEATURED_PRODUCTS_QUERY_RESULT } from "@/sanity.types";
 import Autoplay from "embla-carousel-autoplay";
 import { ArrowRight } from "lucide-react";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-  type CarouselApi,
-} from "@/components/ui/carousel";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { cn, formatPrice } from "@/lib/utils";
-import type { FEATURED_PRODUCTS_QUERYResult } from "@/sanity.types";
+import Image from "next/image";
+import Link from "next/link";
+import { useCallback, useEffect, useState } from "react";
 
-type FeaturedProduct = FEATURED_PRODUCTS_QUERYResult[number];
+type FeaturedProduct = FEATURED_PRODUCTS_QUERY_RESULT[number];
 
 interface FeaturedCarouselProps {
-  products: FEATURED_PRODUCTS_QUERYResult;
+  products: FEATURED_PRODUCTS_QUERY_RESULT;
 }
 
 export function FeaturedCarousel({ products }: FeaturedCarouselProps) {

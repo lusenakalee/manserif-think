@@ -1,12 +1,12 @@
 "use client";
 
-import Link from "next/link";
-import Image from "next/image";
+import type { ALL_CATEGORIES_QUERY_RESULT } from "@/sanity.types";
 import { Grid2x2 } from "lucide-react";
-import type { ALL_CATEGORIES_QUERYResult } from "@/sanity.types";
+import Image from "next/image";
+import Link from "next/link";
 
 interface CategoryTilesProps {
-  categories: ALL_CATEGORIES_QUERYResult;
+  categories: ALL_CATEGORIES_QUERY_RESULT;
   activeCategory?: string;
 }
 

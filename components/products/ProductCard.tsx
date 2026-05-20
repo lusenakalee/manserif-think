@@ -2,16 +2,15 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { cn, formatPrice } from "@/lib/utils";
-import type { FILTER_PRODUCTS_BY_NAME_QUERYResult } from "@/sanity.types";
+import { cn } from "@/lib/utils";
+import type { FILTER_PRODUCTS_BY_NAME_QUERY_RESULT } from "@/sanity.types";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { AddToCartButton } from "../general/AddToCartButton";
 import { StockBadge } from "../general/StockBadge";
 import { TakeRequestButton } from "../general/TakeRequestButton";
 
-type Product = FILTER_PRODUCTS_BY_NAME_QUERYResult[number];
+type Product = FILTER_PRODUCTS_BY_NAME_QUERY_RESULT[number];
 
 interface ProductCardProps {
   product: Product;

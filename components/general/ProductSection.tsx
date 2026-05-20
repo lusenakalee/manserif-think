@@ -1,18 +1,18 @@
 "use client";
 
-import { useState } from "react";
-import { PanelLeftClose, PanelLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import type {
+    ALL_CATEGORIES_QUERY_RESULT,
+    FILTER_PRODUCTS_BY_NAME_QUERY_RESULT,
+} from "@/sanity.types";
+import { PanelLeft, PanelLeftClose } from "lucide-react";
+import { useState } from "react";
 import { ProductFilters } from "./ProductFilters";
 import { ProductGrid } from "./ProductGrid";
-import type {
-  ALL_CATEGORIES_QUERYResult,
-  FILTER_PRODUCTS_BY_NAME_QUERYResult,
-} from "@/sanity.types";
 
 interface ProductSectionProps {
-  categories: ALL_CATEGORIES_QUERYResult;
-  products: FILTER_PRODUCTS_BY_NAME_QUERYResult;
+  categories: ALL_CATEGORIES_QUERY_RESULT;
+  products: FILTER_PRODUCTS_BY_NAME_QUERY_RESULT;
   searchQuery: string;
 }
 

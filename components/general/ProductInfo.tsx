@@ -1,11 +1,11 @@
-import Link from "next/link";
 import { AddToCartButton } from "@/components/general/AddToCartButton";
 import { StockBadge } from "@/components/general/StockBadge";
 import { formatPrice } from "@/lib/utils";
-import type { PRODUCT_BY_SLUG_QUERYResult } from "@/sanity.types";
+import type { PRODUCT_BY_SLUG_QUERY_RESULT } from "@/sanity.types";
+import Link from "next/link";
 
 interface ProductInfoProps {
-  product: NonNullable<PRODUCT_BY_SLUG_QUERYResult>;
+  product: NonNullable<PRODUCT_BY_SLUG_QUERY_RESULT>;
 }
 
 export function ProductInfo({ product }: ProductInfoProps) {
