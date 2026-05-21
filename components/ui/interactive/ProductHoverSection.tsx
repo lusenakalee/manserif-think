@@ -1,0 +1,258 @@
+'use client';
+
+import React, { useRef, useState, useEffect } from 'react';
+import { gsap } from 'gsap';
+import { useGSAP } from '@gsap/react';
+import Image from 'next/image';
+import { cn } from '@/lib/utils';
+import Link from 'next/link';
+
+export interface ProductItem {
+  title: string;
+  subtitle: string;
+  image: string;
+  alt?: string;
+  slug: string;
+}
+
+interface ProductHoverSectionProps {
+  products: ProductItem[];
+  className?: string;
+  thumbnailWidth?: number;
+  thumbnailHeight?: number;
+}
+
+const ProductHoverSection: React.FC<ProductHoverSectionProps> = ({
+  products,
+  className,
+  thumbnailWidth = 250,
+  thumbnailHeight = 300,
+}) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const thumbnailRef = useRef<HTMLDivElement>(null);
+  const sliderRef = useRef<HTMLDivElement>(null);
+
+  const [isDesktop, setIsDesktop] = useState(true);
+  const [expandedIndex, setExpandedIndex] = useState<number | null>(null);
+  const [modal, setModal] = useState<{ active: boolean; index: number }>({
+    active: false,
+    index: 0,
+  });
+
+  useEffect(() => {
+    const checkDesktop = () => setIsDesktop(window.innerWidth >= 768);
+    checkDesktop();
+    window.addEventListener('resize', checkDesktop);
+    return () => window.removeEventListener('resize', checkDesktop);
+  }, []);
+
+  useGSAP(
+    () => {
+      if (!isDesktop || !thumbnailRef.current || !sliderRef.current || !containerRef.current) return;
+
+      gsap.set(thumbnailRef.current, {
+        scale: 0,
+        xPercent: -50,
+        yPercent: -50,
+        force3D: true,
+      });
+
+      gsap.set(sliderRef.current, { y: 0 });
+
+      const xTo = gsap.quickTo(thumbnailRef.current, 'x', {
+        duration: 0.5,
+        ease: 'power3.out',
+      });
+
+      const yTo = gsap.quickTo(thumbnailRef.current, 'y', {
+        duration: 0.5,
+        ease: 'power3.out',
+      });
+
+      let hasPosition = false;
+
+      const handleMouseMove = (e: MouseEvent) => {
+        const rect = containerRef.current!.getBoundingClientRect();
+        const relX = e.clientX - rect.left;
+        const relY = e.clientY - rect.top;
+
+        if (!hasPosition) {
+          gsap.set(thumbnailRef.current, { x: relX, y: relY });
+          hasPosition = true;
+        } else {
+          xTo(relX);
+          yTo(relY);
+        }
+      };
+
+      window.addEventListener('mousemove', handleMouseMove);
+      return () => window.removeEventListener('mousemove', handleMouseMove);
+    },
+    { dependencies: [isDesktop] }
+  );
+
+  useGSAP(
+    () => {
+      if (!isDesktop || !thumbnailRef.current || !sliderRef.current) return;
+
+      if (modal.active) {
+        gsap.to(thumbnailRef.current, {
+          scale: 1,
+          opacity: 1,
+          visibility: 'visible',
+          duration: 0.4,
+          ease: 'power2.out',
+          overwrite: 'auto',
+        });
+
+        gsap.to(sliderRef.current, {
+          y: -modal.index * thumbnailHeight,
+          duration: 0.4,
+          ease: 'power2.out',
+          overwrite: 'auto',
+        });
+      } else {
+        gsap.to(thumbnailRef.current, {
+          scale: 0,
+          opacity: 0,
+          duration: 0.3,
+          ease: 'power2.in',
+          overwrite: 'auto',
+          onComplete: () => {
+            gsap.set(thumbnailRef.current, { visibility: 'hidden' });
+          },
+        });
+      }
+    },
+    { dependencies: [modal.active, modal.index, isDesktop, thumbnailHeight] }
+  );
+
+  if (isDesktop) {
+    return (
+      <div
+        ref={containerRef}
+        onMouseLeave={() => setModal({ active: false, index: 0 })}
+        className={cn(
+          'relative flex flex-col w-full max-w-[1000px] mx-auto py-12',
+          className
+        )}
+      >
+        <div className="flex flex-col w-full">
+          {products.map((product, index) => (
+            <Link
+              key={index}
+              href={`/products/${product.slug}`}
+              onMouseEnter={() => setModal({ active: true, index })}
+              className={cn(
+                'w-full flex items-center justify-between px-6 md:px-16 py-8 md:py-12 border-t border-white/20 cursor-pointer transition-opacity duration-300',
+                modal.active && modal.index === index && 'opacity-60'
+              )}
+            >
+              <h2
+                className={cn(
+                  'text-2xl md:text-4xl lg:text-5xl font-medium text-neutral-800 transition-transform duration-500 ease-out',
+                  modal.active && modal.index === index && '-translate-x-4'
+                )}
+              >
+                {product.title}
+              </h2>
+
+              {/* <p
+                className={cn(
+                  'text-sm md:text-base text-neutral-800 transition-transform duration-500 ease-out',
+                  modal.active && modal.index === index && 'translate-x-4'
+                )}
+              >
+                {product.subtitle}
+              </p> */}
+            </Link>
+          ))}
+
+          <div className="w-full h-px bg-white/20" />
+        </div>
+
+        <div
+          ref={thumbnailRef}
+          className="absolute top-0 left-0 z-50 overflow-hidden rounded-lg border border-white/20 shadow-2xl pointer-events-none"
+          style={{
+            width: thumbnailWidth,
+            height: thumbnailHeight,
+            opacity: 0,
+            visibility: 'hidden',
+          }}
+        >
+          <div
+            ref={sliderRef}
+            className="relative w-full"
+            style={{
+              height: thumbnailHeight * products.length,
+            }}
+          >
+            {products.map((product, index) => (
+              <div
+                key={index}
+                className="absolute left-0 w-full"
+                style={{
+                  top: index * thumbnailHeight,
+                  width: thumbnailWidth,
+                  height: thumbnailHeight,
+                }}
+              >
+                <Image
+                  src={product.image}
+                  alt={product.alt ?? product.title}
+                  width={thumbnailWidth}
+                  height={thumbnailHeight}
+                  className="w-full h-full object-cover object-top"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={cn('flex flex-col w-full max-w-[1000px] mx-auto py-6', className)}>
+      {products.map((product, index) => (
+        <div key={index} className="border-b border-white/20 last:border-b-0">
+          <button
+            type="button"
+            onClick={() => setExpandedIndex(expandedIndex === index ? null : index)}
+            className="w-full flex items-center justify-between px-4 py-5 text-left active:opacity-80 transition-opacity"
+          >
+            <h2 className="text-xl  font-medium text-neutral-800">{product.title}</h2>
+            {/* <p className="text-sm text-neutral-500">{product.subtitle}</p> */}
+            <span className="ml-2 text-neutral-800 text-lg">
+              {expandedIndex === index ? '−' : '+'}
+            </span>
+          </button>
+
+          <div
+            className={cn(
+              'overflow-hidden transition-all duration-300 ease-out',
+              expandedIndex === index ? 'max-h-64 opacity-100' : 'max-h-0 opacity-0'
+            )}
+          >
+            <div className="px-4 pb-4">
+              <Link href={`/products/${product.slug}`}>
+                <div className="relative w-full aspect-[4/3] rounded-lg overflow-hidden border border-white/20">
+                  <Image
+                    src={product.image}
+                    alt={product.alt ?? product.title}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 400px"
+                  />
+                </div>
+              </Link>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default ProductHoverSection;

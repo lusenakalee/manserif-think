@@ -9,6 +9,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRef } from 'react';
+import { ArrowRight } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -182,13 +183,25 @@ export default function ExhibitPageClient({ exhibit, heroImageUrl }: ExhibitPage
                     {String(index + 1).padStart(2, '0')}
                   </span>
 
-                  {/* Subtle diagonal accent */}
-                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-linear-to-br from-white/5 via-transparent to-transparent" />
+                  {/* Product image */}
+                  {product.images && (
+                    <div className="absolute inset-0">
+                      <Image
+                        src={urlFor(product.images).width(720).height(960).url()}
+                        alt={product.name ?? ''}
+                        fill
+                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                        sizes="(max-width: 768px) 80vw, 28vw"
+                      />
+                      {/* Gradient overlay so text stays legible */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                    </div>
+                  )}
 
                   {/* Product info */}
                   <div className="relative z-10 p-6 border-t border-white/10 group-hover:border-white/20 transition-colors duration-300">
                     <p className="text-[#F5F2ED] font-serif text-lg md:text-xl font-light leading-snug mb-1 group-hover:translate-x-1 transition-transform duration-300">
-                      {product.title}
+                      {product.name}
                     </p>
                     <span className="text-xs uppercase tracking-[0.2em] text-gray-500 group-hover:text-gray-400 transition-colors duration-300">
                       View Work →
@@ -303,12 +316,12 @@ export default function ExhibitPageClient({ exhibit, heroImageUrl }: ExhibitPage
                       const content = (
                         <div className="flex items-center gap-3">
                           {logoUrl && (
-                            <div className="relative w-10 h-10 shrink-0 grayscale hover:grayscale-0 transition-all">
+                            <div className="relative rounded-full w-10 h-10 shrink-0 grayscale hover:grayscale-0 transition-all">
                               <Image
                                 src={logoUrl}
                                 alt={partner.logo?.alt ?? partner.name ?? ''}
                                 fill
-                                className="object-contain"
+                                className="object-contain rounded-full"
                               />
                             </div>
                           )}
@@ -349,10 +362,14 @@ export default function ExhibitPageClient({ exhibit, heroImageUrl }: ExhibitPage
               )}
 
               <div className="lg:col-span-2">
-                <div className="overflow-hidden mb-4">
+
+                <div className="overflow-hidden mb-4 flex ">
+                  <Link className='flex' href="/">
                   <h3 className="reveal-text text-xs uppercase tracking-[0.2em] text-gray-500">
-                    Projets Suivants
+                   Homepage
                   </h3>
+                   <ArrowRight className=' h-4 w-4'/>
+                   </Link>
                 </div>
               </div>
             </div>

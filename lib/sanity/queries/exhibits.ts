@@ -92,8 +92,13 @@ export const EXHIBIT_BY_SLUG_QUERY = defineQuery(`
     },
     featuredProducts[]-> {
       _id,
-      title,
+      name,
       slug,
+      images[0] {
+        asset,
+        hotspot,
+        crop,
+      },
     },
     partners[] {
       name,

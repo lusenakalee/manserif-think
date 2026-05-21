@@ -15,14 +15,14 @@ const ExhibitList = async () => {
     }));
 
   return (
-    <div>
+    <div className='bg-indigo-500 '>
       <div className="mx-auto bg-[#120F17] py-5 lg:mx-0 justify center items-center w-full text-center">
         <h2 className="text-4xl font-semibold tracking-tight text-pretty text-white sm:text-5xl">
           Featured Exhibitions
         </h2>
       </div>
 
-      <div style={{ height: "300px", position: "relative" }}>
+      <div className="" style={{  position: "relative" }}>
         <FlowingMenu
           items={items}
           speed={15}

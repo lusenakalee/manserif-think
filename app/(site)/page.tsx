@@ -4,6 +4,7 @@ import VideoSnippets from "@/components/landing/VideoSnippets";
 import { CinematicFooter } from "@/components/motion-footer";
 import ExhibitList from "@/components/exhibits/ExhibitList";
 import { ProjectHoverSectionDemo } from "@/components/Projecthoversectiondemo";
+import { ProductHoverSectionDemo } from "@/components/ProductHoverSectionDemo";
 
 export default function Home() {
   return (
@@ -11,7 +12,7 @@ export default function Home() {
       <HeroSection/>
       {/* <ArtSnippet/> */}
       <ExhibitList/>
-      <ProjectHoverSectionDemo/>
+      <ProductHoverSectionDemo/>
     <TextMask/>
       <VideoSnippets/>
       {/* <SculpturesSnippet/> */}
