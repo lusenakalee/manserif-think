@@ -365,7 +365,7 @@ export function CinematicFooter() {
                         <line x1="22" y1="2" x2="11" y2="13" />
                         <polygon points="22 2 15 22 11 13 2 9 22 2" />
                       </svg>
-                      Subscribe to newsletter
+                      Let&apos;s connect
                     </>
                   )}
                 </MagneticButton>
@@ -384,7 +384,7 @@ export function CinematicFooter() {
               </div>
 
               {/* Secondary links */}
-              <div className="flex flex-wrap justify-center gap-3 md:gap-6 w-full mt-2">
+              {/* <div className="flex flex-wrap justify-center gap-3 md:gap-6 w-full mt-2">
                 <MagneticButton as="a" href="#" className="footer-glass-pill px-6 py-3 rounded-full text-muted-foreground font-medium text-xs md:text-sm hover:text-foreground">
                   Privacy Policy
                 </MagneticButton>
@@ -394,7 +394,7 @@ export function CinematicFooter() {
                 <MagneticButton as="a" href="#" className="footer-glass-pill px-6 py-3 rounded-full text-muted-foreground font-medium text-xs md:text-sm hover:text-foreground">
                   Support
                 </MagneticButton>
-              </div>
+              </div> */}
 
             </div>
           </div>

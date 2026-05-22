@@ -1,5 +1,5 @@
 import { CinematicFooter } from '@/components/motion-footer'
-import { AboutMeSec } from '@/components/portfolio/AboutMeSec'
+import AboutMeSec  from '@/components/portfolio/AboutMeSec'
 import InstagramFeed from '@/components/portfolio/InstagramFeed'
 import PinSection from '@/components/portfolio/PinSection'
 import PortfolioHeader from '@/components/portfolio/PortfolioHeader'
@@ -16,10 +16,10 @@ export default function page() {
   return (
     <div>
            <PortfolioHeader/>
-       <div className='pb-24'>  <AboutMeSec/></div>
-         <div className="relative mt-20">
+         <AboutMeSec/>
+         {/* <div className="relative mt-20">
                    <PinSection />
-                   </div>
+                   </div> */}
 
            {/* <ProjectsList/> */}
            <SlidingImages/>
