@@ -374,19 +374,7 @@ export default function ExhibitPageClient({ exhibit, heroImageUrl }: ExhibitPage
               </div>
             </div>
 
-            <div className="overflow-hidden">
-              <div className="reveal-text flex flex-col md:flex-row justify-between items-center pt-8 border-t border-gray-200 text-xs uppercase tracking-widest text-gray-500">
-                <p>© {new Date().getFullYear()} MERSI ARCHITECTURE</p>
-                <div className="flex gap-8 mt-4 md:mt-0">
-                  <Link href="#" className="hover:text-gray-800 transition-colors">
-                    Mentions légales
-                  </Link>
-                  <a href="#" className="hover:text-gray-800 transition-colors">
-                    Website by FLOT NOIR
-                  </a>
-                </div>
-              </div>
-            </div>
+        
           </div>
         </footer>
 
