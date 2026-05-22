@@ -12,10 +12,10 @@ const ProductHoverSectionDemo = async () => {
   const hoverProducts = featuredProducts
     .filter((product) => product.slug && product.images?.[0]?.asset?.url)
     .map((product) => ({
-      title: product.name,
+      title: product.name ?? "", // fallback to empty string
       subtitle: `£${product.price?.toFixed(2) ?? "0.00"}`,
       image: product.images![0].asset!.url!,
-      alt: product.name,
+      alt: product.name ?? undefined, // or undefined to match `alt?: string`
       slug: product.slug!,
     }));
 
