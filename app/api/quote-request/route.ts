@@ -6,7 +6,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 const clerk = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
 
 const OWNER_EMAIL = "lusenakalee@gmail.com";
-const FROM_EMAIL = "<anything>@eoulkeoqua.resend.app";
+const FROM_EMAIL = "onboarding@resend.dev";
 
 export async function POST(req: NextRequest) {
   try {
