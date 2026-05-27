@@ -66,20 +66,22 @@ export default function AboutMeSec() {
         <div className="space-y-16">
           <p className="reveal-text text-xl md:text-3xl leading-[1.8] font-medium tracking-tight">
             {splitWords(
-              "My name is Warren Gathigi Kamau, and Man Serif.Think is the creative space where thought, faith, and artistry converge. It is more than an art studio—it is a living thought bubble, a personal archive of vision and imagination, where each piece reflects a journey of introspection, spiritual inquiry, and creative expression. Rooted in faith and guided by purpose, this portfolio marks the beginning of a path whose destination is unknown, yet whose foundation is firmly entrusted to God."
+              `My name is Warren Kamau, an Artist and Fashion Designer from Nairobi, Kenya. I am currently pursuing a Bachelor's Fashion Degree at IFA Paris while working as a freelance artist.`
             )}
           </p>
 
           <p className="reveal-text text-xl md:text-3xl leading-[1.8] font-medium tracking-tight">
             {splitWords(
-              "Through Man Serif.Think, I present a collection of conceptual paintings, prints, collages, and sculptures that reinterpret biblical anecdotes through contemporary visual language. My work spans both abstract and realistic styles, recontextualizing ancient truths to make them resonate with the modern mind. Each artwork invites viewers to engage with timeless spiritual narratives in fresh, familiar, and thought-provoking ways—while also offering original pieces, samples, and products available for collection and purchase."
-            )}
+              `My work centre's around the Christian Faith, seeking to present it's Truths through and from a  contemporary point of view with the aim of igniting thought.`
+
+)}
           </p>
 
           <p className="reveal-text text-xl md:text-3xl leading-[1.8] font-medium tracking-tight">
             {splitWords(
-              "This is the start of a new journey—one shaped by curiosity, devotion, and the courage to create without knowing exactly where the road leads. Every piece is a step forward, a conversation between the sacred and the present, and a testament to the belief that what begins with faith is carried through to completion. Welcome to Man Serif.Think, where art becomes both reflection and revelation."
-            )}
+              `My current exhibition in Paris at La Galerie in collaboration with the DIASONAMA foundation is an introduction to my work, showcasing former works and future projects. I have worked using different media such as a short films and sculptures, as I continually seek to explore the different art paths that will effectively communicate my message, that is, The Good News of Jesus Christ.`
+
+)}
           </p>
         </div>
       </div>
