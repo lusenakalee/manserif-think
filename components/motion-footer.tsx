@@ -1,5 +1,6 @@
 "use client";
 import * as React from "react";
+import { Loader2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -231,6 +232,7 @@ export function CinematicFooter() {
   const [email, setEmail] = useState("");
   const [subscribed, setSubscribed] = useState(false);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -262,15 +264,28 @@ export function CinematicFooter() {
     return () => ctx.revert();
   }, []);
 
-  const handleSubscribe = () => {
+  const handleSubscribe = async () => {
     const trimmed = email.trim();
     if (!trimmed || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
       setError("Please enter a valid email address.");
       return;
     }
     setError("");
-    setSubscribed(true);
-    // TODO: wire up to your newsletter provider here
+    setLoading(true);
+    try {
+      const res = await fetch("/api/newsletter", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: trimmed }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error ?? "Something went wrong");
+      setSubscribed(true);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : "Failed to subscribe. Try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
@@ -338,7 +353,7 @@ export function CinematicFooter() {
                     value={email}
                     onChange={(e) => { setEmail(e.target.value); setError(""); }}
                     onKeyDown={(e) => e.key === "Enter" && handleSubscribe()}
-                    disabled={subscribed}
+                    disabled={subscribed || loading}
                     aria-label="Email address for newsletter"
                   />
                 </div>
@@ -357,6 +372,11 @@ export function CinematicFooter() {
                         <path d="M5 13l4 4L19 7" />
                       </svg>
                       Subscribed
+                    </>
+                  ) : loading ? (
+                    <>
+                      <Loader2 className="w-5 h-5 shrink-0 animate-spin" />
+                      Sending…
                     </>
                   ) : (
                     <>
