@@ -44,7 +44,7 @@ const { sub: userId } = await verifyToken(token, { secretKey: process.env.CLERK_
       );
     }
     const formattedPrice = price
-      ? `KES ${Number(price).toLocaleString("en-KE")}`
+      ? `Euros ${Number(price).toLocaleString("en-KE")}`
       : "Price not listed";
 
     // ── 1. Notify the owner ──────────────────────────────────────────────────
