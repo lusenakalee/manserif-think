@@ -77,12 +77,7 @@ export default function AboutMeSec() {
 )}
           </p>
 
-          <p className="reveal-text text-xl md:text-3xl leading-[1.8] font-medium tracking-tight">
-            {splitWords(
-              `My current exhibition in Paris at La Galerie in collaboration with the DIASONAMA foundation is an introduction to my work, showcasing former works and future projects. I have worked using different media such as a short films and sculptures, as I continually seek to explore the different art paths that will effectively communicate my message, that is, The Good News of Jesus Christ.`
-
-)}
-          </p>
+         
         </div>
       </div>
     </section>
