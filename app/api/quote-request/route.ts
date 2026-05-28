@@ -5,7 +5,7 @@ import { createClerkClient, verifyToken } from "@clerk/nextjs/server";
 const resend = new Resend(process.env.RESEND_API_KEY);
 const clerk = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
 
-const OWNER_EMAIL = "lusenakalee@gmail.com";
+const OWNER_EMAIL = ["lusenakalee@gmail.com", "warrenkamau1@gmail.com"];
 const FROM_EMAIL = "onboarding@resend.dev";
 
 export async function POST(req: NextRequest) {

@@ -3,7 +3,7 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-const OWNER_EMAIL = "lusenakalee@gmail.com";
+const OWNER_EMAIL = ["lusenakalee@gmail.com", "warrenkamau1@gmail.com"];
 // Use your verified domain in production; for testing use onboarding@resend.dev
 const FROM_EMAIL = process.env.RESEND_FROM_EMAIL ?? "onboarding@resend.dev";
 
