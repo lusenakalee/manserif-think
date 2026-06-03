@@ -5,11 +5,12 @@ import { CinematicFooter } from "@/components/motion-footer";
 import ExhibitList from "@/components/exhibits/ExhibitList";
 import { ProjectHoverSectionDemo } from "@/components/Projecthoversectiondemo";
 import { ProductHoverSectionDemo } from "@/components/ProductHoverSectionDemo";
+import AnimatedHero from "@/components/landing/AnimatedHero";
 
 export default function Home() {
   return (
     <div >
-      <HeroSection/>
+      <AnimatedHero/>
       {/* <ArtSnippet/> */}
       <ExhibitList/>
       <ProductHoverSectionDemo/>

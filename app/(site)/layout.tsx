@@ -20,7 +20,7 @@ export default function SiteLayout({
       <CartStoreProvider>
         <div className="relative z-10">
           {/* <Header /> */}
-          <SiteNav/>
+          {/* <SiteNav/> */}
         </div>
         <main className="relative z-0 ">{children}</main>
         <CartSheet />
