@@ -1,6 +1,7 @@
 import { sanityFetch } from "@/sanity/lib/live";
 import { FEATURED_PRODUCTS_QUERY } from "@/lib/sanity/queries/products";
 import ProductHoverSection from "./ui/interactive/ProductHoverSection";
+import { ImagesBadgeDemo } from "./landing/ImagesBadgeDemo";
 
 const ProductHoverSectionDemo = async () => {
   const { data: featuredProducts } = await sanityFetch({
@@ -22,9 +23,13 @@ const ProductHoverSectionDemo = async () => {
   return (
     <div
       id="featured"
-      className="w-full min-h-[500px] flex items-center justify-center bg-gray-200 rounded-lg py-12"
+      className="w-full min-h-[500px]  items-center justify-center bg-gray-200 rounded-lg py-12"
     >
+      <div className="w-full ">
+
       <ProductHoverSection products={hoverProducts} />
+        </div>
+      <ImagesBadgeDemo/>
     </div>
   );
 };
