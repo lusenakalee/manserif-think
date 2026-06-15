@@ -1,8 +1,8 @@
-import DomeGalleryDemo from '@/components/shop/DomeGalleryDemo'
-import React from 'react'
+import Slider from '@/components/projects/Slider'
+
 
 export default function page() {
   return (
-    <DomeGalleryDemo/>
+    <Slider/>
   )
 }
