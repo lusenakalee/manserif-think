@@ -25,11 +25,13 @@ const ProductHoverSectionDemo = async () => {
       id="featured"
       className="w-full min-h-[500px]  items-center justify-center bg-gray-200 rounded-lg py-12"
     >
+
+      <h2 className="text-3xl font-bold text-center mb-8">Featured Work</h2>
       <div className="w-full ">
 
-      <ProductHoverSection products={hoverProducts} />
-        </div>
-      <ImagesBadgeDemo/>
+        <ProductHoverSection products={hoverProducts} />
+      </div>
+      <ImagesBadgeDemo />
     </div>
   );
 };

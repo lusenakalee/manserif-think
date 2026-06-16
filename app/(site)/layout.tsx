@@ -18,9 +18,9 @@ export default function SiteLayout({
   return (
     <ClerkProvider>
       <CartStoreProvider>
-        <div className="relative z-10">
+        <div className="absolute w-full z-10">
           {/* <Header /> */}
-          {/* <SiteNav/> */}
+          <SiteNav/>
         </div>
         <main className="relative z-0 ">{children}</main>
         <CartSheet />

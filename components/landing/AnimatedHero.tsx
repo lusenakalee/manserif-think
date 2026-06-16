@@ -217,7 +217,7 @@ export default function AnimatedHero() {
         />
         <div className="w-full h-screen flex items-center justify-center opacity-25">
           <img
-            src="/images/general4.webp"
+            src="/images/manserif-white.png"
             alt="Logo"
             className="animate-pulse h-48 w-auto"
           />
@@ -225,32 +225,7 @@ export default function AnimatedHero() {
       </div>
 
       {/* ── Navigation ──────────────────────────────────────────────────── */}
-      <nav
-        data-split-nav
-        className="fixed top-0 z-[2] flex w-full items-start justify-between p-8"
-      >
-        {/* Logo / brand */}
-        <div className="nav-logo">
-          <a href="#" data-split className="text-white no-underline">
-            ManSerif.Think
-            <br />
-            Design with Intent.
-          </a>
-        </div>
-
-        {/* Nav links */}
-        <div className="flex gap-16 max-[1000px]:flex-col max-[1000px]:items-end max-[1000px]:gap-0">
-          <a href="#" data-split className="text-white no-underline">
-            Work
-          </a>
-          <a href="#" data-split className="text-white no-underline">
-            Catalogue
-          </a>
-          <a href="#" data-split className="text-white no-underline">
-            About
-          </a>
-        </div>
-      </nav>
+      
 
       {/* ── Hero ────────────────────────────────────────────────────────── */}
       <section className="relative h-svh w-full overflow-hidden">
