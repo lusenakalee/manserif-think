@@ -16,6 +16,15 @@ export const ALL_EXHIBITS_QUERY = defineQuery(`
       crop,
       alt
     },
+    heroVideo {
+      asset-> {
+        _id,
+        url,
+        mimeType,
+        originalFilename,
+        size
+      }
+    },
     startDateTime,
     endDateTime,
     exhibitLocation {
@@ -46,6 +55,15 @@ export const FEATURED_EXHIBITS_QUERY = defineQuery(`
       crop,
       alt
     },
+    heroVideo {
+      asset-> {
+        _id,
+        url,
+        mimeType,
+        originalFilename,
+        size
+      }
+    },
     startDateTime,
     endDateTime,
     exhibitLocation {
@@ -74,6 +92,15 @@ export const EXHIBIT_BY_SLUG_QUERY = defineQuery(`
       hotspot,
       crop,
       alt
+    },
+    heroVideo {
+      asset-> {
+        _id,
+        url,
+        mimeType,
+        originalFilename,
+        size
+      }
     },
     images[] {
       asset,

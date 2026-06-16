@@ -59,6 +59,16 @@ export const exhibitType = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: 'heroVideo',
+      title: 'Hero Video',
+      type: 'file',
+      description:
+        'Optional video for the hero section (e.g. an MP4). If provided, your front end can choose to show this instead of, or alongside, the Hero Image.',
+      options: {
+        accept: 'video/*',
+      },
+    }),
+    defineField({
       name: 'images',
       title: 'Exhibit Images',
       type: 'array',
