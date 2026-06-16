@@ -107,6 +107,13 @@ export type Project = {
   order?: number;
 };
 
+export type SanityFileAssetReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "sanity.fileAsset";
+};
+
 export type ProductReference = {
   _ref: string;
   _type: "reference";
@@ -132,6 +139,11 @@ export type Exhibit = {
     crop?: SanityImageCrop;
     alt?: string;
     _type: "image";
+  };
+  heroVideo?: {
+    asset?: SanityFileAssetReference;
+    media?: unknown;
+    _type: "file";
   };
   images?: Array<{
     asset?: SanityImageAssetReference;
@@ -410,6 +422,7 @@ export type AllSanitySchemaTypes =
   | SanityImageHotspot
   | Slug
   | Project
+  | SanityFileAssetReference
   | ProductReference
   | Exhibit
   | CustomerReference
@@ -508,7 +521,7 @@ export type CUSTOMER_BY_STRIPE_ID_QUERY_RESULT = {
 
 // Source: lib/sanity/queries/exhibits.ts
 // Variable: ALL_EXHIBITS_QUERY
-// Query: *[_type == "exhibit"] | order(order asc, startDateTime desc) {    _id,    _createdAt,    title,    slug,    subtitle,    exhibitDescription,    artistDescription,    heroImage {      asset,      hotspot,      crop,      alt    },    startDateTime,    endDateTime,    exhibitLocation {      venueName,      address,      city,      country,      mapsUrl    },    isFeatured,    order  }
+// Query: *[_type == "exhibit"] | order(order asc, startDateTime desc) {    _id,    _createdAt,    title,    slug,    subtitle,    exhibitDescription,    artistDescription,    heroImage {      asset,      hotspot,      crop,      alt    },    heroVideo {      asset-> {        _id,        url,        mimeType,        originalFilename,        size      }    },    startDateTime,    endDateTime,    exhibitLocation {      venueName,      address,      city,      country,      mapsUrl    },    isFeatured,    order  }
 export type ALL_EXHIBITS_QUERY_RESULT = Array<{
   _id: string;
   _createdAt: string;
@@ -522,6 +535,15 @@ export type ALL_EXHIBITS_QUERY_RESULT = Array<{
     hotspot: SanityImageHotspot | null;
     crop: SanityImageCrop | null;
     alt: string | null;
+  } | null;
+  heroVideo: {
+    asset: {
+      _id: string;
+      url: string | null;
+      mimeType: string | null;
+      originalFilename: string | null;
+      size: number | null;
+    } | null;
   } | null;
   startDateTime: string | null;
   endDateTime: string | null;
@@ -538,7 +560,7 @@ export type ALL_EXHIBITS_QUERY_RESULT = Array<{
 
 // Source: lib/sanity/queries/exhibits.ts
 // Variable: FEATURED_EXHIBITS_QUERY
-// Query: *[_type == "exhibit" && isFeatured == true] | order(order asc, startDateTime desc) {    _id,    _createdAt,    title,    slug,    subtitle,    exhibitDescription,    artistDescription,    heroImage {      asset,      hotspot,      crop,      alt    },    startDateTime,    endDateTime,    exhibitLocation {      venueName,      address,      city,      country,      mapsUrl    },    order  }
+// Query: *[_type == "exhibit" && isFeatured == true] | order(order asc, startDateTime desc) {    _id,    _createdAt,    title,    slug,    subtitle,    exhibitDescription,    artistDescription,    heroImage {      asset,      hotspot,      crop,      alt    },    heroVideo {      asset-> {        _id,        url,        mimeType,        originalFilename,        size      }    },    startDateTime,    endDateTime,    exhibitLocation {      venueName,      address,      city,      country,      mapsUrl    },    order  }
 export type FEATURED_EXHIBITS_QUERY_RESULT = Array<{
   _id: string;
   _createdAt: string;
@@ -552,6 +574,15 @@ export type FEATURED_EXHIBITS_QUERY_RESULT = Array<{
     hotspot: SanityImageHotspot | null;
     crop: SanityImageCrop | null;
     alt: string | null;
+  } | null;
+  heroVideo: {
+    asset: {
+      _id: string;
+      url: string | null;
+      mimeType: string | null;
+      originalFilename: string | null;
+      size: number | null;
+    } | null;
   } | null;
   startDateTime: string | null;
   endDateTime: string | null;
@@ -567,7 +598,7 @@ export type FEATURED_EXHIBITS_QUERY_RESULT = Array<{
 
 // Source: lib/sanity/queries/exhibits.ts
 // Variable: EXHIBIT_BY_SLUG_QUERY
-// Query: *[_type == "exhibit" && slug.current == $slug][0] {    _id,    _createdAt,    title,    slug,    subtitle,    exhibitDescription,    artistDescription,    heroImage {      asset,      hotspot,      crop,      alt    },    images[] {      asset,      hotspot,      crop,      alt    },    startDateTime,    endDateTime,    exhibitLocation {      venueName,      address,      city,      country,      mapsUrl    },    featuredProducts[]-> {      _id,      name,      slug,      images[0] {        asset,        hotspot,        crop,      },    },    partners[] {      name,      role,      logo {        asset,        hotspot,        crop,        alt      },      website    },    isFeatured,    order  }
+// Query: *[_type == "exhibit" && slug.current == $slug][0] {    _id,    _createdAt,    title,    slug,    subtitle,    exhibitDescription,    artistDescription,    heroImage {      asset,      hotspot,      crop,      alt    },    heroVideo {      asset-> {        _id,        url,        mimeType,        originalFilename,        size      }    },    images[] {      asset,      hotspot,      crop,      alt    },    startDateTime,    endDateTime,    exhibitLocation {      venueName,      address,      city,      country,      mapsUrl    },    featuredProducts[]-> {      _id,      name,      slug,      images[0] {        asset,        hotspot,        crop,      },    },    partners[] {      name,      role,      logo {        asset,        hotspot,        crop,        alt      },      website    },    isFeatured,    order  }
 export type EXHIBIT_BY_SLUG_QUERY_RESULT = {
   _id: string;
   _createdAt: string;
@@ -581,6 +612,15 @@ export type EXHIBIT_BY_SLUG_QUERY_RESULT = {
     hotspot: SanityImageHotspot | null;
     crop: SanityImageCrop | null;
     alt: string | null;
+  } | null;
+  heroVideo: {
+    asset: {
+      _id: string;
+      url: string | null;
+      mimeType: string | null;
+      originalFilename: string | null;
+      size: number | null;
+    } | null;
   } | null;
   images: Array<{
     asset: SanityImageAssetReference | null;
@@ -1033,9 +1073,9 @@ declare module "@sanity/client" {
     '*[\n  _type == "category"\n  && slug.current == $slug\n][0] {\n  _id,\n  title,\n  "slug": slug.current,\n  "image": image{\n    asset->{\n      _id,\n      url\n    },\n    hotspot\n  }\n}': CATEGORY_BY_SLUG_QUERY_RESULT;
     '*[\n  _type == "customer"\n  && email == $email\n][0]{\n  _id,\n  email,\n  name,\n  clerkUserId,\n  stripeCustomerId,\n  createdAt\n}': CUSTOMER_BY_EMAIL_QUERY_RESULT;
     '*[\n  _type == "customer"\n  && stripeCustomerId == $stripeCustomerId\n][0]{\n  _id,\n  email,\n  name,\n  clerkUserId,\n  stripeCustomerId,\n  createdAt\n}': CUSTOMER_BY_STRIPE_ID_QUERY_RESULT;
-    '\n  *[_type == "exhibit"] | order(order asc, startDateTime desc) {\n    _id,\n    _createdAt,\n    title,\n    slug,\n    subtitle,\n    exhibitDescription,\n    artistDescription,\n    heroImage {\n      asset,\n      hotspot,\n      crop,\n      alt\n    },\n    startDateTime,\n    endDateTime,\n    exhibitLocation {\n      venueName,\n      address,\n      city,\n      country,\n      mapsUrl\n    },\n    isFeatured,\n    order\n  }\n': ALL_EXHIBITS_QUERY_RESULT;
-    '\n  *[_type == "exhibit" && isFeatured == true] | order(order asc, startDateTime desc) {\n    _id,\n    _createdAt,\n    title,\n    slug,\n    subtitle,\n    exhibitDescription,\n    artistDescription,\n    heroImage {\n      asset,\n      hotspot,\n      crop,\n      alt\n    },\n    startDateTime,\n    endDateTime,\n    exhibitLocation {\n      venueName,\n      address,\n      city,\n      country,\n      mapsUrl\n    },\n    order\n  }\n': FEATURED_EXHIBITS_QUERY_RESULT;
-    '\n  *[_type == "exhibit" && slug.current == $slug][0] {\n    _id,\n    _createdAt,\n    title,\n    slug,\n    subtitle,\n    exhibitDescription,\n    artistDescription,\n    heroImage {\n      asset,\n      hotspot,\n      crop,\n      alt\n    },\n    images[] {\n      asset,\n      hotspot,\n      crop,\n      alt\n    },\n    startDateTime,\n    endDateTime,\n    exhibitLocation {\n      venueName,\n      address,\n      city,\n      country,\n      mapsUrl\n    },\n    featuredProducts[]-> {\n      _id,\n      name,\n      slug,\n      images[0] {\n        asset,\n        hotspot,\n        crop,\n      },\n    },\n    partners[] {\n      name,\n      role,\n      logo {\n        asset,\n        hotspot,\n        crop,\n        alt\n      },\n      website\n    },\n    isFeatured,\n    order\n  }\n': EXHIBIT_BY_SLUG_QUERY_RESULT;
+    '\n  *[_type == "exhibit"] | order(order asc, startDateTime desc) {\n    _id,\n    _createdAt,\n    title,\n    slug,\n    subtitle,\n    exhibitDescription,\n    artistDescription,\n    heroImage {\n      asset,\n      hotspot,\n      crop,\n      alt\n    },\n    heroVideo {\n      asset-> {\n        _id,\n        url,\n        mimeType,\n        originalFilename,\n        size\n      }\n    },\n    startDateTime,\n    endDateTime,\n    exhibitLocation {\n      venueName,\n      address,\n      city,\n      country,\n      mapsUrl\n    },\n    isFeatured,\n    order\n  }\n': ALL_EXHIBITS_QUERY_RESULT;
+    '\n  *[_type == "exhibit" && isFeatured == true] | order(order asc, startDateTime desc) {\n    _id,\n    _createdAt,\n    title,\n    slug,\n    subtitle,\n    exhibitDescription,\n    artistDescription,\n    heroImage {\n      asset,\n      hotspot,\n      crop,\n      alt\n    },\n    heroVideo {\n      asset-> {\n        _id,\n        url,\n        mimeType,\n        originalFilename,\n        size\n      }\n    },\n    startDateTime,\n    endDateTime,\n    exhibitLocation {\n      venueName,\n      address,\n      city,\n      country,\n      mapsUrl\n    },\n    order\n  }\n': FEATURED_EXHIBITS_QUERY_RESULT;
+    '\n  *[_type == "exhibit" && slug.current == $slug][0] {\n    _id,\n    _createdAt,\n    title,\n    slug,\n    subtitle,\n    exhibitDescription,\n    artistDescription,\n    heroImage {\n      asset,\n      hotspot,\n      crop,\n      alt\n    },\n    heroVideo {\n      asset-> {\n        _id,\n        url,\n        mimeType,\n        originalFilename,\n        size\n      }\n    },\n    images[] {\n      asset,\n      hotspot,\n      crop,\n      alt\n    },\n    startDateTime,\n    endDateTime,\n    exhibitLocation {\n      venueName,\n      address,\n      city,\n      country,\n      mapsUrl\n    },\n    featuredProducts[]-> {\n      _id,\n      name,\n      slug,\n      images[0] {\n        asset,\n        hotspot,\n        crop,\n      },\n    },\n    partners[] {\n      name,\n      role,\n      logo {\n        asset,\n        hotspot,\n        crop,\n        alt\n      },\n      website\n    },\n    isFeatured,\n    order\n  }\n': EXHIBIT_BY_SLUG_QUERY_RESULT;
     '*[\n  _type == "order"\n  && clerkUserId == $clerkUserId\n] | order(createdAt desc) {\n  _id,\n  orderNumber,\n  total,\n  status,\n  createdAt,\n  "itemCount": count(items),\n  "itemNames": items[].product->name,\n  "itemImages": items[].product->images[0].asset->url\n}': ORDERS_BY_USER_QUERY_RESULT;
     '*[\n  _type == "order"\n  && _id == $id\n][0] {\n  _id,\n  orderNumber,\n  clerkUserId,\n  email,\n  items[]{\n    _key,\n    quantity,\n    priceAtPurchase,\n    product->{\n      _id,\n      name,\n      "slug": slug.current,\n      "image": images[0]{\n        asset->{\n          _id,\n          url\n        }\n      }\n    }\n  },\n  total,\n  status,\n  address{\n    name,\n    line1,\n    line2,\n    city,\n    postcode,\n    country\n  },\n  stripePaymentId,\n  createdAt\n}': ORDER_BY_ID_QUERY_RESULT;
     '*[\n  _type == "order"\n] | order(createdAt desc) [0...$limit] {\n  _id,\n  orderNumber,\n  email,\n  total,\n  status,\n  createdAt\n}': RECENT_ORDERS_QUERY_RESULT;
