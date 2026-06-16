@@ -2,8 +2,26 @@
 import Lenis from 'lenis';
 import React, { useEffect } from 'react'
 import Section from './Section';
+import { urlFor } from '@/sanity/lib/image'; // adjust this import to wherever your image-url builder lives
+import type { ALL_EXHIBITS_QUERY_RESULT } from '@/sanity.types'; // adjust path to wherever typegen writes sanity.types.ts
 
-export default function VideoSnippets() {
+type Exhibit = ALL_EXHIBITS_QUERY_RESULT[number];
+
+// Narrows out any exhibit missing a slug, since there's nowhere for "Learn More" to link to without one.
+// Asserting the inner `{ current: string }` shape directly (rather than NonNullable<Exhibit['slug']>)
+// matters here because Sanity's generated `Slug` type marks `current` itself as optional —
+// just stripping `null` off the outer `slug` field still leaves `current: string | undefined`.
+function hasSlug(
+  exhibit: Exhibit
+): exhibit is Exhibit & { slug: { current: string } } {
+  return Boolean(exhibit.slug?.current);
+}
+
+export default function VideoSnippets({
+  exhibits,
+}: {
+  exhibits: ALL_EXHIBITS_QUERY_RESULT;
+}) {
   useEffect(() => {
     const lenis = new Lenis();
     function raf(time: number) {
@@ -15,21 +33,25 @@ export default function VideoSnippets() {
 
   return (
     <div>
-      <Section
-        video="/videos/garment.mp4"
-        tag="RAW FILES* "
-        title="GARMENT 001"
-        description="Unedited Raw Footage of Toile fittings circa 2022, files that had no date of when they'd see the light.We decided to keep it as raw as possible, as if you were alongside us, only with inserted texts that give context and information on the project as a whole.."
-      />
+      {exhibits.filter(hasSlug).map((exhibit) => {
+        const heroVideoUrl = exhibit.heroVideo?.asset?.url ?? undefined;
+        const heroImageUrl = exhibit.heroImage?.asset
+          ? urlFor(exhibit.heroImage).width(1920).height(1080).url()
+          : undefined;
 
-      <Section
-        video="/videos/merchant.mp4"
-        tag="Short Film"
-        title="THE MERCHANT IS COMING"
-        description="This short film is based on a poem written by The Poet Michael, following a caged bird&apos;s longing to be freed by The Merchant, that is, Christ, and how she will no longer be overlooked, her insights not considered, but will be weighed.This short film was re-scripted and shot within 4 hours by the Project OCTOBER* team. This is the first of our short film series to be released on this page. SUBSCRIBE to follow on the creative journey."
-      />
-
-   
+        return (
+          <Section
+            key={exhibit._id}
+            video={heroVideoUrl}
+            image={heroImageUrl}
+            imageAlt={exhibit.heroImage?.alt ?? undefined}
+            tag={exhibit.subtitle ?? ''}
+            title={exhibit.title ?? ''}
+            description={exhibit.exhibitDescription ?? ''}
+            slug={exhibit.slug.current}
+          />
+        );
+      })}
     </div>
   );
 }
