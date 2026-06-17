@@ -8,6 +8,7 @@ import { gsap } from "gsap";
 import { CustomEase } from "gsap/CustomEase";
 import { EaselPlugin } from "gsap/EaselPlugin";
 import { SplitText } from "gsap/SplitText";
+import { Mail } from "lucide-react";
 
 gsap.registerPlugin(useGSAP, EaselPlugin, SplitText, CustomEase);
 
@@ -28,11 +29,11 @@ interface IntroImage {
 }
 
 const INTRO_IMAGES: IntroImage[] = [
-  { src: "/images/charcoal2.webp", alt: "Industrial design piece 1" },
-  { src: "/images/forgive1.webp", alt: "Industrial design piece 2" },
-  { src: "/images/eyes.webp", alt: "Industrial design piece 3", isHero: true },
-  { src: "/images/poetic1.webp", alt: "Industrial design piece 4" },
-  { src: "/images/poetic5.webp", alt: "Industrial design piece 5" },
+  { src: "/images/charcoal2.webp", alt: "Manserif think 1" },
+  { src: "/images/forgive1.webp", alt: "Manserif think 2" },
+  { src: "/images/ledivinclean.png", alt: "Manserif think 3", isHero: true },
+  { src: "/images/poetic1.webp", alt: "Manserif think 4" },
+  { src: "/images/poetic5.webp", alt: "Manserif think 5" },
 ];
 
 const IMG_SCALE = 0.2;
@@ -215,7 +216,7 @@ export default function AnimatedHero() {
           ref={preloaderRef}
           className="absolute top-0 h-2 w-full origin-left scale-x-0 bg-white will-change-transform"
         />
-        <div className="w-full h-screen flex items-center justify-center opacity-25">
+        <div className="w-full h-screen flex items-center justify-center ">
           <img
             src="/images/manserif-white.png"
             alt="Logo"
@@ -225,7 +226,7 @@ export default function AnimatedHero() {
       </div>
 
       {/* ── Navigation ──────────────────────────────────────────────────── */}
-      
+
 
       {/* ── Hero ────────────────────────────────────────────────────────── */}
       <section className="relative h-svh w-full overflow-hidden">
@@ -249,26 +250,31 @@ export default function AnimatedHero() {
         ))}
 
         {/* Hero text content */}
-        <div className="absolute bottom-8 left-8 right-8 z-[2] flex items-end justify-between">
+        <div className="absolute bottom-8 left-8 right-8 z-[2] flex h-full items-end justify-between">
           {/* Headline */}
           <div data-split-header className="w-3/5 max-[1000px]:w-full">
-<h1 data-split className="text-white font-normal leading-[1.1] tracking-[-0.01em] text-[clamp(1.75rem,3vw,3rem)]">
+            <h1 data-split className="text-white  md:pb-0 font-normal leading-[1.1] tracking-[-0.01em] text-[clamp(1.75rem,3vw,3rem)]">
               Multidisciplinary artist sharing evolving work, products, and
               journey.
             </h1>
           </div>
 
           {/* Social / contact */}
-          <div data-split-social className="flex flex-col gap-1">
-            <p data-split className="text-white no-underline font-normal tracking-[-0.01em] block">Say Hello</p>
-            <a href="#" data-split className="text-white no-underline font-normal tracking-[-0.01em] block">
+          <div data-split-social className="flex flex-col gap-1  justify-end items-end">
+            <p data-split className="text-white no-underline font-normal tracking-[-0.01em] hidden  lg:block">Say Hello</p>
+            <a href="mailto:warrenkamau.art@outlook.com" data-split className="text-white no-underline font-normal tracking-[-0.01em] hidden  lg:block">
               warrenkamau.art@outlook.com
             </a>
-            <a href="#" data-split className="text-white no-underline font-normal tracking-[-0.01em] block">
-              View Enquiries
+            <a href="#" data-split className="text-white no-underline font-normal tracking-[-0.01em] block md:hidden">
+              <Mail className="inline-block   h-6 w-6" /> 
+            </a>
+             <a href="#" data-split className="text-white no-underline font-normal tracking-[-0.01em] block md:hidden">
+              <img src="/images/instagram-white-icon.webp" className="inline-block  h-6 w-6"  /> 
             </a>
           </div>
         </div>
+                <div className="w-full h-full  bg-black/40  absolute "/>
+
       </section>
     </div>
   );

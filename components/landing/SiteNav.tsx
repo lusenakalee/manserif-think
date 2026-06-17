@@ -83,9 +83,7 @@ export default function SiteNav() {
     return (
         <div className="bg-white lg:bg-transparent" ref={containerRef}>
 
-            {/* ── Mobile menu ─────────────────────────────────────────────────
-                ⚠️  DO NOT TOUCH — user instruction: leave mobile menu unchanged
-            ───────────────────────────────────────────────────────────────── */}
+            {/* ── Mobile menu ─── */}
             <Dialog open={open} onClose={setOpen} className="relative z-40 lg:hidden">
                 <DialogBackdrop
                     transition
