@@ -265,10 +265,10 @@ export default function AnimatedHero() {
             <a href="mailto:warrenkamau.art@outlook.com" data-split className="text-white no-underline font-normal tracking-[-0.01em] hidden  lg:block">
               warrenkamau.art@outlook.com
             </a>
-            <a href="#" data-split className="text-white no-underline font-normal tracking-[-0.01em] block md:hidden">
+            <a href="mailto:warrenkamau.art@outlook.com" data-split className="text-white no-underline font-normal tracking-[-0.01em] block md:hidden">
               <Mail className="inline-block   h-6 w-6" /> 
             </a>
-             <a href="#" data-split className="text-white no-underline font-normal tracking-[-0.01em] block md:hidden">
+             <a href="https://www.instagram.com/manserif.think/" data-split className="text-white no-underline font-normal tracking-[-0.01em] block md:hidden">
               <img src="/images/instagram-white-icon.webp" className="inline-block  h-6 w-6"  /> 
             </a>
           </div>
