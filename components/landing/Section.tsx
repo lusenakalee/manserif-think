@@ -93,7 +93,7 @@ const Section: React.FC<{
           <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl leading-tight">
             {title}
           </h1>
-          <p className="text-sm sm:text-base text-white/80 max-w-[50ch] leading-relaxed">
+          <p className="text-sm sm:text-base text-white/80 max-w-[50ch] leading-relaxed line-clamp-4">
             {description}
           </p>
           <Link

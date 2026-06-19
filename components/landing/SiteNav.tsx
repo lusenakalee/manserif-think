@@ -172,19 +172,6 @@ export default function SiteNav() {
                 {/* LEFT LOGO AREA */}
 
                 <div className="flex items-center gap-3 ">
-
-
-                    <a href="/">
-                        <img
-                            src="/images/manserif-man.svg"
-                            alt=""
-                            className="h-12 w-auto"
-                        />
-                    </a>
-
-
-
-
                 </div>
 
                 {/* RIGHT MENU */}
@@ -261,41 +248,38 @@ export default function SiteNav() {
                     >
                         <div className="flex h-16 items-center">
                             {/* Logo */}
-                            <div className="ml-4 flex lg:ml-0 bg-black">
-                                <a href="/">
+                            <div className="ml-4 flex lg:ml-0">
+                                <a href="/" className="flex items-center gap-3 text-white">
                                     <span className="sr-only">
-                                       Manserif
+                                        MANSERIF
                                     </span>
-
 
                                     <img
                                         alt=""
-                                        src="/images/manserif-man.svg"
+                                        src="/images/manserif-white.png"
                                         className={[
-                                            'h-8 w-auto transition-all duration-500',
-
+                                            'h-8 w-auto transition-all duration-500 invert ',
                                             !scrolled
                                                 ? 'lg:brightness-0 lg:invert'
                                                 : '',
-
                                         ].join(' ')}
                                     />
+
                                     <div className="flex flex-col">
                                         <p
                                             data-mobile-split
                                             className="text-sm font-semibold leading-none"
                                         >
-                                            manserif.
+                                            MANSERIF
                                         </p>
+
                                         <p
                                             data-mobile-split
-                                            className="mt-1 max-w-[160px] text-xs leading-tight "
+                                            className="mt-1 max-w-[160px] text-xs leading-tight"
                                         >
-                                            Think
+                                            .THINK
                                         </p>
                                     </div>
-
-
                                 </a>
                             </div>
                             {/* Desktop nav */}
@@ -346,18 +330,8 @@ export default function SiteNav() {
                                             )
                                         )
                                     }
-
-
                                 </div>
-
-
                             </PopoverGroup>
-
-
-
-
-
-
 
                             {/* Right side actions */}
 
