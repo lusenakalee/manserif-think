@@ -1,39 +1,64 @@
 import { sanityFetch } from "@/sanity/lib/live";
 import { FEATURED_PRODUCTS_QUERY } from "@/lib/sanity/queries/products";
 import ProductHoverSection from "./ui/interactive/ProductHoverSection";
-import { ImagesBadgeDemo } from "./landing/ImagesBadgeDemo";
 
 const ProductHoverSectionDemo = async () => {
+
   const { data: featuredProducts } = await sanityFetch({
     query: FEATURED_PRODUCTS_QUERY,
   });
 
-  if (!featuredProducts || featuredProducts.length === 0) return null;
+
+  if (!featuredProducts || featuredProducts.length === 0)
+    return null;
+
 
   const hoverProducts = featuredProducts
-    .filter((product) => product.slug && product.images?.[0]?.asset?.url)
+    .filter(
+      (product) =>
+        product.slug &&
+        product.images?.[0]?.asset?.url
+    )
     .map((product) => ({
-      title: product.name ?? "", // fallback to empty string
-      subtitle: `£${product.price?.toFixed(2) ?? "0.00"}`,
-      image: product.images![0].asset!.url!,
-      alt: product.name ?? undefined, // or undefined to match `alt?: string`
-      slug: product.slug!,
+      title: product.name ?? "",
+
+      category:
+        product.category?.title ?? "Uncategorized",
+
+      image:
+        product.images![0].asset!.url!,
+
+      alt:
+        product.name ?? undefined,
+
+      slug:
+        product.slug!,
     }));
+
 
   return (
     <div
       id="featured"
-      className="w-full min-h-[500px]  items-center justify-center bg-gray-200 rounded-lg py-12"
+      className="w-full min-h-[500px] items-center justify-center bg-gray-200 rounded-lg py-12"
     >
 
-      <h2 className="text-3xl font-bold text-center mb-8">Featured Work</h2>
-      <div className="w-full ">
+      <h2 className="text-3xl font-bold text-center mb-8">
+        Featured Work
+      </h2>
 
-        <ProductHoverSection products={hoverProducts} />
+
+      <div className="w-full">
+
+        <ProductHoverSection
+          products={hoverProducts}
+        />
+
       </div>
-      <ImagesBadgeDemo />
+
+
     </div>
   );
 };
+
 
 export { ProductHoverSectionDemo };

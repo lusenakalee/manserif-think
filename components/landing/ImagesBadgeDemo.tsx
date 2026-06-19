@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export function ImagesBadgeDemo() {
   return (
-    <Link href="/projects" className="flex h-[10rem] w-full items-center justify-center">
+    <Link href="/products" className="flex h-[10rem] w-full items-center justify-center">
       <ImagesBadge
         text="Explore More"
         images={[

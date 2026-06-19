@@ -9,7 +9,7 @@ import Link from 'next/link';
 
 export interface ProductItem {
   title: string;
-  subtitle: string;
+  category: string;
   image: string;
   alt?: string;
   slug: string;
@@ -42,13 +42,20 @@ const ProductHoverSection: React.FC<ProductHoverSectionProps> = ({
   useEffect(() => {
     const checkDesktop = () => setIsDesktop(window.innerWidth >= 768);
     checkDesktop();
+
     window.addEventListener('resize', checkDesktop);
     return () => window.removeEventListener('resize', checkDesktop);
   }, []);
 
   useGSAP(
     () => {
-      if (!isDesktop || !thumbnailRef.current || !sliderRef.current || !containerRef.current) return;
+      if (
+        !isDesktop ||
+        !thumbnailRef.current ||
+        !sliderRef.current ||
+        !containerRef.current
+      )
+        return;
 
       gsap.set(thumbnailRef.current, {
         scale: 0,
@@ -73,11 +80,16 @@ const ProductHoverSection: React.FC<ProductHoverSectionProps> = ({
 
       const handleMouseMove = (e: MouseEvent) => {
         const rect = containerRef.current!.getBoundingClientRect();
+
         const relX = e.clientX - rect.left;
         const relY = e.clientY - rect.top;
 
         if (!hasPosition) {
-          gsap.set(thumbnailRef.current, { x: relX, y: relY });
+          gsap.set(thumbnailRef.current, {
+            x: relX,
+            y: relY,
+          });
+
           hasPosition = true;
         } else {
           xTo(relX);
@@ -86,10 +98,12 @@ const ProductHoverSection: React.FC<ProductHoverSectionProps> = ({
       };
 
       window.addEventListener('mousemove', handleMouseMove);
+
       return () => window.removeEventListener('mousemove', handleMouseMove);
     },
     { dependencies: [isDesktop] }
   );
+
 
   useGSAP(
     () => {
@@ -111,7 +125,9 @@ const ProductHoverSection: React.FC<ProductHoverSectionProps> = ({
           ease: 'power2.out',
           overwrite: 'auto',
         });
+
       } else {
+
         gsap.to(thumbnailRef.current, {
           scale: 0,
           opacity: 0,
@@ -119,57 +135,93 @@ const ProductHoverSection: React.FC<ProductHoverSectionProps> = ({
           ease: 'power2.in',
           overwrite: 'auto',
           onComplete: () => {
-            gsap.set(thumbnailRef.current, { visibility: 'hidden' });
+            gsap.set(thumbnailRef.current, {
+              visibility: 'hidden',
+            });
           },
         });
+
       }
     },
-    { dependencies: [modal.active, modal.index, isDesktop, thumbnailHeight] }
+    {
+      dependencies: [
+        modal.active,
+        modal.index,
+        isDesktop,
+        thumbnailHeight,
+      ],
+    }
   );
+
 
   if (isDesktop) {
     return (
       <div
         ref={containerRef}
-        onMouseLeave={() => setModal({ active: false, index: 0 })}
+        onMouseLeave={() =>
+          setModal({
+            active: false,
+            index: 0,
+          })
+        }
         className={cn(
           'relative flex flex-col w-full max-w-[1000px] mx-auto py-12',
           className
         )}
       >
+
         <div className="flex flex-col w-full">
+
           {products.map((product, index) => (
+
             <Link
               key={index}
               href={`/products/${product.slug}`}
-              onMouseEnter={() => setModal({ active: true, index })}
+              onMouseEnter={() =>
+                setModal({
+                  active: true,
+                  index,
+                })
+              }
               className={cn(
                 'w-full flex items-center justify-between px-6 md:px-16 py-8 md:py-12 border-t border-white/20 cursor-pointer transition-opacity duration-300',
-                modal.active && modal.index === index && 'opacity-60'
+                modal.active &&
+                  modal.index === index &&
+                  'opacity-60'
               )}
             >
+
               <h2
                 className={cn(
                   'text-2xl md:text-4xl lg:text-5xl font-medium text-neutral-800 transition-transform duration-500 ease-out',
-                  modal.active && modal.index === index && '-translate-x-4'
+                  modal.active &&
+                    modal.index === index &&
+                    '-translate-x-4'
                 )}
               >
                 {product.title}
               </h2>
 
-              {/* <p
+
+              <p
                 className={cn(
                   'text-sm md:text-base text-neutral-800 transition-transform duration-500 ease-out',
-                  modal.active && modal.index === index && 'translate-x-4'
+                  modal.active &&
+                    modal.index === index &&
+                    'translate-x-4'
                 )}
               >
-                {product.subtitle}
-              </p> */}
+                {product.category}
+              </p>
+
             </Link>
+
           ))}
 
           <div className="w-full h-px bg-white/20" />
+
         </div>
+
 
         <div
           ref={thumbnailRef}
@@ -181,6 +233,7 @@ const ProductHoverSection: React.FC<ProductHoverSectionProps> = ({
             visibility: 'hidden',
           }}
         >
+
           <div
             ref={sliderRef}
             className="relative w-full"
@@ -188,16 +241,18 @@ const ProductHoverSection: React.FC<ProductHoverSectionProps> = ({
               height: thumbnailHeight * products.length,
             }}
           >
-            {products.map((product, index) => (
+
+            {products.map((product,index)=>(
               <div
                 key={index}
                 className="absolute left-0 w-full"
                 style={{
-                  top: index * thumbnailHeight,
-                  width: thumbnailWidth,
-                  height: thumbnailHeight,
+                  top:index * thumbnailHeight,
+                  width:thumbnailWidth,
+                  height:thumbnailHeight,
                 }}
               >
+
                 <Image
                   src={product.image}
                   alt={product.alt ?? product.title}
@@ -205,52 +260,90 @@ const ProductHoverSection: React.FC<ProductHoverSectionProps> = ({
                   height={thumbnailHeight}
                   className="w-full h-full object-cover object-top"
                 />
+
               </div>
             ))}
+
           </div>
+
         </div>
+
+
       </div>
     );
   }
 
+
   return (
-    <div className={cn('flex flex-col w-full max-w-[1000px] mx-auto py-6', className)}>
-      {products.map((product, index) => (
-        <div key={index} className="border-b border-white/20 last:border-b-0">
+    <div className={cn(
+      'flex flex-col w-full max-w-[1000px] mx-auto py-6',
+      className
+    )}>
+
+      {products.map((product,index)=>(
+
+        <div
+          key={index}
+          className="border-b border-white/20 last:border-b-0"
+        >
+
           <button
             type="button"
-            onClick={() => setExpandedIndex(expandedIndex === index ? null : index)}
-            className="w-full flex items-center justify-between px-4 py-5 text-left active:opacity-80 transition-opacity"
+            onClick={() =>
+              setExpandedIndex(
+                expandedIndex === index ? null : index
+              )
+            }
+            className="w-full flex items-center justify-between px-4 py-5 text-left"
           >
-            <h2 className="text-xl  font-medium text-neutral-800">{product.title}</h2>
-            {/* <p className="text-sm text-neutral-500">{product.subtitle}</p> */}
+
+            <h2 className="text-xl font-medium text-neutral-800">
+              {product.title}
+            </h2>
+
+
             <span className="ml-2 text-neutral-800 text-lg">
               {expandedIndex === index ? '−' : '+'}
             </span>
+
           </button>
+
 
           <div
             className={cn(
-              'overflow-hidden transition-all duration-300 ease-out',
-              expandedIndex === index ? 'max-h-64 opacity-100' : 'max-h-0 opacity-0'
+              'overflow-hidden transition-all duration-300',
+              expandedIndex === index
+                ? 'max-h-64 opacity-100'
+                : 'max-h-0 opacity-0'
             )}
           >
+
             <div className="px-4 pb-4">
+
               <Link href={`/products/${product.slug}`}>
-                <div className="relative w-full aspect-[4/3] rounded-lg overflow-hidden border border-white/20">
+
+                <div className="relative w-full aspect-[4/3] rounded-lg overflow-hidden">
+
                   <Image
                     src={product.image}
                     alt={product.alt ?? product.title}
                     fill
                     className="object-cover"
-                    sizes="(max-width: 768px) 100vw, 400px"
                   />
+
                 </div>
+
               </Link>
+
             </div>
+
           </div>
+
+
         </div>
+
       ))}
+
     </div>
   );
 };
