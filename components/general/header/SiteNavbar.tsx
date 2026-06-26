@@ -27,8 +27,7 @@ const navLinks: NavLink[] = [
 
 const SiteNavbar = () => {
 
-
-      const { isSignedIn } = useUser();
+  const { isSignedIn } = useUser();
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const pathname = usePathname()
 
@@ -77,11 +76,23 @@ const SiteNavbar = () => {
     }
   }, [])
 
+  const isMobile = () => typeof window !== 'undefined' && window.innerWidth < 640
+
   const animateToLink = (index: number) => {
     const indicator = refs.indicator.current
     const container = refs.linksContainer.current
 
     if (!indicator || !container) return
+
+    // Hide indicator on mobile (layout is stacked, no room for it)
+    if (isMobile()) {
+      gsap.set(indicator, { opacity: 0 })
+      refs.linkRows.current.forEach((row, i) => {
+        const anchor = row?.querySelector('a')
+        if (anchor) gsap.set(anchor, { x: '0px' })
+      })
+      return
+    }
 
     if (index >= 0 && refs.linkRows.current[index]) {
       const containerRect = container.getBoundingClientRect()
@@ -126,6 +137,8 @@ const SiteNavbar = () => {
     const tl = gsap.timeline()
     refs.timeline.current = tl
 
+    const mobile = isMobile()
+
     if (isOpen) {
       gsap.set(refs.indicator.current, {
         x: "-2vw", opacity: 0
@@ -135,16 +148,15 @@ const SiteNavbar = () => {
         if (anchor) gsap.set(anchor, { x: '0vw' })
       })
 
-
-      tl.to(refs.nav.current, { width: '90vw', duration: .5, ease: 'power3.inOut' })
+      tl.to(refs.nav.current, { width: mobile ? '95vw' : '90vw', duration: .5, ease: 'power3.inOut' })
         .to(refs.topLine.current, { rotation: 45, y: 0, duration: 0.3, ease: 'power2.inOut' }, 0)
         .to(refs.bottomLine.current, { rotation: -45, y: 0, duration: 0.3, ease: 'power2.inOut' }, 0)
         .to(refs.menu.current, { clipPath: 'inset(0% 0% 0% 0%)', duration: 0.5, ease: 'power3.inOut' }, 0.3)
         .to(refs.allLines.current, { y: '0%', duration: 0.5, stagger: 0.03, ease: 'power3.out' }, 0.5)
         .call(() => animateToLink(activeIndex))
     } else {
-      tl.to(refs.topLine.current, { rotation: 0, y: '-0.3vw', duration: 0.3, ease: 'power2.inOut' }, 0)
-        .to(refs.bottomLine.current, { rotation: 0, y: '0.3vw', duration: 0.3, ease: 'power2.inOut' }, 0)
+      tl.to(refs.topLine.current, { rotation: 0, y: mobile ? '-4px' : '-0.3vw', duration: 0.3, ease: 'power2.inOut' }, 0)
+        .to(refs.bottomLine.current, { rotation: 0, y: mobile ? '4px' : '0.3vw', duration: 0.3, ease: 'power2.inOut' }, 0)
         .to(refs.menu.current, { clipPath: 'inset(0% 0% 100% 0%)', duration: 0.5, ease: 'power3.inOut' }, 0)
         .to(refs.nav.current, { width: '95vw', duration: 0.5, ease: 'power3.inOut' }, 0.3)
         .set(refs.allLines.current, { y: '100%' }, 0.5)
@@ -156,61 +168,89 @@ const SiteNavbar = () => {
 
   return (
     <>
-      <nav ref={refs.nav} className='fixed top-[5%] left-1/2 -translate-x-1/2 w-[95vw] bg-zinc-800 border border-white/10 rounded-md flex items-center justify-between px-[2vw] py-[1.5vw] z-50'>
-        <p className='text-white text-[1.3vw] font-medium'>Manserif<br/>.Think</p>
+      {/* ── Navbar bar ── */}
+      <nav
+        ref={refs.nav}
+        className='fixed top-[5%] left-1/2 -translate-x-1/2 w-[95vw] bg-zinc-800 border border-white/10 rounded-md flex items-center justify-between px-4 sm:px-[2vw] py-3 sm:py-[1.5vw] z-50'
+      >
+        {/* Logo */}
+        <p className='text-white text-sm sm:text-[1.3vw] font-medium leading-tight'>
+          Manserif<br />.Think
+        </p>
 
-       
+        {/* Menu toggle */}
+        <div
+          onClick={() => setIsOpen(!isOpen)}
+          className='flex px-4 sm:px-[2vw] items-center justify-center gap-4 sm:gap-[2vw] cursor-pointer'
+        >
+          <p className='text-white text-sm sm:text-[1.3vw] font-medium'>
+            {isOpen ? 'Close' : 'Menu'}
+          </p>
 
-        <div onClick={() => setIsOpen(!isOpen)} className='flex px-[2vw] items-center justify-center gap-[2vw] cursor-pointer'>
-          <p className='text-white text-[1.3vw] font-medium'>{isOpen ? 'Close' : 'Menu'}</p>
-
-          <div className='relative'>
-            <span ref={refs.topLine} className='absolute w-[2vw] h-0.5 bg-white -translate-y-[.3vw]'></span>
-
-            <span ref={refs.bottomLine} className='absolute w-[2vw] h-0.5 bg-white translate-y-[.3vw]'></span>
+          {/* Hamburger lines */}
+          <div className='relative w-6 h-4 sm:w-[2vw] sm:h-[1vw]'>
+            <span
+              ref={refs.topLine}
+              className='absolute w-6 sm:w-[2vw] h-0.5 bg-white'
+              style={{ top: '25%' }}
+            />
+            <span
+              ref={refs.bottomLine}
+              className='absolute w-6 sm:w-[2vw] h-0.5 bg-white'
+              style={{ top: '75%' }}
+            />
           </div>
         </div>
 
-
-         {
-                        isSignedIn ? (
-                            <UserButton
-                                afterSwitchSessionUrl="/"
-                                appearance={{
-                                    elements: {
-                                        avatarBox: "h-9 w-9"
-                                    }
-                                }}
-                            >
-                                <UserButton.MenuItems>
-                                    <UserButton.Link
-                                        label="Shop"
-                                        labelIcon={
-                                            <Package className="h-4 w-4" />
-                                        }
-                                        href="/products"
-                                    />
-                                </UserButton.MenuItems>
-                            </UserButton>
-                        ) : (
-                            <SignInButton mode="modal">
-                                <button className="text-lg font-medium text-white ">
-                                    Sign in
-                                </button>
-                            </SignInButton>)}
-
-
-
-
-
+        {/* Auth */}
+        {isSignedIn ? (
+          <UserButton
+            afterSwitchSessionUrl="/"
+            appearance={{
+              elements: {
+                avatarBox: "h-8 w-8 sm:h-9 sm:w-9"
+              }
+            }}
+          >
+            <UserButton.MenuItems>
+              <UserButton.Link
+                label="Shop"
+                labelIcon={<Package className="h-4 w-4" />}
+                href="/products"
+              />
+            </UserButton.MenuItems>
+          </UserButton>
+        ) : (
+          <SignInButton mode="modal">
+            <button className="text-sm sm:text-lg font-medium text-white">
+              Sign in
+            </button>
+          </SignInButton>
+        )}
       </nav>
 
-      <div ref={refs.menu} className=' fixed top-[calc(6vw+5%)] left-1/2 -translate-x-1/2 w-[90vw] bg-zinc-800 border border-white/10 rounded-md z-40 overflow-clip'
+      {/* ── Dropdown menu ── */}
+      <div
+        ref={refs.menu}
+        className='fixed top-[calc(56px+5%)] sm:top-[calc(6vw+5%)] left-1/2 -translate-x-1/2 w-[95vw] sm:w-[90vw] bg-zinc-800 border border-white/10 rounded-md z-40 overflow-clip'
         style={{ clipPath: 'inset(0% 0% 100% 0%)' }}
       >
-        <div className='p-[2.5vw] h-fit flex'>
-          <div ref={refs.linksContainer} className='w-[25%] flex flex-col gap-[.5vw] border-r border-white/10 pr-[2vw] relative' onMouseLeave={() => animateToLink(activeIndex)}>
-            <div ref={refs.indicator} className='absolute left-0 top-0 size-[1.4vw] bg-orange-500 opacity-0 pointer-events-none z-10'
+        {/* 
+          Mobile: stacked column layout
+          Desktop: original side-by-side row 
+        */}
+        <div className='p-4 sm:p-[2.5vw] h-fit flex flex-col sm:flex-row gap-6 sm:gap-0'>
+
+          {/* Nav links */}
+          <div
+            ref={refs.linksContainer}
+            className='w-full sm:w-[25%] flex flex-col gap-2 sm:gap-[.5vw] border-b sm:border-b-0 sm:border-r border-white/10 pb-4 sm:pb-0 sm:pr-[2vw] relative'
+            onMouseLeave={() => animateToLink(activeIndex)}
+          >
+            {/* Indicator diamond — hidden on mobile via opacity/pointer-events */}
+            <div
+              ref={refs.indicator}
+              className='absolute left-0 top-0 w-4 h-4 sm:w-[1.4vw] sm:h-[1.4vw] bg-orange-500 opacity-0 pointer-events-none z-10 hidden sm:block'
               style={{ transform: 'translateX(-2vw)' }}
             />
 
@@ -221,66 +261,52 @@ const SiteNavbar = () => {
                 className='flex w-fit flex-row items-center'
                 onMouseEnter={() => animateToLink(index)}
               >
-                <Link ref={el => { refs.links.current[index] = el }} href={link.href} className={`text-[2.8vw] font-medium transition-colors  ${pathname === link.href ? 'text-orange-500' : 'text-white hover:text-orange-500'}`}>{link.label}</Link>
+                <Link
+                  ref={el => { refs.links.current[index] = el }}
+                  href={link.href}
+                  className={`text-4xl sm:text-[2.8vw] font-medium transition-colors ${pathname === link.href ? 'text-orange-500' : 'text-white hover:text-orange-500'}`}
+                >
+                  {link.label}
+                </Link>
               </div>
             ))}
           </div>
 
-          <div ref={refs.contactInfo} className='w-[25%] flex flex-col gap-[1.5vw] px-[2vw] text-white/70 text-[1.1vw]'>
+          {/* Contact info */}
+          <div
+            ref={refs.contactInfo}
+            className='w-full sm:w-[25%] flex flex-col gap-4 sm:gap-[1.5vw] sm:px-[2vw] text-white/70 text-sm sm:text-[1.1vw]'
+          >
             <div>
-              <p className='text-white/40 uppercase text-[0.85vw] mb-[0.3vw]'>Contact</p>
+              <p className='text-white/40 uppercase text-xs sm:text-[0.85vw] mb-1 sm:mb-[0.3vw]'>Contact</p>
               <p>warren@manserifthink.com</p>
             </div>
 
-            {/* <div>
-              <p className='text-white/40 uppercase text-[0.85vw] mb-[0.3vw]'>Team</p>
-              <p>John: john@test.com</p>
-              <p>Jane: jane@test.com</p>
-            </div> */}
-
             <div>
-              <p className='text-white/40 uppercase text-[0.85vw] mb-[0.3vw]'>Social</p>
+              <p className='text-white/40 uppercase text-xs sm:text-[0.85vw] mb-1 sm:mb-[0.3vw]'>Social</p>
               <p>Instagram: @manserif.think</p>
-             
             </div>
-
-            {/* <div>
-              <p className='text-white/40 uppercase text-[0.85vw] mb-[0.3vw]'>Status</p>
-              <p className='flex items-center gap-[0.3vw]'>
-                Lorem ipsum dolor sit amet
-              </p>
-              <p className='flex items-center gap-[0.3vw]'>
-                Random test data 12345
-              </p>
-            </div> */}
           </div>
 
-          <div className='w-[50%] flex gap-[1vw] pl-[2vw]'>
-            {/* <div className='flex-1 flex flex-col gap-[1vw]'>
-              <p className='text-white/40 uppercase text-[.85vw]'>About the studio</p>
-
-              <div className='flex-1 rounded-md overflow-clip'>
-                <img
-                  src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=400"
-                  alt="Studio team"
-                  className='w-full h-full object-cover'
-                />
-              </div>
-            </div> */}
-
-            <div className='flex-1 flex flex-col gap-[1vw]'>
-              <a href="/exhibits/le-divin-a-travers-mes-yeux-the-divine-through-my-eyes" className='text-orange-500 hover:text-orange-300 transition-colors'>
-                <p className='text-white/40 uppercase text-[0.85vw]'>Featured Exhibit</p>
-              <div className='flex-1 rounded-md overflow-hidden border-2 border-orange-500'>
-                <img
-                  src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400"
-                  alt="Feature project"
-                  className='w-full h-full object-cover'
+          {/* Featured exhibit */}
+          <div className='w-full sm:w-[50%] flex gap-[1vw] sm:pl-[2vw]'>
+            <div className='flex-1 flex flex-col gap-2 sm:gap-[1vw]'>
+              <a
+                href="/exhibits/le-divin-a-travers-mes-yeux-the-divine-through-my-eyes"
+                className='text-orange-500 hover:text-orange-300 transition-colors'
+              >
+                <p className='text-white/40 uppercase text-xs sm:text-[0.85vw] mb-1'>Featured Exhibit</p>
+                <div className='flex-1 rounded-md overflow-hidden border-2 border-orange-500 max-h-40 sm:max-h-none'>
+                  <img
+                    src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400"
+                    alt="Feature project"
+                    className='w-full h-full object-cover'
                   />
-              </div>
-                  </a>
+                </div>
+              </a>
             </div>
           </div>
+
         </div>
       </div>
     </>
