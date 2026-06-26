@@ -273,7 +273,7 @@ export default function AnimatedHero() {
             </a>
           </div>
         </div>
-                <div className="w-full h-full  bg-black/40  absolute "/>
+                {/* <div className="w-full h-full  bg-black/40  absolute "/> */}
 
       </section>
     </div>
