@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import type { Metadata } from "next";
 import { sanityFetch } from "@/sanity/lib/live";
 import {
   FEATURED_PRODUCTS_QUERY,
@@ -24,6 +25,34 @@ interface PageProps {
     sort?: string;
     inStock?: string;
   }>;
+}
+
+export async function generateMetadata({
+  searchParams,
+}: PageProps): Promise<Metadata> {
+  const params = await searchParams;
+  const category = params.category;
+  const search = params.q;
+
+  const title = search
+    ? `Search results for "${search}"`
+    : category
+      ? `Shop ${category}`
+      : "Shop";
+
+  const description = category
+    ? `Shop original ${category} pieces from Manserif.Think — conceptual art, prints and sculpture by Kenyan artist Warren Kamau.`
+    : "Shop original paintings, prints, collage and sculpture from Manserif.Think — the studio and online gallery of Kenyan artist Warren Kamau.";
+
+  return {
+    title,
+    description,
+    alternates: {
+      // Keep filter/sort combinations out of the index; only category is
+      // meaningful enough to warrant its own canonical variant.
+      canonical: category ? `/products?category=${category}` : "/products",
+    },
+  };
 }
 
 export default async function HomePage({ searchParams }: PageProps) {

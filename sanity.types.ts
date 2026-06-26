@@ -441,6 +441,15 @@ export type AllSanitySchemaTypes =
   | SanityImageAsset
   | Geopoint;
 
+// Source: app/sitemap.ts
+// Variable: ALL_PRODUCTS_FOR_SITEMAP_QUERY
+// Query: *[  _type == "product"  && defined(slug.current)]{  "slug": slug.current,  _updatedAt,  "images": images[].asset->url}
+export type ALL_PRODUCTS_FOR_SITEMAP_QUERY_RESULT = Array<{
+  slug: string | null;
+  _updatedAt: string;
+  images: Array<string | null> | null;
+}>;
+
 // Source: components/landing/HeroSection.tsx
 // Variable: HERO_QUERY
 // Query: *[_type == "heroSection"][0] {    name,    tagline,    subtitle,    description,    contactEmail,    figureSvg,    preloaderImages[] {      asset,      alt    }  }
@@ -1068,6 +1077,7 @@ export type SNIPPET_PRODUCTS_BY_CATEGORY_QUERY_RESULT = Array<{
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
+    '*[\n  _type == "product"\n  && defined(slug.current)\n]{\n  "slug": slug.current,\n  _updatedAt,\n  "images": images[].asset->url\n}': ALL_PRODUCTS_FOR_SITEMAP_QUERY_RESULT;
     '\n  *[_type == "heroSection"][0] {\n    name,\n    tagline,\n    subtitle,\n    description,\n    contactEmail,\n    figureSvg,\n    preloaderImages[] {\n      asset,\n      alt\n    }\n  }\n': HERO_QUERY_RESULT;
     '*[\n  _type == "category"\n] | order(title asc) {\n  _id,\n  title,\n  "slug": slug.current,\n  "image": image{\n    asset->{\n      _id,\n      url\n    },\n    hotspot\n  }\n}': ALL_CATEGORIES_QUERY_RESULT;
     '*[\n  _type == "category"\n  && slug.current == $slug\n][0] {\n  _id,\n  title,\n  "slug": slug.current,\n  "image": image{\n    asset->{\n      _id,\n      url\n    },\n    hotspot\n  }\n}': CATEGORY_BY_SLUG_QUERY_RESULT;
