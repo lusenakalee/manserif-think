@@ -262,10 +262,10 @@ export default function AnimatedHero() {
           {/* Social / contact */}
           <div data-split-social className="flex flex-col gap-1  justify-end items-end">
             <p data-split className="text-white no-underline font-normal tracking-[-0.01em] hidden  lg:block">Say Hello</p>
-            <a href="mailto:warren@manserif.com" data-split className="text-white no-underline font-normal tracking-[-0.01em] hidden  lg:block">
-              warren@manserif.com
+            <a href="mailto:warren@manserifthink.com" data-split className="text-white no-underline font-normal tracking-[-0.01em] hidden  lg:block">
+              warren@manserifthink.com
             </a>
-            <a href="mailto:warren@manserif.com" data-split className="text-white no-underline font-normal tracking-[-0.01em] block md:hidden">
+            <a href="mailto:warren@manserifthink.com" data-split className="text-white no-underline font-normal tracking-[-0.01em] block md:hidden">
               <Mail className="inline-block   h-6 w-6" /> 
             </a>
              <a href="https://www.instagram.com/manserif.think/" data-split className="text-white no-underline font-normal tracking-[-0.01em] block md:hidden">

@@ -5,6 +5,9 @@ import React, { useState, useRef, useEffect } from 'react'
 import { usePathname } from 'next/navigation'
 import gsap from 'gsap'
 import { SplitText } from 'gsap/SplitText'
+import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
+import { LogIn, Package } from "lucide-react";
+
 
 
 gsap.registerPlugin(SplitText)
@@ -19,11 +22,13 @@ const navLinks: NavLink[] = [
   { href: '/', label: 'Home' },
   { href: '/portfolio', label: 'About' },
   { href: '/products', label: 'Work' },
-  { href: '/contact', label: 'Contact' },
+  // { href: '/contact', label: 'Contact' },
 ]
 
 const SiteNavbar = () => {
 
+
+      const { isSignedIn } = useUser();
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const pathname = usePathname()
 
@@ -154,6 +159,8 @@ const SiteNavbar = () => {
       <nav ref={refs.nav} className='fixed top-[5%] left-1/2 -translate-x-1/2 w-[95vw] bg-zinc-800 border border-white/10 rounded-md flex items-center justify-between px-[2vw] py-[1.5vw] z-50'>
         <p className='text-white text-[1.3vw] font-medium'>Manserif<br/>.Think</p>
 
+       
+
         <div onClick={() => setIsOpen(!isOpen)} className='flex px-[2vw] items-center justify-center gap-[2vw] cursor-pointer'>
           <p className='text-white text-[1.3vw] font-medium'>{isOpen ? 'Close' : 'Menu'}</p>
 
@@ -163,6 +170,39 @@ const SiteNavbar = () => {
             <span ref={refs.bottomLine} className='absolute w-[2vw] h-0.5 bg-white translate-y-[.3vw]'></span>
           </div>
         </div>
+
+
+         {
+                        isSignedIn ? (
+                            <UserButton
+                                afterSwitchSessionUrl="/"
+                                appearance={{
+                                    elements: {
+                                        avatarBox: "h-9 w-9"
+                                    }
+                                }}
+                            >
+                                <UserButton.MenuItems>
+                                    <UserButton.Link
+                                        label="Shop"
+                                        labelIcon={
+                                            <Package className="h-4 w-4" />
+                                        }
+                                        href="/products"
+                                    />
+                                </UserButton.MenuItems>
+                            </UserButton>
+                        ) : (
+                            <SignInButton mode="modal">
+                                <button className="text-lg font-medium text-white ">
+                                    Sign in
+                                </button>
+                            </SignInButton>)}
+
+
+
+
+
       </nav>
 
       <div ref={refs.menu} className=' fixed top-[calc(6vw+5%)] left-1/2 -translate-x-1/2 w-[90vw] bg-zinc-800 border border-white/10 rounded-md z-40 overflow-clip'
@@ -189,7 +229,7 @@ const SiteNavbar = () => {
           <div ref={refs.contactInfo} className='w-[25%] flex flex-col gap-[1.5vw] px-[2vw] text-white/70 text-[1.1vw]'>
             <div>
               <p className='text-white/40 uppercase text-[0.85vw] mb-[0.3vw]'>Contact</p>
-              <p>warren@manserif.com</p>
+              <p>warren@manserifthink.com</p>
             </div>
 
             {/* <div>
@@ -216,7 +256,7 @@ const SiteNavbar = () => {
           </div>
 
           <div className='w-[50%] flex gap-[1vw] pl-[2vw]'>
-            <div className='flex-1 flex flex-col gap-[1vw]'>
+            {/* <div className='flex-1 flex flex-col gap-[1vw]'>
               <p className='text-white/40 uppercase text-[.85vw]'>About the studio</p>
 
               <div className='flex-1 rounded-md overflow-clip'>
@@ -226,17 +266,19 @@ const SiteNavbar = () => {
                   className='w-full h-full object-cover'
                 />
               </div>
-            </div>
+            </div> */}
 
             <div className='flex-1 flex flex-col gap-[1vw]'>
-              <p className='text-white/40 uppercase text-[0.85vw]'>Feature project</p>
+              <a href="/exhibits/le-divin-a-travers-mes-yeux-the-divine-through-my-eyes" className='text-orange-500 hover:text-orange-300 transition-colors'>
+                <p className='text-white/40 uppercase text-[0.85vw]'>Featured Exhibit</p>
               <div className='flex-1 rounded-md overflow-hidden border-2 border-orange-500'>
                 <img
                   src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400"
                   alt="Feature project"
                   className='w-full h-full object-cover'
-                />
+                  />
               </div>
+                  </a>
             </div>
           </div>
         </div>

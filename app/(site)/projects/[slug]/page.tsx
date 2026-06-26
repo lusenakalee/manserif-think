@@ -203,10 +203,10 @@ export default function ProjectPage({ params }: PageProps) {
                 <ul className="space-y-2 text-sm font-light">
                   <li className="overflow-hidden">
                     <a
-                      href="mailto:warren@manserif.com"
+                      href="mailto:warren@manserifthink.com"
                       className="reveal-text block hover:opacity-70 transition-opacity"
                     >
-                      warren@manserif.com
+                      warren@manserifthink.com
                     </a>
                   </li>
                   <li className="overflow-hidden">
