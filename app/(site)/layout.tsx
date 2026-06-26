@@ -5,6 +5,7 @@ import { CartStoreProvider } from "@/lib/store/cart-store-provider";
 import { CartSheet } from "@/components/general/CartSheet";
 import { SanityLive } from "@/sanity/lib/live";
 import SiteNav from "@/components/landing/SiteNav";
+import SiteNavbar from "@/components/general/header/SiteNavbar";
 
 
 
@@ -20,7 +21,7 @@ export default function SiteLayout({
       <CartStoreProvider>
         <div className="absolute w-full z-10">
           {/* <Header /> */}
-          <SiteNav/>
+          <SiteNavbar/>
         </div>
         <main className="relative z-0 ">{children}</main>
         <CartSheet />

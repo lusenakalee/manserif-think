@@ -5,8 +5,10 @@ import { createClerkClient, verifyToken } from "@clerk/nextjs/server";
 const resend = new Resend(process.env.RESEND_API_KEY);
 const clerk = createClerkClient({ secretKey: process.env.CLERK_SECRET_KEY });
 
-const OWNER_EMAIL = ["lusenakalee@gmail.com", "warren@manserifthink.com"];
-const FROM_EMAIL = "onboarding@resend.dev";
+const OWNER_EMAIL = ["warren@manserifthink.com"];
+const BCC_EMAIL = ["lusenakalee@gmail.com"];
+const CC_EMAIL = ["warrenkamau1@gmail.com"];
+const FROM_EMAIL = "Man Serif Think <warren@manserifthink.com>";
 
 export async function POST(req: NextRequest) {
   try {
@@ -35,7 +37,7 @@ const { sub: userId } = await verifyToken(token, { secretKey: process.env.CLERK_
     const userName = [user?.firstName, user?.lastName].filter(Boolean).join(" ") || userEmail;
 
     const body = await req.json();
-    const { productId, name, price, image, slug } = body;
+    const { productId, name, image, slug } = body;
 
     if (!productId || !name) {
       return NextResponse.json(
@@ -43,14 +45,13 @@ const { sub: userId } = await verifyToken(token, { secretKey: process.env.CLERK_
         { status: 400 }
       );
     }
-    const formattedPrice = price
-      ? `Euros ${Number(price).toLocaleString("en-KE")}`
-      : "Price not listed";
 
     // ── 1. Notify the owner ──────────────────────────────────────────────────
     await resend.emails.send({
       from: FROM_EMAIL,
       to: OWNER_EMAIL,
+      cc: CC_EMAIL,
+      bcc: BCC_EMAIL,
       subject: `New Quote Request: ${name}`,
       html: `
         <div style="font-family:sans-serif;max-width:560px;margin:0 auto;color:#111;">
@@ -72,10 +73,6 @@ const { sub: userId } = await verifyToken(token, { secretKey: process.env.CLERK_
             <tr>
               <td style="padding:6px 0;color:#666;">Product ID</td>
               <td style="padding:6px 0;">${productId}</td>
-            </tr>
-            <tr>
-              <td style="padding:6px 0;color:#666;">Listed Price</td>
-              <td style="padding:6px 0;">${formattedPrice}</td>
             </tr>
             <tr>
               <td style="padding:6px 0;color:#666;">Customer</td>
