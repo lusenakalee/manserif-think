@@ -12,7 +12,7 @@ export default function robots(): MetadataRoute.Robots {
         // actually exist on the site (Sanity Studio, Clerk-protected
         // account pages, cart/checkout, API routes, etc.) — none of these
         // need to be, or should be, indexed.
-        disallow: ["/api/", "/studio/", "/account/", "/checkout/", "/cart/"],
+        disallow: ["/api/", "/studio/", "/account/", "/checkout/", "/cart/" , "/login/", "/register/" , "/order/", "/orders/", "/reset-password/", "/verify-email/"],
       },
     ],
     sitemap: `${siteUrl}/sitemap.xml`,
