@@ -298,7 +298,7 @@ const SiteNavbar = () => {
                 <p className='text-white/40 uppercase text-xs sm:text-[0.85vw] mb-1'>Featured Exhibit</p>
                 <div className='flex-1 rounded-md overflow-hidden border-2 border-orange-500 max-h-40 sm:max-h-none'>
                   <img
-                    src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400"
+                    src="/images/eyes.webp"
                     alt="Feature project"
                     className='w-full h-full object-cover'
                   />
