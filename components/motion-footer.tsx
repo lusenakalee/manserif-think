@@ -233,6 +233,8 @@ export function CinematicFooter() {
   const [subscribed, setSubscribed] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [siteInquirySent, setSiteInquirySent] = useState(false);
+  const [siteInquiryLoading, setSiteInquiryLoading] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -264,7 +266,7 @@ export function CinematicFooter() {
     return () => ctx.revert();
   }, []);
 
-  const handleSubscribe = async () => {
+  const handleConnect = async () => {
     const trimmed = email.trim();
     if (!trimmed || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
       setError("Please enter a valid email address.");
@@ -273,7 +275,7 @@ export function CinematicFooter() {
     setError("");
     setLoading(true);
     try {
-      const res = await fetch("/api/newsletter", {
+      const res = await fetch("/api/connect", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: trimmed }),
@@ -282,13 +284,32 @@ export function CinematicFooter() {
       if (!res.ok) throw new Error(data?.error ?? "Something went wrong");
       setSubscribed(true);
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Failed to subscribe. Try again.");
+      setError(err instanceof Error ? err.message : "Failed to send. Try again.");
     } finally {
       setLoading(false);
     }
   };
 
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
+
+  const handleSiteInquiry = async () => {
+    if (siteInquirySent || siteInquiryLoading) return;
+    setSiteInquiryLoading(true);
+    try {
+      await fetch("/api/site-inquiry", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          page: typeof window !== "undefined" ? window.location.href : undefined,
+        }),
+      });
+      setSiteInquirySent(true);
+    } catch {
+      // Fail silently — this is a low-stakes background ping, not worth surfacing an error UI for.
+    } finally {
+      setSiteInquiryLoading(false);
+    }
+  };
 
   return (
     <>
@@ -352,16 +373,16 @@ export function CinematicFooter() {
                     placeholder="your@email.com"
                     value={email}
                     onChange={(e) => { setEmail(e.target.value); setError(""); }}
-                    onKeyDown={(e) => e.key === "Enter" && handleSubscribe()}
+                    onKeyDown={(e) => e.key === "Enter" && handleConnect()}
                     disabled={subscribed || loading}
-                    aria-label="Email address for newsletter"
+                    aria-label="Your email address"
                   />
                 </div>
 
                 {/* Subscribe magnetic button */}
                 <MagneticButton
                   as="button"
-                  onClick={handleSubscribe}
+                  onClick={handleConnect}
                   disabled={subscribed}
                   className="footer-subscribe-btn px-10 py-4 rounded-full font-bold text-sm md:text-base flex items-center gap-3 disabled:opacity-60 disabled:cursor-default"
                 >
@@ -371,7 +392,7 @@ export function CinematicFooter() {
                       <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                         <path d="M5 13l4 4L19 7" />
                       </svg>
-                      Subscribed
+                      Sent
                     </>
                   ) : loading ? (
                     <>
@@ -398,7 +419,7 @@ export function CinematicFooter() {
                 )}
                 {subscribed && (
                   <p className="footer-subscribe-success">
-                    ✦ &nbsp;You&rsquo;re on the list — thank you
+                    ✦ &nbsp;Message sent — we&rsquo;ll be in touch
                   </p>
                 )}
               </div>
@@ -424,13 +445,23 @@ export function CinematicFooter() {
             <div className="text-muted-foreground text-[10px] md:text-xs font-semibold tracking-widest uppercase order-2 md:order-1">
               © 2026 ManSerif. All rights reserved.
             </div>
-            <div className="footer-glass-pill px-6 py-3 rounded-full flex items-center gap-2 order-1 md:order-2 cursor-default border-border/50">
-             <a href="mailto:lusenakalee@gmail.com?subject=Let's%20Work%20Together">
-
-              <span className="text-muted-foreground text-[10px] md:text-xs font-bold uppercase tracking-widest">Site</span>
-              <span className="text-muted-foreground text-[10px] md:text-xs font-bold uppercase tracking-widest">by</span>
-              <span className="text-foreground font-black text-xs md:text-sm tracking-normal ml-1">Leroy.Dev</span>
-              </a>
+            <div className="footer-glass-pill px-6 py-3 rounded-full flex items-center gap-2 order-1 md:order-2 border-border/50">
+              <button
+                type="button"
+                onClick={handleSiteInquiry}
+                disabled={siteInquiryLoading}
+                className="flex items-center gap-2 cursor-pointer disabled:cursor-default"
+                aria-label="Site by Leroy.Dev — send a website inquiry"
+              >
+                <span className="text-muted-foreground text-[10px] md:text-xs font-bold uppercase tracking-widest">Site</span>
+                <span className="text-muted-foreground text-[10px] md:text-xs font-bold uppercase tracking-widest">by</span>
+                <span className="text-foreground font-black text-xs md:text-sm tracking-normal ml-1">Leroy.Dev</span>
+                {siteInquirySent && (
+                  <svg className="w-3.5 h-3.5 shrink-0 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M5 13l4 4L19 7" />
+                  </svg>
+                )}
+              </button>
             </div>
             <MagneticButton
               as="button"
