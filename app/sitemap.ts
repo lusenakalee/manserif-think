@@ -4,9 +4,6 @@ import { sanityFetch } from "@/sanity/lib/live";
 
 const siteUrl = "https://www.manserifthink.com";
 
-// Pulls just what the sitemap needs — slug, last-updated timestamp, and
-// resolved image URLs (so product pages can show up in Google Image search
-// via the sitemap "images" extension).
 const ALL_PRODUCTS_FOR_SITEMAP_QUERY = defineQuery(`*[
   _type == "product"
   && defined(slug.current)
@@ -14,6 +11,15 @@ const ALL_PRODUCTS_FOR_SITEMAP_QUERY = defineQuery(`*[
   "slug": slug.current,
   _updatedAt,
   "images": images[].asset->url
+}`);
+
+const ALL_EXHIBITS_FOR_SITEMAP_QUERY = defineQuery(`*[
+  _type == "exhibit"
+  && defined(slug.current)
+]{
+  "slug": slug.current,
+  _updatedAt,
+  "image": heroImage.asset->url
 }`);
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -36,23 +42,43 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "weekly",
       priority: 0.9,
     },
+    {
+      url: `${siteUrl}/exhibits`,
+      lastModified: new Date(),
+      changeFrequency: "monthly",
+      priority: 0.8,
+    },
   ];
 
-  const { data: products } = await sanityFetch({
-    query: ALL_PRODUCTS_FOR_SITEMAP_QUERY,
-  });
+  const [{ data: products }, { data: exhibits }] = await Promise.all([
+    sanityFetch({ query: ALL_PRODUCTS_FOR_SITEMAP_QUERY }),
+    sanityFetch({ query: ALL_EXHIBITS_FOR_SITEMAP_QUERY }),
+  ]);
 
-  const productRoutes: MetadataRoute.Sitemap = (products ?? []).map(
-    (product) => ({
+  type ProductRow = NonNullable<typeof products>[number];
+  type ExhibitRow = NonNullable<typeof exhibits>[number];
+
+  const productRoutes: MetadataRoute.Sitemap = (products ?? [])
+    .filter((p: ProductRow): p is ProductRow & { slug: string } => p.slug !== null)
+    .map((product: ProductRow & { slug: string }) => ({
       url: `${siteUrl}/products/${product.slug}`,
-      lastModified: product._updatedAt ? new Date(product._updatedAt) : new Date(),
-      changeFrequency: "weekly",
+      lastModified: new Date(product._updatedAt),
+      changeFrequency: "weekly" as const,
       priority: 0.7,
       ...(product.images?.length
-        ? { images: product.images.filter(Boolean) as string[] }
+        ? { images: product.images.filter((img): img is string => img !== null) }
         : {}),
-    })
-  );
+    }));
 
-  return [...staticRoutes, ...productRoutes];
+  const exhibitRoutes: MetadataRoute.Sitemap = (exhibits ?? [])
+    .filter((e: ExhibitRow): e is ExhibitRow & { slug: string } => e.slug !== null)
+    .map((exhibit: ExhibitRow & { slug: string }) => ({
+      url: `${siteUrl}/exhibits/${exhibit.slug}`,
+      lastModified: new Date(exhibit._updatedAt),
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+      ...(exhibit.image ? { images: [exhibit.image] } : {}),
+    }));
+
+  return [...staticRoutes, ...productRoutes, ...exhibitRoutes];
 }
