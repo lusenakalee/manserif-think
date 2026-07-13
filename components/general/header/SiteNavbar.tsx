@@ -29,6 +29,8 @@ const SiteNavbar = () => {
 
   const { isSignedIn } = useUser();
   const [isOpen, setIsOpen] = useState<boolean>(false)
+  const [isVisible, setIsVisible] = useState<boolean>(false)
+  const [isScrolled, setIsScrolled] = useState<boolean>(false)
   const pathname = usePathname()
 
   const refs = {
@@ -74,6 +76,34 @@ const SiteNavbar = () => {
       refs.timeline.current?.kill()
       splits.forEach(split => split.revert())
     }
+  }, [])
+
+  // Wait 5 seconds before the navbar appears
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsVisible(true)
+    }, 5000)
+    return () => clearTimeout(timer)
+  }, [])
+
+  // Animate the navbar in once it becomes visible
+  useEffect(() => {
+    if (!isVisible || !refs.nav.current) return
+    gsap.fromTo(
+      refs.nav.current,
+      { opacity: 0, y: -16 },
+      { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }
+    )
+  }, [isVisible])
+
+  // Track scroll position to toggle translucency
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20)
+    }
+    handleScroll()
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   const isMobile = () => typeof window !== 'undefined' && window.innerWidth < 640
@@ -171,7 +201,9 @@ const SiteNavbar = () => {
       {/* ── Navbar bar ── */}
       <nav
         ref={refs.nav}
-        className='fixed top-[5%] left-1/2 -translate-x-1/2 w-[95vw] bg-zinc-800 border border-white/10 rounded-md flex items-center justify-between px-4 sm:px-[2vw] py-3 sm:py-[1.5vw] z-50'
+        style={{ opacity: isVisible ? undefined : 0, pointerEvents: isVisible ? undefined : 'none' }}
+        className={`fixed top-[5%] left-1/2 -translate-x-1/2 w-[95vw] border border-white/10 rounded-md flex items-center justify-between px-4 sm:px-[2vw] py-3 sm:py-[1.5vw] z-50 transition-colors duration-300 ${isScrolled ? 'bg-zinc-800/60 backdrop-blur-md' : 'bg-zinc-800'
+          }`}
       >
         {/* Logo */}
         <p className='text-white text-sm sm:text-[1.3vw] font-medium leading-tight'>
@@ -264,6 +296,7 @@ const SiteNavbar = () => {
                 <Link
                   ref={el => { refs.links.current[index] = el }}
                   href={link.href}
+                  onClick={() => setIsOpen(false)}
                   className={`text-4xl sm:text-[2.8vw] font-medium transition-colors ${pathname === link.href ? 'text-orange-500' : 'text-white hover:text-orange-500'}`}
                 >
                   {link.label}
@@ -296,7 +329,8 @@ const SiteNavbar = () => {
                 className='text-orange-500 hover:text-orange-300 transition-colors'
               >
                 <p className='text-white/40 uppercase text-xs sm:text-[0.85vw] mb-1'>Featured Exhibit</p>
-                <div className='flex-1 rounded-md overflow-hidden border-2 border-orange-500 max-h-40 sm:max-h-none'>
+                <div className={`flex-1 rounded-md overflow-hidden border-2 border-orange-500 transition-all duration-500 ease-in-out ${isOpen ? 'max-h-32 sm:max-h-40' : 'max-h-40 sm:max-h-none'
+                  }`}>
                   <img
                     src="/images/eyes.webp"
                     alt="Feature project"
