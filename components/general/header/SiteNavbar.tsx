@@ -31,6 +31,7 @@ const SiteNavbar = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [isVisible, setIsVisible] = useState<boolean>(false)
   const [isScrolled, setIsScrolled] = useState<boolean>(false)
+  const [isCompact, setIsCompact] = useState<boolean>(false)
   const pathname = usePathname()
 
   const refs = {
@@ -43,6 +44,10 @@ const SiteNavbar = () => {
     indicator: useRef<HTMLDivElement>(null),
     linksContainer: useRef<HTMLDivElement>(null),
     contactInfo: useRef<HTMLDivElement>(null),
+    logo: useRef<HTMLDivElement>(null),
+    menuLabel: useRef<HTMLDivElement>(null),
+    authWrap: useRef<HTMLDivElement>(null),
+    toggleWrap: useRef<HTMLDivElement>(null),
     timeline: useRef<gsap.core.Timeline | null>(null),
     splits: useRef<SplitText[]>([]),
     allLines: useRef<HTMLElement[]>([]),
@@ -96,17 +101,37 @@ const SiteNavbar = () => {
     )
   }, [isVisible])
 
-  // Track scroll position to toggle translucency
+  // Track scroll position to toggle translucency, and auto-collapse to compact mode
   useEffect(() => {
+    let wasScrolled = window.scrollY > 20
+
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20)
+      const scrolled = window.scrollY > 20
+      setIsScrolled(scrolled)
+
+      if (isOpen) return // don't fight the open/close timeline
+
+      if (!scrolled) {
+        setIsCompact(false) // always show the full nav at the top
+      } else if (scrolled && !wasScrolled) {
+        setIsCompact(true) // just crossed the threshold, collapse
+      }
+
+      wasScrolled = scrolled
     }
+
     handleScroll()
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  }, [isOpen])
 
   const isMobile = () => typeof window !== 'undefined' && window.innerWidth < 640
+
+  // Kept in sync so the compact-nav effect can check isOpen without needing it as a dependency
+  const isOpenRef = useRef(false)
+  useEffect(() => {
+    isOpenRef.current = isOpen
+  }, [isOpen])
 
   const animateToLink = (index: number) => {
     const indicator = refs.indicator.current
@@ -195,6 +220,52 @@ const SiteNavbar = () => {
 
   }, [isOpen, activeIndex])
 
+  // Collapse the nav to just the hamburger lines once scrolled, expand on click
+  useEffect(() => {
+    if (isOpenRef.current || !refs.nav.current) return // the open/close timeline owns width while the menu is open
+
+    const mobile = isMobile()
+    const collapsibles = [refs.logo.current, refs.menuLabel.current, refs.authWrap.current]
+      .filter((el): el is HTMLDivElement => Boolean(el))
+
+    // Nav's own left+right padding (px-4 / 2vw) stays fixed; compact width just needs
+    // to fit that plus the icon itself (w-6 / 2vw), since the toggle wrapper's own
+    // padding + gap collapse to 0 below.
+    gsap.to(refs.nav.current, {
+      width: isCompact ? (mobile ? '56px' : '6vw') : '95vw',
+      duration: 0.5,
+      ease: 'power3.inOut',
+      overwrite: true,
+    })
+
+    gsap.to(collapsibles, {
+      width: isCompact ? 0 : 'auto',
+      opacity: isCompact ? 0 : 1,
+      duration: 0.4,
+      ease: 'power3.inOut',
+      overwrite: true,
+    })
+
+    if (refs.toggleWrap.current) {
+      gsap.to(refs.toggleWrap.current, {
+        paddingLeft: isCompact ? 0 : (mobile ? '16px' : '2vw'),
+        paddingRight: isCompact ? 0 : (mobile ? '16px' : '2vw'),
+        columnGap: isCompact ? 0 : (mobile ? '16px' : '2vw'),
+        duration: 0.4,
+        ease: 'power3.inOut',
+        overwrite: true,
+      })
+    }
+  }, [isCompact])
+
+  const handleToggleClick = () => {
+    // First click while collapsed just re-expands the nav
+    if (isCompact) {
+      setIsCompact(false)
+      return
+    }
+    setIsOpen(!isOpen)
+  }
 
   return (
     <>
@@ -202,22 +273,27 @@ const SiteNavbar = () => {
       <nav
         ref={refs.nav}
         style={{ opacity: isVisible ? undefined : 0, pointerEvents: isVisible ? undefined : 'none' }}
-        className={`fixed top-[5%] left-1/2 -translate-x-1/2 w-[95vw] border border-white/10 rounded-md flex items-center justify-between px-4 sm:px-[2vw] py-3 sm:py-[1.5vw] z-50 transition-colors duration-300 ${isScrolled ? 'bg-zinc-800/60 backdrop-blur-md' : 'bg-zinc-800'
+        className={`fixed top-[5%] right-[2.5%] w-[95vw] border border-white/10 rounded-md flex items-center justify-between px-4 sm:px-[2vw] py-3 sm:py-[1.5vw] z-50 overflow-hidden transition-colors duration-300 ${isScrolled ? 'bg-zinc-800/60 backdrop-blur-md' : 'bg-zinc-800'
           }`}
       >
         {/* Logo */}
-        <p className='text-white text-sm sm:text-[1.3vw] font-medium leading-tight'>
-          Manserif<br />.Think
-        </p>
+        <div ref={refs.logo} className='overflow-hidden'>
+          <p className='text-white text-sm sm:text-[1.3vw] font-medium leading-tight whitespace-nowrap'>
+            Manserif<br />.Think
+          </p>
+        </div>
 
         {/* Menu toggle */}
         <div
-          onClick={() => setIsOpen(!isOpen)}
+          ref={refs.toggleWrap}
+          onClick={handleToggleClick}
           className='flex px-4 sm:px-[2vw] items-center justify-center gap-4 sm:gap-[2vw] cursor-pointer'
         >
-          <p className='text-white text-sm sm:text-[1.3vw] font-medium'>
-            {isOpen ? 'Close' : 'Menu'}
-          </p>
+          <div ref={refs.menuLabel} className='overflow-hidden'>
+            <p className='text-white text-sm sm:text-[1.3vw] font-medium whitespace-nowrap'>
+              {isOpen ? 'Close' : 'Menu'}
+            </p>
+          </div>
 
           {/* Hamburger lines */}
           <div className='relative w-6 h-4 sm:w-[2vw] sm:h-[1vw]'>
@@ -235,36 +311,38 @@ const SiteNavbar = () => {
         </div>
 
         {/* Auth */}
-        {isSignedIn ? (
-          <UserButton
-            afterSwitchSessionUrl="/"
-            appearance={{
-              elements: {
-                avatarBox: "h-8 w-8 sm:h-9 sm:w-9"
-              }
-            }}
-          >
-            <UserButton.MenuItems>
-              <UserButton.Link
-                label="Shop"
-                labelIcon={<Package className="h-4 w-4" />}
-                href="/products"
-              />
-            </UserButton.MenuItems>
-          </UserButton>
-        ) : (
-          <SignInButton mode="modal">
-            <button className="text-sm sm:text-lg font-medium text-white">
-              Sign in
-            </button>
-          </SignInButton>
-        )}
+        <div ref={refs.authWrap} className='overflow-hidden'>
+          {isSignedIn ? (
+            <UserButton
+              afterSwitchSessionUrl="/"
+              appearance={{
+                elements: {
+                  avatarBox: "h-8 w-8 sm:h-9 sm:w-9"
+                }
+              }}
+            >
+              <UserButton.MenuItems>
+                <UserButton.Link
+                  label="Shop"
+                  labelIcon={<Package className="h-4 w-4" />}
+                  href="/products"
+                />
+              </UserButton.MenuItems>
+            </UserButton>
+          ) : (
+            <SignInButton mode="modal">
+              <button className="text-sm sm:text-lg font-medium text-white whitespace-nowrap">
+                Sign in
+              </button>
+            </SignInButton>
+          )}
+        </div>
       </nav>
 
       {/* ── Dropdown menu ── */}
       <div
         ref={refs.menu}
-        className='fixed top-[calc(56px+5%)] sm:top-[calc(6vw+5%)] left-1/2 -translate-x-1/2 w-[95vw] sm:w-[90vw] bg-zinc-800 border border-white/10 rounded-md z-40 overflow-clip'
+        className='fixed top-[calc(56px+5%)] sm:top-[calc(6vw+5%)] right-[2.5%] w-[95vw] sm:w-[90vw] bg-zinc-800 border border-white/10 rounded-md z-40 overflow-clip'
         style={{ clipPath: 'inset(0% 0% 100% 0%)' }}
       >
         {/* 
