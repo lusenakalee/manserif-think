@@ -1,6 +1,6 @@
 import { ClerkProvider } from "@clerk/nextjs";
 import { Toaster } from "@/components/ui/sonner";
-import { Header } from "@/components/general/Header";
+import  Header  from "@/components/general/header-comps/Header";
 import { CartStoreProvider } from "@/lib/store/cart-store-provider";
 import { CartSheet } from "@/components/general/CartSheet";
 import { SanityLive } from "@/sanity/lib/live";
@@ -20,8 +20,8 @@ export default function SiteLayout({
     <ClerkProvider>
       <CartStoreProvider>
         <div className="absolute w-full z-10">
-          {/* <Header /> */}
-          <SiteNavbar/>
+        <div className=""> <Header /> </div>  
+                   {/* <SiteNavbar/> */}
         </div>
         <main className="relative z-0 ">{children}</main>
         <CartSheet />
