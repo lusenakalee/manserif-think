@@ -23,7 +23,7 @@ export default function SiteLayout({
         <div className=""> <Header /> </div>  
                    {/* <SiteNavbar/> */}
         </div>
-        <main className="relative z-0 ">{children}</main>
+        <main className="relative z-0 overflow-x-0 ">{children}</main>
         <CartSheet />
         <Toaster position="bottom-center" />
         <SanityLive />

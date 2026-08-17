@@ -8,11 +8,17 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Nav from "./nav-comps/Nav";
 import Rounded from "@/components/general/RoundedButton2";
 import Magnetic from "@/components/general/Magnetic";
+import Link from "next/link";
 
 // Shared custom easing curve, used throughout (replaces the SCSS cubic-bezier)
 const EASE = "ease-[cubic-bezier(0.76,0,0.24,1)]";
 
-const NAV_LINKS = ["Work", "About", "Contact"];
+const NAV_LINKS = [
+  { label: "Pieces", href: "/pieces" },
+  { label: "Exhibitions", href: "/exhibitions" },
+  { label: "Portfolio", href: "/portfolio" },
+];
+
 
 export default function Header() {
   const header = useRef<HTMLDivElement>(null);
@@ -59,6 +65,7 @@ export default function Header() {
           <div
             className={`relative ml-[5px] flex overflow-hidden whitespace-nowrap transition-all duration-500 ${EASE} group-hover/logo:pr-[30px]`}
           >
+            <Link href="/" className="flex">
             <p
               className={`relative m-0 transition-transform duration-500 ${EASE} group-hover/logo:-translate-x-full`}
             >
@@ -69,6 +76,7 @@ export default function Header() {
             >
               .Think
             </p>
+            </Link>
             <p
               className={`absolute left-[120px] m-0 pl-[0.3em] transition-transform duration-500 ${EASE} group-hover/logo:-translate-x-[65px]`}
             >
@@ -79,16 +87,19 @@ export default function Header() {
 
         {/* Nav links — hidden on mobile, the burger menu handles navigation there */}
         <div className="hidden md:flex md:items-center">
-          {NAV_LINKS.map((label) => (
-            <Magnetic key={label}>
-              <div className="group/el relative z-[1] flex cursor-pointer flex-col p-[15px]">
-                <a className="cursor-pointer">{label}</a>
-                <div
-                  className={`absolute left-1/2 top-[45px] h-[5px] w-[5px] -translate-x-1/2 scale-0 rounded-full bg-white transition-transform duration-200 ${EASE} group-hover/el:scale-100`}
-                />
-              </div>
-            </Magnetic>
-          ))}
+          {NAV_LINKS.map(({ label, href }) => (
+  <Magnetic key={label}>
+    <div className="group/el relative z-[1] flex flex-col p-[15px]">
+      <Link href={href} className="cursor-pointer">
+        {label}
+      </Link>
+
+      <div
+        className={`absolute left-1/2 top-[45px] h-[5px] w-[5px] -translate-x-1/2 scale-0 rounded-full bg-white transition-transform duration-200 ${EASE} group-hover/el:scale-100`}
+      />
+    </div>
+  </Magnetic>
+))}
         </div>
       </div>
 

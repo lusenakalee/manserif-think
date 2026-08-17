@@ -14,11 +14,14 @@ export default async function Home() {
     const exhibits = await client.fetch(ALL_EXHIBITS_QUERY);
 
   return (
-    <div >
-      <AnimatedHero/>
+    <div className="">
+    <div>
+       <AnimatedHero/>
       {/* <ArtSnippet/> */}
       {/* <ExhibitList/> */}
       <ProductHoverSectionDemo/>
+      
+      </div> 
     <TextMask/>
 <VideoSnippets exhibits={exhibits} />
       {/* <SculpturesSnippet/> */}
