@@ -1,11 +1,12 @@
 import InfiniteGallery from '@/components/general/InfiniteGallery';
 import imageUrlBuilder from '@sanity/image-url';
+import type { SanityImageSource } from '@sanity/image-url';
 import { client } from '@/sanity/lib/client';
 import { ALL_EXHIBITS_QUERY } from '@/lib/sanity/queries/exhibits';
 
 const builder = imageUrlBuilder(client);
 
-function urlFor(source: unknown) {
+function urlFor(source: SanityImageSource) {
   return builder.image(source);
 }
 
