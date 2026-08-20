@@ -16,8 +16,7 @@ export async function POST(request: Request) {
     }
 
     await resend.emails.send({
-      // Replace with your verified Resend sending domain (e.g. hello@manserifthink.com)
-      from: "ManSerif.Think <hello@manserifthink.com>",
+      from: "ManSerif.Think <warren@manserifthink.com>",
       to: "warren@manserifthink.com",
       cc: "warrenkamau1@gmail.com",
       replyTo: trimmed,
