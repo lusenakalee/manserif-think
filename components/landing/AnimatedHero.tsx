@@ -254,7 +254,7 @@ export default function AnimatedHero() {
           {/* Headline */}
           <div data-split-header className="w-3/5 max-[1000px]:w-full">
             <h1 data-split className="text-white  md:pb-0 font-normal leading-[1.1] tracking-[-0.01em] text-[clamp(1.75rem,3vw,3rem)]">
-              Multidisciplinary artist sharing evolving work, products, and
+              Multidisciplinary <span className="bg-white text-black px-2 py-1">artist</span> sharing evolving work, products, and
               journey.
             </h1>
           </div>
