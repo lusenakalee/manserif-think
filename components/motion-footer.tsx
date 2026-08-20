@@ -195,18 +195,32 @@ const MagneticButton = React.forwardRef<HTMLElement, MagneticButtonProps>(
       return () => ctx.revert();
     }, []);
 
+    // Cast to a permissive type before using as a JSX tag. `Component` is
+    // `React.ElementType`, and using that broad union directly as a JSX tag
+    // makes TS intersect props across every possible element it could be,
+    // which collapses `children`/`ref`/`className` to `never`. Casting here
+    // avoids that without weakening the public `MagneticButtonProps` type.
+    const Comp = Component as React.ComponentType<
+      React.HTMLAttributes<HTMLElement> & {
+        ref?: React.Ref<HTMLElement>;
+        href?: string;
+        type?: string;
+        disabled?: boolean;
+      }
+    >;
+
     return (
-      <Component
-        ref={(node: HTMLElement) => {
-          (localRef as any).current = node;
-          if (typeof forwardedRef === "function") forwardedRef(node);
-          else if (forwardedRef) (forwardedRef as any).current = node;
+      <Comp
+        ref={(node: HTMLElement | null) => {
+          (localRef as React.MutableRefObject<HTMLElement | null>).current = node;
+          if (typeof forwardedRef === "function") forwardedRef(node as HTMLElement);
+          else if (forwardedRef) (forwardedRef as React.MutableRefObject<HTMLElement | null>).current = node;
         }}
         className={cn("cursor-pointer", className)}
         {...props}
       >
         {children}
-      </Component>
+      </Comp>
     );
   }
 );
