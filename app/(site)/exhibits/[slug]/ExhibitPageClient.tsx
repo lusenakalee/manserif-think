@@ -21,25 +21,73 @@ interface ExhibitPageClientProps {
 export default function ExhibitPageClient({ exhibit, heroImageUrl }: ExhibitPageClientProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const detailsPinRef = useRef<HTMLElement>(null);
+  const detailsContentRef = useRef<HTMLDivElement>(null);
 
   useGSAP(
     () => {
-      if (!containerRef.current || !wrapperRef.current) return;
+      if (
+        !containerRef.current ||
+        !wrapperRef.current ||
+        !detailsPinRef.current ||
+        !detailsContentRef.current
+      )
+        return;
 
       const wrapper = wrapperRef.current;
+      const detailsPin = detailsPinRef.current;
+      const detailsContent = detailsContentRef.current;
 
-      const scrollTween = gsap.to(wrapper, {
-        x: () => -(wrapper.scrollWidth - window.innerWidth),
+      // ── Horizontal scroll timeline, split into 3 segments ──
+      // A: Hero  →  Exhibit Details            (horizontal)
+      // B: Exhibit Details content reveal       (horizontal movement locked, vertical)
+      // C: Exhibit Details  →  Featured Products / Gallery / Footer / CTA (horizontal)
+      let detailsOffset = 0; // px the wrapper travels to bring Details flush left
+      let detailsExtraHeight = 0; // px of Details content taller than the viewport
+      let totalX = 0; // full horizontal travel distance across the whole page
+
+      const measure = () => {
+        detailsOffset = detailsPin.offsetLeft;
+        detailsExtraHeight = Math.max(0, detailsContent.scrollHeight - window.innerHeight);
+        totalX = wrapper.scrollWidth - window.innerWidth;
+      };
+      measure();
+
+      const master = gsap.timeline({ paused: true });
+
+      const xToDetails = master.to(wrapper, {
+        x: () => -detailsOffset,
         ease: 'none',
-        scrollTrigger: {
-          trigger: containerRef.current,
-          pin: true,
-          scrub: 1,
-          end: () => `+=${wrapper.scrollWidth - window.innerWidth}`,
-          invalidateOnRefresh: true,
-          onUpdate: (self) => {
-            gsap.set('.progress-bar', { scaleX: self.progress });
-          },
+        duration: Math.max(detailsOffset, 0.0001),
+      });
+
+      const lockDetails = master.to(detailsContent, {
+        y: () => -detailsExtraHeight,
+        ease: 'none',
+        duration: Math.max(detailsExtraHeight, 0.0001),
+      });
+
+      const xToEnd = master.to(wrapper, {
+        x: () => -totalX,
+        ease: 'none',
+        duration: Math.max(totalX - detailsOffset, 0.0001),
+      });
+
+      ScrollTrigger.create({
+        animation: master,
+        trigger: containerRef.current,
+        pin: true,
+        scrub: 1,
+        invalidateOnRefresh: true,
+        end: () => `+=${totalX + detailsExtraHeight}`,
+        onRefreshInit: () => {
+          measure();
+          xToDetails.duration(Math.max(detailsOffset, 0.0001));
+          lockDetails.duration(Math.max(detailsExtraHeight, 0.0001));
+          xToEnd.duration(Math.max(totalX - detailsOffset, 0.0001));
+        },
+        onUpdate: (self) => {
+          gsap.set('.progress-bar', { scaleX: self.progress });
         },
       });
 
@@ -55,7 +103,7 @@ export default function ExhibitPageClient({ exhibit, heroImageUrl }: ExhibitPage
             ease: 'power3.out',
             scrollTrigger: {
               trigger: text,
-              containerAnimation: scrollTween,
+              containerAnimation: master,
               start: 'left right-=100',
             },
           }
@@ -75,7 +123,7 @@ export default function ExhibitPageClient({ exhibit, heroImageUrl }: ExhibitPage
             ease: 'power2.out',
             scrollTrigger: {
               trigger: wrapperEl,
-              containerAnimation: scrollTween,
+              containerAnimation: master,
               start: 'left 92%',
               end: 'left 42%',
               scrub: true,
@@ -91,7 +139,7 @@ export default function ExhibitPageClient({ exhibit, heroImageUrl }: ExhibitPage
             ease: 'power2.out',
             scrollTrigger: {
               trigger: wrapperEl,
-              containerAnimation: scrollTween,
+              containerAnimation: master,
               start: 'left 92%',
               end: 'left 42%',
               scrub: true,
@@ -153,7 +201,7 @@ export default function ExhibitPageClient({ exhibit, heroImageUrl }: ExhibitPage
           </div>
 
           {/* Top corner labels */}
-          <div className="relative z-10 flex items-start justify-between text-[#F5F2ED]">
+          <div className="relative z-10 flex items-start justify-between mt-0 md:mt-6 text-[#F5F2ED]">
             <div className="overflow-hidden">
               <span className="hero-subtitle block text-[0.7rem] font-medium uppercase tracking-[0.3em] opacity-80">
                 Exhibition
@@ -184,7 +232,11 @@ export default function ExhibitPageClient({ exhibit, heroImageUrl }: ExhibitPage
         </section>
 
         {/* ── Exhibit Details ───────────────────────────────────────────── */}
+        {/* Full-screen-width viewport: horizontal movement is locked here while
+            its content is scrubbed vertically to reveal everything inside it. */}
         <ExhibitDetails
+          sectionRef={detailsPinRef}
+          contentRef={detailsContentRef}
           title={exhibit.title ?? ''}
           subtitle={exhibit.subtitle ?? ''}
           exhibitDescription={exhibit.exhibitDescription ?? ''}
@@ -294,34 +346,13 @@ export default function ExhibitPageClient({ exhibit, heroImageUrl }: ExhibitPage
           );
         })}
 
-        {/* ── CTA Section ───────────────────────────────────────────────── */}
-        <section className="flex h-screen w-screen shrink-0 flex-col items-center justify-center bg-[#F5F2ED] px-6 text-center">
-          <div className="mb-4 overflow-hidden">
-            <span className="reveal-text block text-[0.65rem] font-medium uppercase tracking-[0.3em] text-gray-500">
-              Continue Exploring
-            </span>
-          </div>
-          <div className="mb-8 max-w-xl overflow-hidden">
-            <p className="reveal-text font-serif text-2xl font-light leading-snug text-[#1A1A1A] md:text-3xl">
-              Discover more exhibitions from our collection
-            </p>
-          </div>
-          <div className="overflow-hidden">
-            <Link
-              href="/exhibits"
-              className="reveal-text group inline-flex items-center gap-2 border-b border-[#1A1A1A]/40 pb-1 text-xs font-medium uppercase tracking-[0.2em] text-[#1A1A1A] transition-opacity hover:opacity-60"
-            >
-              View All Exhibitions
-              <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
-            </Link>
-          </div>
-        </section>
 
-        {/* ── Footer ─────────────────────────────────────────────────────── */}
+
+  {/* ── Footer ─────────────────────────────────────────────────────── */}
         <footer className="flex h-screen w-screen shrink-0 flex-col justify-center bg-white px-6 py-12 text-[#1A1A1A] md:px-12 lg:px-24">
           <div className="mx-auto w-full max-w-7xl">
             <div className="mb-16 overflow-hidden md:mb-24">
-              <h2 className="reveal-text pt-24 font-serif text-3xl font-light leading-tight max-w-4xl md:text-5xl lg:text-7xl">
+              <h2 className="reveal-text pt-24 font-serif text-lg font-light leading-tight max-w-4xl md:text-3xl lg:text-5xl">
                 {exhibit.title} <br /> — {exhibit.subtitle}
               </h2>
             </div>
@@ -440,20 +471,41 @@ export default function ExhibitPageClient({ exhibit, heroImageUrl }: ExhibitPage
                   </ul>
                 </div>
               )}
-
-              <div className="lg:col-span-2">
-                <div className="mb-4 flex overflow-hidden">
-                  <Link className="group flex items-center gap-1" href="/">
-                    <h3 className="reveal-text text-xs uppercase tracking-[0.2em] text-gray-500">
-                      Homepage
-                    </h3>
-                    <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-                  </Link>
-                </div>
-              </div>
             </div>
           </div>
         </footer>
+
+
+
+
+
+
+
+
+        {/* ── CTA Section ───────────────────────────────────────────────── */}
+        <section className="flex h-screen w-screen shrink-0 flex-col items-center justify-center bg-[#F5F2ED] px-6 text-center">
+          <div className="mb-4 overflow-hidden">
+            <span className="reveal-text block text-[0.65rem] font-medium uppercase tracking-[0.3em] text-gray-500">
+              Continue Exploring
+            </span>
+          </div>
+          <div className="mb-8 max-w-xl overflow-hidden">
+            <p className="reveal-text font-serif text-2xl font-light leading-snug text-[#1A1A1A] md:text-3xl">
+              Discover more exhibitions from our collection
+            </p>
+          </div>
+          <div className="overflow-hidden">
+            <Link
+              href="/exhibitions"
+              className="reveal-text group inline-flex items-center gap-2 border-b border-[#1A1A1A]/40 pb-1 text-xs font-medium uppercase tracking-[0.2em] text-[#1A1A1A] transition-opacity hover:opacity-60"
+            >
+              View All Exhibitions
+              <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+            </Link>
+          </div>
+        </section>
+      
+
       </div>
     </main>
   );

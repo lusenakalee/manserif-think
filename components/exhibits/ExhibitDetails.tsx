@@ -1,8 +1,14 @@
+import type { Ref } from 'react';
+
 interface ExhibitDetailsProps {
   title: string;
   subtitle: string;
   exhibitDescription: string;
   artistDescription: string;
+  /** Ref to the outer full-screen section (the "pin viewport"). */
+  sectionRef?: Ref<HTMLElement>;
+  /** Ref to the inner content wrapper that gets translated vertically. */
+  contentRef?: Ref<HTMLDivElement>;
 }
 
 export default function ExhibitDetails({
@@ -10,6 +16,8 @@ export default function ExhibitDetails({
   subtitle,
   exhibitDescription,
   artistDescription,
+  sectionRef,
+  contentRef,
 }: ExhibitDetailsProps) {
   const exhibitParagraphs = exhibitDescription
     .split('\n\n')
@@ -20,8 +28,11 @@ export default function ExhibitDetails({
     .filter(Boolean);
 
   return (
-    <section className="min-h-screen md:h-screen w-screen shrink-0 bg-[#F5F2ED] overflow-y-auto">
-      <div className="w-full h-full px-5 py-24 md:px-12 lg:px-24">
+    <section
+      ref={sectionRef}
+      className="relative h-screen w-screen shrink-0 overflow-hidden bg-[#F5F2ED]"
+    >
+      <div ref={contentRef} className="w-full px-5 py-24 md:px-12 lg:px-24 will-change-transform">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24 max-w-7xl mx-auto">
 
           {/* LEFT CONTENT */}
@@ -80,7 +91,7 @@ export default function ExhibitDetails({
 
           {/* RIGHT SIDEBAR */}
           <div className="lg:col-span-4 lg:col-start-9">
-            <div className="sticky top-24">
+            <div>
               <div className="overflow-hidden mb-5 hidden md:block">
                 <h3 className="reveal-text text-xs uppercase tracking-[0.2em] text-gray-400">
                   Project

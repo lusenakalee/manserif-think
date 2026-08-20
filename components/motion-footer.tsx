@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -233,8 +234,7 @@ export function CinematicFooter() {
   const [subscribed, setSubscribed] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [siteInquirySent, setSiteInquirySent] = useState(false);
-  const [siteInquiryLoading, setSiteInquiryLoading] = useState(false);
+  
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -290,26 +290,8 @@ export function CinematicFooter() {
     }
   };
 
-  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
-  const handleSiteInquiry = async () => {
-    if (siteInquirySent || siteInquiryLoading) return;
-    setSiteInquiryLoading(true);
-    try {
-      await fetch("/api/site-inquiry", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          page: typeof window !== "undefined" ? window.location.href : undefined,
-        }),
-      });
-      setSiteInquirySent(true);
-    } catch {
-      // Fail silently — this is a low-stakes background ping, not worth surfacing an error UI for.
-    } finally {
-      setSiteInquiryLoading(false);
-    }
-  };
+  
 
   return (
     <>
@@ -362,8 +344,7 @@ export function CinematicFooter() {
               <div className="flex flex-wrap justify-center gap-4 w-full">
 
                 {/* Email input pill */}
-                <div className="footer-email-pill flex items-center gap-3 px-5 py-4 rounded-full w-full max-w-xs">
-                  {/* Mail icon */}
+                {/* <div className="footer-email-pill flex items-center gap-3 px-5 py-4 rounded-full w-full max-w-xs">
                   <svg className="w-5 h-5 shrink-0 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                     <rect x="2" y="4" width="20" height="16" rx="2" />
                     <path d="M2 7l10 7 10-7" />
@@ -377,38 +358,23 @@ export function CinematicFooter() {
                     disabled={subscribed || loading}
                     aria-label="Your email address"
                   />
-                </div>
+                </div> */}
 
                 {/* Subscribe magnetic button */}
                 <MagneticButton
                   as="button"
-                  onClick={handleConnect}
-                  disabled={subscribed}
                   className="footer-subscribe-btn px-10 py-4 rounded-full font-bold text-sm md:text-base flex items-center gap-3 disabled:opacity-60 disabled:cursor-default"
                 >
-                  {subscribed ? (
-                    <>
-                      {/* Checkmark icon */}
-                      <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M5 13l4 4L19 7" />
-                      </svg>
-                      Sent
-                    </>
-                  ) : loading ? (
-                    <>
-                      <Loader2 className="w-5 h-5 shrink-0 animate-spin" />
-                      Sending…
-                    </>
-                  ) : (
-                    <>
+                 
+                    <Link href="mailto:warren@manserifthink.com" className="flex items-center gap-2">
                       {/* Send icon */}
                       <svg className="w-5 h-5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                         <line x1="22" y1="2" x2="11" y2="13" />
                         <polygon points="22 2 15 22 11 13 2 9 22 2" />
                       </svg>
                       Let&apos;s connect
-                    </>
-                  )}
+                    </Link>
+               
                 </MagneticButton>
               </div>
 
@@ -446,24 +412,21 @@ export function CinematicFooter() {
               © 2026 ManSerif. All rights reserved.
             </div>
             <div className="footer-glass-pill px-6 py-3 rounded-full flex items-center gap-2 order-1 md:order-2 border-border/50">
+             
               <button
                 type="button"
-                onClick={handleSiteInquiry}
-                disabled={siteInquiryLoading}
                 className="flex items-center gap-2 cursor-pointer disabled:cursor-default"
                 aria-label="Site by Leroy.Dev — send a website inquiry"
               >
+             <Link href="https://www.lbbyte.com/" target="_blank" rel="noopener noreferrer">
                 <span className="text-muted-foreground text-[10px] md:text-xs font-bold uppercase tracking-widest">Site</span>
-                <span className="text-muted-foreground text-[10px] md:text-xs font-bold uppercase tracking-widest">by</span>
+                <span className="text-muted-foreground text-[10px] md:text-xs font-bold uppercase tracking-widest px-2">by</span>
                 <span className="text-foreground font-black text-xs md:text-sm tracking-normal ml-1">Leroy.Dev</span>
-                {siteInquirySent && (
-                  <svg className="w-3.5 h-3.5 shrink-0 text-muted-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M5 13l4 4L19 7" />
-                  </svg>
-                )}
+            
+              </Link>
               </button>
             </div>
-            <MagneticButton
+            {/* <MagneticButton
               as="button"
               onClick={scrollToTop}
               className="w-12 h-12 rounded-full footer-glass-pill flex items-center justify-center text-muted-foreground hover:text-foreground group order-3"
@@ -471,7 +434,7 @@ export function CinematicFooter() {
               <svg className="w-5 h-5 transform group-hover:-translate-y-1.5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
               </svg>
-            </MagneticButton>
+            </MagneticButton> */}
           </div>
 
         </footer>

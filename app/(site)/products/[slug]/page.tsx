@@ -4,6 +4,14 @@ import { sanityFetch } from "@/sanity/lib/live";
 import { PRODUCT_BY_SLUG_QUERY } from "@/lib/sanity/queries/products";
 import { ProductGallery } from "@/components/products/ProductGallery";
 import { ProductInfo } from "@/components/products/ProductInfo";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
 
 const siteUrl = "https://www.manserifthink.com";
 
@@ -138,12 +146,29 @@ export default async function ProductPage({ params }: ProductPageProps) {
   };
 
   return (
-    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-900">
+    <div className="min-h-screen bg-zinc-50 dark:bg-zinc-900 ">
+      <div className="h-16 md:h-24 bg-black">
+
+      </div>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <div className="mb-4 flex md:hidden w-full justify-end ">
+            <Breadcrumb>
+      <BreadcrumbList>
+        <BreadcrumbItem>
+          <BreadcrumbLink href="/pieces">Back</BreadcrumbLink>
+        </BreadcrumbItem>
+        <BreadcrumbSeparator />
+       
+        
+      </BreadcrumbList>
+    </Breadcrumb>
+          
+
+        </div>
         <div className="grid gap-8 lg:grid-cols-2">
           {/* Image Gallery */}
           <ProductGallery images={product.images} productName={title} />

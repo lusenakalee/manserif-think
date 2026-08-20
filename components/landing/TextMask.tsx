@@ -40,7 +40,7 @@ export default function TextMask() {
   };
 
   return (
-    <div className="w-full relative left-1/2 right-1/2 mx-[-50vw] ">
+    <div className="w-full relative left-[48vw] mx-[-50vw] ">
     <main className=" w-full min-h-screen " >
       <div ref={container} className="container ">
         <div ref={stickyMask} className="stickyMask">

@@ -22,7 +22,11 @@ export default async function Home() {
       <ProductHoverSectionDemo/>
       
       </div> 
+
+      <div className=" [scrollbar-width:none]  ">
+
     <TextMask/>
+      </div>
 <VideoSnippets exhibits={exhibits} />
       {/* <SculpturesSnippet/> */}
       {/* <GarmentsSnippet/>     */}
