@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import { Mail, Loader2, CheckCircle2 } from "lucide-react";
-import { toast } from "sonner";
-import { useUser, useClerk, useAuth } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useAuth, useClerk, useUser } from "@clerk/nextjs";
+import { CheckCircle2, Loader2, Mail } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 
 interface TakeRequestButtonProps {
   productId: string;

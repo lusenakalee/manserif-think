@@ -128,13 +128,12 @@ export async function POST(req: NextRequest) {
     });
 
     if (ownerEmail.error) {
-      console.error("[quote-request] Owner email failed:", ownerEmail.error);
-
-      return NextResponse.json(
-        { error: "Failed to notify owner" },
-        { status: 500 }
-      );
-    }
+  console.error("[quote-request] Owner email failed:", ownerEmail.error);
+  return NextResponse.json(
+    { error: "Failed to notify owner", detail: ownerEmail.error }, // ← add detail
+    { status: 500 }
+  );
+}
 
     // ── 2. Confirm to the customer ────────────────────────────────────────
     const customerEmail = await resend.emails.send({
