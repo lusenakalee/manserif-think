@@ -77,13 +77,15 @@ export default function Home({ imageUrl, imageAlt, firstText: first, secondText:
 
   return (
     <main className="relative flex h-screen  overflow-hidden">
-      <Image
-         src={imageUrl}
-        fill
-        alt={imageAlt}
-        priority
-        className="object-cover object-top"
-      />
+     {imageUrl && (
+        <Image
+          src={imageUrl}
+          fill
+          alt={imageAlt}
+          priority
+          className="object-cover object-top"
+        />
+      )}
 
       <div className="absolute top-[calc(100vh-200px)] md:top-[calc(100vh-300px)] lg:top-[calc(100vh-350px)]">
         <div ref={slider} className="relative whitespace-nowrap">

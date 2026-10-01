@@ -820,17 +820,17 @@ export type ORDER_BY_STRIPE_PAYMENT_ID_QUERY_RESULT = {
 
 // Source: lib/sanity/queries/portfolio.ts
 // Variable: portfolioQuery
-// Query: *[_type == "portfolio"][0]{    "header": {      "imageUrl": headerImage.asset->url,      "imageAlt": coalesce(headerImage.alt, "background"),      "firstText": headerFirstText,      "secondText": headerSecondText    },    "about": {      "heading": coalesce(aboutHeading, "About"),      "paragraphs": aboutParagraphs    }  }
+// Query: *[_type == "portfolio"][0]{    "header": {       "imageUrl": coalesce(headerImage.asset->url, ""),       "imageAlt": coalesce(headerImage.alt, "background"),      "firstText": coalesce(headerFirstText, ""),      "secondText": coalesce(headerSecondText, "")    },    "about": {      "heading": coalesce(aboutHeading, "About"),   "paragraphs": coalesce(aboutParagraphs, [])    }  }
 export type PortfolioQueryResult = {
   header: {
-    imageUrl: string | null;
+    imageUrl: string | "";
     imageAlt: string | "background";
-    firstText: string | null;
-    secondText: string | null;
+    firstText: string | "";
+    secondText: string | "";
   };
   about: {
     heading: string | "About";
-    paragraphs: Array<string> | null;
+    paragraphs: Array<string> | Array<never>;
   };
 } | null;
 
@@ -1184,7 +1184,7 @@ declare module "@sanity/client" {
     '*[\n  _type == "order"\n  && _id == $id\n][0] {\n  _id,\n  orderNumber,\n  clerkUserId,\n  email,\n  items[]{\n    _key,\n    quantity,\n    priceAtPurchase,\n    product->{\n      _id,\n      name,\n      "slug": slug.current,\n      "image": images[0]{\n        asset->{\n          _id,\n          url\n        }\n      }\n    }\n  },\n  total,\n  status,\n  address{\n    name,\n    line1,\n    line2,\n    city,\n    postcode,\n    country\n  },\n  stripePaymentId,\n  createdAt\n}': ORDER_BY_ID_QUERY_RESULT;
     '*[\n  _type == "order"\n] | order(createdAt desc) [0...$limit] {\n  _id,\n  orderNumber,\n  email,\n  total,\n  status,\n  createdAt\n}': RECENT_ORDERS_QUERY_RESULT;
     '*[\n  _type == "order"\n  && stripePaymentId == $stripePaymentId\n][0]{ _id }': ORDER_BY_STRIPE_PAYMENT_ID_QUERY_RESULT;
-    '\n  *[_type == "portfolio"][0]{\n    "header": {\n      "imageUrl": headerImage.asset->url,\n      "imageAlt": coalesce(headerImage.alt, "background"),\n      "firstText": headerFirstText,\n      "secondText": headerSecondText\n    },\n    "about": {\n      "heading": coalesce(aboutHeading, "About"),\n      "paragraphs": aboutParagraphs\n    }\n  }\n': PortfolioQueryResult;
+    '\n  *[_type == "portfolio"][0]{\n    "header": {\n       "imageUrl": coalesce(headerImage.asset->url, ""),\n       "imageAlt": coalesce(headerImage.alt, "background"),\n      "firstText": coalesce(headerFirstText, ""),\n      "secondText": coalesce(headerSecondText, "")\n    },\n    "about": {\n      "heading": coalesce(aboutHeading, "About"),\n   "paragraphs": coalesce(aboutParagraphs, [])\n    }\n  }\n': PortfolioQueryResult;
     '*[\n  _type == "product"\n] | order(name asc) {\n  _id,\n  name,\n  "slug": slug.current,\n  description,\n  price,\n  "images": images[]{\n    _key,\n    asset->{\n      _id,\n      url\n    },\n    hotspot\n  },\n  category->{\n    _id,\n    title,\n    "slug": slug.current\n  },\n  material,\n  color,\n  dimensions,\n  stock,\n  featured,\n  assemblyRequired\n}': ALL_PRODUCTS_QUERY_RESULT;
     '*[\n  _type == "product"\n  && featured == true\n  && stock > 0\n] | order(name asc) [0...6] {\n  _id,\n  name,\n  "slug": slug.current,\n  description,\n  price,\n  "images": images[]{\n    _key,\n    asset->{\n      _id,\n      url\n    },\n    hotspot\n  },\n  category->{\n    _id,\n    title,\n    "slug": slug.current\n  },\n  stock\n}': FEATURED_PRODUCTS_QUERY_RESULT;
     '*[\n  _type == "product"\n  && category->slug.current == $categorySlug\n] | order(name asc) {\n  _id,\n  name,\n  "slug": slug.current,\n  price,\n  "image": images[0]{\n    asset->{\n      _id,\n      url\n    },\n    hotspot\n  },\n  category->{\n    _id,\n    title,\n    "slug": slug.current\n  },\n  material,\n  color,\n  stock\n}': PRODUCTS_BY_CATEGORY_QUERY_RESULT;

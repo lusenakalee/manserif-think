@@ -31,7 +31,7 @@ export default async function page() {
   return (
     <div>
       <PortfolioHeader {...data.header} />
-+         <AboutMeSec {...data.about} />
+   <AboutMeSec {...data.about} />
       {/* <div className="relative mt-20">
                    <PinSection />
                    </div> */}
