@@ -47,63 +47,50 @@ const ProductHoverSection: React.FC<ProductHoverSectionProps> = ({
     return () => window.removeEventListener('resize', checkDesktop);
   }, []);
 
-  useGSAP(
-    () => {
-      if (
-        !isDesktop ||
-        !thumbnailRef.current ||
-        !sliderRef.current ||
-        !containerRef.current
-      )
-        return;
+  // Cursor-following thumbnail. useEffect guarantees the cleanup runs
+  // on unmount and whenever isDesktop changes.
+  useEffect(() => {
+    if (!isDesktop) return;
 
-      gsap.set(thumbnailRef.current, {
-        scale: 0,
-        xPercent: -50,
-        yPercent: -50,
-        force3D: true,
-      });
+    const container = containerRef.current;
+    const thumb = thumbnailRef.current;
+    const slider = sliderRef.current;
+    if (!container || !thumb || !slider) return;
 
-      gsap.set(sliderRef.current, { y: 0 });
+    gsap.set(thumb, {
+      scale: 0,
+      xPercent: -50,
+      yPercent: -50,
+      force3D: true,
+    });
+    gsap.set(slider, { y: 0 });
 
-      const xTo = gsap.quickTo(thumbnailRef.current, 'x', {
-        duration: 0.5,
-        ease: 'power3.out',
-      });
+    const xTo = gsap.quickTo(thumb, 'x', { duration: 0.5, ease: 'power3.out' });
+    const yTo = gsap.quickTo(thumb, 'y', { duration: 0.5, ease: 'power3.out' });
 
-      const yTo = gsap.quickTo(thumbnailRef.current, 'y', {
-        duration: 0.5,
-        ease: 'power3.out',
-      });
+    let hasPosition = false;
 
-      let hasPosition = false;
+    const handleMouseMove = (e: MouseEvent) => {
+      const rect = container.getBoundingClientRect();
+      const relX = e.clientX - rect.left;
+      const relY = e.clientY - rect.top;
 
-      const handleMouseMove = (e: MouseEvent) => {
-        const rect = containerRef.current!.getBoundingClientRect();
+      if (!hasPosition) {
+        gsap.set(thumb, { x: relX, y: relY });
+        hasPosition = true;
+      } else {
+        xTo(relX);
+        yTo(relY);
+      }
+    };
 
-        const relX = e.clientX - rect.left;
-        const relY = e.clientY - rect.top;
+    window.addEventListener('mousemove', handleMouseMove);
 
-        if (!hasPosition) {
-          gsap.set(thumbnailRef.current, {
-            x: relX,
-            y: relY,
-          });
-
-          hasPosition = true;
-        } else {
-          xTo(relX);
-          yTo(relY);
-        }
-      };
-
-      window.addEventListener('mousemove', handleMouseMove);
-
-      return () => window.removeEventListener('mousemove', handleMouseMove);
-    },
-    { dependencies: [isDesktop] }
-  );
-
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      gsap.killTweensOf([thumb, slider]);
+    };
+  }, [isDesktop]);
 
   useGSAP(
     () => {
@@ -125,9 +112,7 @@ const ProductHoverSection: React.FC<ProductHoverSectionProps> = ({
           ease: 'power2.out',
           overwrite: 'auto',
         });
-
       } else {
-
         gsap.to(thumbnailRef.current, {
           scale: 0,
           opacity: 0,
@@ -135,93 +120,61 @@ const ProductHoverSection: React.FC<ProductHoverSectionProps> = ({
           ease: 'power2.in',
           overwrite: 'auto',
           onComplete: () => {
-            gsap.set(thumbnailRef.current, {
-              visibility: 'hidden',
-            });
+            if (thumbnailRef.current) {
+              gsap.set(thumbnailRef.current, { visibility: 'hidden' });
+            }
           },
         });
-
       }
     },
     {
-      dependencies: [
-        modal.active,
-        modal.index,
-        isDesktop,
-        thumbnailHeight,
-      ],
+      dependencies: [modal.active, modal.index, isDesktop, thumbnailHeight],
     }
   );
-
 
   if (isDesktop) {
     return (
       <div
         ref={containerRef}
-        onMouseLeave={() =>
-          setModal({
-            active: false,
-            index: 0,
-          })
-        }
+        onMouseLeave={() => setModal({ active: false, index: 0 })}
         className={cn(
           'relative flex flex-col w-full max-w-[1000px] mx-auto py-12',
           className
         )}
       >
-
         <div className="flex flex-col w-full">
-
           {products.map((product, index) => (
-
             <Link
               key={index}
               href={`/products/${product.slug}`}
-              onMouseEnter={() =>
-                setModal({
-                  active: true,
-                  index,
-                })
-              }
+              onMouseEnter={() => setModal({ active: true, index })}
               className={cn(
                 'w-full flex items-center justify-between px-6 md:px-16 py-8 md:py-12 border-t border-white/20 cursor-pointer transition-opacity duration-300',
-                modal.active &&
-                  modal.index === index &&
-                  'opacity-60'
+                modal.active && modal.index === index && 'opacity-60'
               )}
             >
-
               <h2
                 className={cn(
                   'text-2xl md:text-4xl lg:text-5xl font-medium text-neutral-800 transition-transform duration-500 ease-out',
-                  modal.active &&
-                    modal.index === index &&
-                    '-translate-x-4'
+                  modal.active && modal.index === index && '-translate-x-4'
                 )}
               >
                 {product.title}
               </h2>
 
-
               <p
                 className={cn(
                   'text-sm md:text-base text-neutral-800 transition-transform duration-500 ease-out',
-                  modal.active &&
-                    modal.index === index &&
-                    'translate-x-4'
+                  modal.active && modal.index === index && 'translate-x-4'
                 )}
               >
                 {product.category}
               </p>
-
             </Link>
-
           ))}
 
           <div className="w-full h-px bg-white/20" />
-
         </div>
-
 
         <div
           ref={thumbnailRef}
@@ -233,26 +186,21 @@ const ProductHoverSection: React.FC<ProductHoverSectionProps> = ({
             visibility: 'hidden',
           }}
         >
-
           <div
             ref={sliderRef}
             className="relative w-full"
-            style={{
-              height: thumbnailHeight * products.length,
-            }}
+            style={{ height: thumbnailHeight * products.length }}
           >
-
-            {products.map((product,index)=>(
+            {products.map((product, index) => (
               <div
                 key={index}
                 className="absolute left-0 w-full"
                 style={{
-                  top:index * thumbnailHeight,
-                  width:thumbnailWidth,
-                  height:thumbnailHeight,
+                  top: index * thumbnailHeight,
+                  width: thumbnailWidth,
+                  height: thumbnailHeight,
                 }}
               >
-
                 <Image
                   src={product.image}
                   alt={product.alt ?? product.title}
@@ -260,54 +208,33 @@ const ProductHoverSection: React.FC<ProductHoverSectionProps> = ({
                   height={thumbnailHeight}
                   className="w-full h-full object-cover object-top"
                 />
-
               </div>
             ))}
-
           </div>
-
         </div>
-
-
       </div>
     );
   }
 
-
   return (
-    <div className={cn(
-      'flex flex-col w-full max-w-[1000px] mx-auto py-6',
-      className
-    )}>
-
-      {products.map((product,index)=>(
-
-        <div
-          key={index}
-          className="border-b border-white/20 last:border-b-0"
-        >
-
+    <div
+      className={cn('flex flex-col w-full max-w-[1000px] mx-auto py-6', className)}
+    >
+      {products.map((product, index) => (
+        <div key={index} className="border-b border-white/20 last:border-b-0">
           <button
             type="button"
-            onClick={() =>
-              setExpandedIndex(
-                expandedIndex === index ? null : index
-              )
-            }
+            onClick={() => setExpandedIndex(expandedIndex === index ? null : index)}
             className="w-full flex items-center justify-between px-4 py-5 text-left"
           >
-
             <h2 className="text-xl font-medium text-neutral-800">
               {product.title}
             </h2>
 
-
             <span className="ml-2 text-neutral-800 text-lg">
               {expandedIndex === index ? '−' : '+'}
             </span>
-
           </button>
-
 
           <div
             className={cn(
@@ -317,33 +244,21 @@ const ProductHoverSection: React.FC<ProductHoverSectionProps> = ({
                 : 'max-h-0 opacity-0'
             )}
           >
-
             <div className="px-4 pb-4">
-
               <Link href={`/products/${product.slug}`}>
-
                 <div className="relative w-full aspect-[4/3] rounded-lg overflow-hidden">
-
                   <Image
                     src={product.image}
                     alt={product.alt ?? product.title}
                     fill
                     className="object-cover"
                   />
-
                 </div>
-
               </Link>
-
             </div>
-
           </div>
-
-
         </div>
-
       ))}
-
     </div>
   );
 };

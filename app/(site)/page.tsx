@@ -8,29 +8,35 @@ import { ProjectHoverSectionDemo } from "@/components/Projecthoversectiondemo";
 import { ProductHoverSectionDemo } from "@/components/ProductHoverSectionDemo";
 import AnimatedHero from "@/components/landing/AnimatedHero";
 import { ALL_EXHIBITS_QUERY } from "@/lib/sanity/queries/exhibits";
+import { landingHeroQuery } from "@/lib/sanity/queries/landingHero";
 
 
 export default async function Home() {
-    const exhibits = await client.fetch(ALL_EXHIBITS_QUERY);
+   const [exhibits, hero] = await Promise.all([
+    client.fetch(ALL_EXHIBITS_QUERY),
+    client.fetch(landingHeroQuery, {}, { next: { revalidate: 60 } }),
+  ]);
+console.log("[Home] hero is null?", hero === null);
+  console.log("[Home] image count:", hero?.images?.length);
+  console.log("[Home] image srcs:", hero?.images?.map((i: any) => i.src));
+  console.log("[Home] headline:", hero?.headline);
+  console.log("[Home] exhibits count:", exhibits?.length);
+
 
   return (
     <div className="">
-    <div>
-       <AnimatedHero/>
-      {/* <ArtSnippet/> */}
-      {/* <ExhibitList/> */}
-      <ProductHoverSectionDemo/>
-      
-      </div> 
+      <div>
+{hero && <AnimatedHero {...hero} />}
+        <ProductHoverSectionDemo />
+      </div>
 
       <div className=" [scrollbar-width:none]  ">
-
-    <TextMask/>
+        <TextMask />
       </div>
-<VideoSnippets exhibits={exhibits} />
+      <VideoSnippets exhibits={exhibits} />
       {/* <SculpturesSnippet/> */}
       {/* <GarmentsSnippet/>     */}
-      <CinematicFooter/> 
+      <CinematicFooter />
     </div>
   );
 }

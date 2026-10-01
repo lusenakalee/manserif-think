@@ -6,8 +6,12 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function AboutMeSec() {
-  const sectionRef = useRef<HTMLDivElement | null>(null);
+interface AboutMeSecProps {
+  heading: string;
+  paragraphs: string[];
+}
+
+export default function AboutMeSec({ heading, paragraphs }: AboutMeSecProps) {  const sectionRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -60,23 +64,18 @@ export default function AboutMeSec() {
     >
       <div className="mx-auto max-w-5xl">
         <h2 className="mb-16 text-4xl md:text-6xl font-semibold tracking-tight">
-          About
+           {heading}
         </h2>
 
         <div className="space-y-16">
-          <p className="reveal-text text-xl md:text-3xl leading-[1.8] font-medium tracking-tight">
-            {splitWords(
-              `My name is Warren Kamau, an Artist and Fashion Designer from Nairobi, Kenya. I am currently pursuing a Bachelor's Fashion Degree at IFA Paris while working as a freelance artist.`
-            )}
-          </p>
-
-          <p className="reveal-text text-xl md:text-3xl leading-[1.8] font-medium tracking-tight">
-            {splitWords(
-              `My work centre's around the Christian Faith, seeking to present it's Truths through and from a  contemporary point of view with the aim of igniting thought.`
-
-)}
-          </p>
-
+           {paragraphs?.map((text, i) => (
+            <p
+              key={i}
+              className="reveal-text text-xl md:text-3xl leading-[1.8] font-medium tracking-tight"
+            >
+              {splitWords(text)}
+            </p>
+          ))}
          
         </div>
       </div>

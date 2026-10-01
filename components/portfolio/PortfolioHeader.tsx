@@ -5,8 +5,16 @@ import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
-export default function Home() {
-  const firstText = useRef<HTMLParagraphElement | null>(null);
+
+
+interface PortfolioHeaderProps {
+ imageUrl: string;
+imageAlt: string;
+firstText: string;
+secondText: string;
+}
+
+export default function Home({ imageUrl, imageAlt, firstText: first, secondText: second }: PortfolioHeaderProps) {  const firstText = useRef<HTMLParagraphElement | null>(null);
   const secondText = useRef<HTMLParagraphElement | null>(null);
   const slider = useRef<HTMLDivElement | null>(null);
 
@@ -70,9 +78,9 @@ export default function Home() {
   return (
     <main className="relative flex h-screen  overflow-hidden">
       <Image
-        src="/images/background.webp"
+         src={imageUrl}
         fill
-        alt="background"
+        alt={imageAlt}
         priority
         className="object-cover object-top"
       />
@@ -92,7 +100,7 @@ export default function Home() {
               xl:text-[230px]
             "
           >
-           Warren Kamau -
+           {first} -
           </p>
 
           <p
@@ -106,7 +114,7 @@ export default function Home() {
               xl:text-[230px]
             "
           >
-           Manserif.Think -
+           {second} -
           </p>
         </div>
       </div>

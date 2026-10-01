@@ -22,6 +22,65 @@ export type SanityImageAssetReference = {
   [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
 };
 
+export type LandingHero = {
+  _id: string;
+  _type: "landingHero";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  introImages?: Array<{
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "introImage";
+    _key: string;
+  }>;
+  headlinePrefix?: string;
+  headlineHighlight?: string;
+  headlineSuffix?: string;
+  contactLabel?: string;
+  contactEmail?: string;
+  instagramUrl?: string;
+};
+
+export type SanityImageCrop = {
+  _type: "sanity.imageCrop";
+  top?: number;
+  bottom?: number;
+  left?: number;
+  right?: number;
+};
+
+export type SanityImageHotspot = {
+  _type: "sanity.imageHotspot";
+  x?: number;
+  y?: number;
+  height?: number;
+  width?: number;
+};
+
+export type Portfolio = {
+  _id: string;
+  _type: "portfolio";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  headerImage?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    alt?: string;
+    _type: "image";
+  };
+  headerFirstText?: string;
+  headerSecondText?: string;
+  aboutHeading?: string;
+  aboutParagraphs?: Array<string>;
+};
+
 export type HeroSection = {
   _id: string;
   _type: "heroSection";
@@ -50,22 +109,6 @@ export type HeroSection = {
     _type: "image";
     _key: string;
   }>;
-};
-
-export type SanityImageCrop = {
-  _type: "sanity.imageCrop";
-  top?: number;
-  bottom?: number;
-  left?: number;
-  right?: number;
-};
-
-export type SanityImageHotspot = {
-  _type: "sanity.imageHotspot";
-  x?: number;
-  y?: number;
-  height?: number;
-  width?: number;
 };
 
 export type Slug = {
@@ -417,9 +460,11 @@ export type Geopoint = {
 
 export type AllSanitySchemaTypes =
   | SanityImageAssetReference
-  | HeroSection
+  | LandingHero
   | SanityImageCrop
   | SanityImageHotspot
+  | Portfolio
+  | HeroSection
   | Slug
   | Project
   | SanityFileAssetReference
@@ -448,6 +493,15 @@ export type ALL_PRODUCTS_FOR_SITEMAP_QUERY_RESULT = Array<{
   slug: string | null;
   _updatedAt: string;
   images: Array<string | null> | null;
+}>;
+
+// Source: app/sitemap.ts
+// Variable: ALL_EXHIBITS_FOR_SITEMAP_QUERY
+// Query: *[  _type == "exhibit"  && defined(slug.current)]{  "slug": slug.current,  _updatedAt,  "image": heroImage.asset->url}
+export type ALL_EXHIBITS_FOR_SITEMAP_QUERY_RESULT = Array<{
+  slug: string | null;
+  _updatedAt: string;
+  image: string | null;
 }>;
 
 // Source: components/landing/HeroSection.tsx
@@ -671,6 +725,28 @@ export type EXHIBIT_BY_SLUG_QUERY_RESULT = {
   order: number | null;
 } | null;
 
+// Source: lib/sanity/queries/landingHero.ts
+// Variable: landingHeroQuery
+// Query: *[_type == "landingHero"][0]{    "images": coalesce(introImages[defined(asset)]{      "src": asset->url,      "alt": coalesce(alt, "Manserif think")   }, []),    "headline": {      "prefix": coalesce(headlinePrefix, ""),      "highlight": coalesce(headlineHighlight, ""),      "suffix": coalesce(headlineSuffix, "")    },    "contact": {      "label": coalesce(contactLabel, "Say Hello"),      "email": coalesce(contactEmail, ""),      "instagramUrl": coalesce(instagramUrl, "")    }  }
+export type LandingHeroQueryResult = {
+  images:
+    | Array<{
+        src: string | null;
+        alt: string | "Manserif think";
+      }>
+    | Array<never>;
+  headline: {
+    prefix: string | "";
+    highlight: string | "";
+    suffix: string | "";
+  };
+  contact: {
+    label: string | "Say Hello";
+    email: string | "";
+    instagramUrl: string | "";
+  };
+} | null;
+
 // Source: lib/sanity/queries/orders.ts
 // Variable: ORDERS_BY_USER_QUERY
 // Query: *[  _type == "order"  && clerkUserId == $clerkUserId] | order(createdAt desc) {  _id,  orderNumber,  total,  status,  createdAt,  "itemCount": count(items),  "itemNames": items[].product->name,  "itemImages": items[].product->images[0].asset->url}
@@ -740,6 +816,22 @@ export type RECENT_ORDERS_QUERY_RESULT = Array<{
 // Query: *[  _type == "order"  && stripePaymentId == $stripePaymentId][0]{ _id }
 export type ORDER_BY_STRIPE_PAYMENT_ID_QUERY_RESULT = {
   _id: string;
+} | null;
+
+// Source: lib/sanity/queries/portfolio.ts
+// Variable: portfolioQuery
+// Query: *[_type == "portfolio"][0]{    "header": {      "imageUrl": headerImage.asset->url,      "imageAlt": coalesce(headerImage.alt, "background"),      "firstText": headerFirstText,      "secondText": headerSecondText    },    "about": {      "heading": coalesce(aboutHeading, "About"),      "paragraphs": aboutParagraphs    }  }
+export type PortfolioQueryResult = {
+  header: {
+    imageUrl: string | null;
+    imageAlt: string | "background";
+    firstText: string | null;
+    secondText: string | null;
+  };
+  about: {
+    heading: string | "About";
+    paragraphs: Array<string> | null;
+  };
 } | null;
 
 // Source: lib/sanity/queries/products.ts
@@ -1078,6 +1170,7 @@ import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
     '*[\n  _type == "product"\n  && defined(slug.current)\n]{\n  "slug": slug.current,\n  _updatedAt,\n  "images": images[].asset->url\n}': ALL_PRODUCTS_FOR_SITEMAP_QUERY_RESULT;
+    '*[\n  _type == "exhibit"\n  && defined(slug.current)\n]{\n  "slug": slug.current,\n  _updatedAt,\n  "image": heroImage.asset->url\n}': ALL_EXHIBITS_FOR_SITEMAP_QUERY_RESULT;
     '\n  *[_type == "heroSection"][0] {\n    name,\n    tagline,\n    subtitle,\n    description,\n    contactEmail,\n    figureSvg,\n    preloaderImages[] {\n      asset,\n      alt\n    }\n  }\n': HERO_QUERY_RESULT;
     '*[\n  _type == "category"\n] | order(title asc) {\n  _id,\n  title,\n  "slug": slug.current,\n  "image": image{\n    asset->{\n      _id,\n      url\n    },\n    hotspot\n  }\n}': ALL_CATEGORIES_QUERY_RESULT;
     '*[\n  _type == "category"\n  && slug.current == $slug\n][0] {\n  _id,\n  title,\n  "slug": slug.current,\n  "image": image{\n    asset->{\n      _id,\n      url\n    },\n    hotspot\n  }\n}': CATEGORY_BY_SLUG_QUERY_RESULT;
@@ -1086,10 +1179,12 @@ declare module "@sanity/client" {
     '\n  *[_type == "exhibit"] | order(order asc, startDateTime desc) {\n    _id,\n    _createdAt,\n    title,\n    slug,\n    subtitle,\n    exhibitDescription,\n    artistDescription,\n    heroImage {\n      asset,\n      hotspot,\n      crop,\n      alt\n    },\n    heroVideo {\n      asset-> {\n        _id,\n        url,\n        mimeType,\n        originalFilename,\n        size\n      }\n    },\n    startDateTime,\n    endDateTime,\n    exhibitLocation {\n      venueName,\n      address,\n      city,\n      country,\n      mapsUrl\n    },\n    isFeatured,\n    order\n  }\n': ALL_EXHIBITS_QUERY_RESULT;
     '\n  *[_type == "exhibit" && isFeatured == true] | order(order asc, startDateTime desc) {\n    _id,\n    _createdAt,\n    title,\n    slug,\n    subtitle,\n    exhibitDescription,\n    artistDescription,\n    heroImage {\n      asset,\n      hotspot,\n      crop,\n      alt\n    },\n    heroVideo {\n      asset-> {\n        _id,\n        url,\n        mimeType,\n        originalFilename,\n        size\n      }\n    },\n    startDateTime,\n    endDateTime,\n    exhibitLocation {\n      venueName,\n      address,\n      city,\n      country,\n      mapsUrl\n    },\n    order\n  }\n': FEATURED_EXHIBITS_QUERY_RESULT;
     '\n  *[_type == "exhibit" && slug.current == $slug][0] {\n    _id,\n    _createdAt,\n    title,\n    slug,\n    subtitle,\n    exhibitDescription,\n    artistDescription,\n    heroImage {\n      asset,\n      hotspot,\n      crop,\n      alt\n    },\n    heroVideo {\n      asset-> {\n        _id,\n        url,\n        mimeType,\n        originalFilename,\n        size\n      }\n    },\n    images[] {\n      asset,\n      hotspot,\n      crop,\n      alt\n    },\n    startDateTime,\n    endDateTime,\n    exhibitLocation {\n      venueName,\n      address,\n      city,\n      country,\n      mapsUrl\n    },\n    featuredProducts[]-> {\n      _id,\n      name,\n      slug,\n      images[0] {\n        asset,\n        hotspot,\n        crop,\n      },\n    },\n    partners[] {\n      name,\n      role,\n      logo {\n        asset,\n        hotspot,\n        crop,\n        alt\n      },\n      website\n    },\n    isFeatured,\n    order\n  }\n': EXHIBIT_BY_SLUG_QUERY_RESULT;
+    '\n  *[_type == "landingHero"][0]{\n    "images": coalesce(introImages[defined(asset)]{\n      "src": asset->url,\n      "alt": coalesce(alt, "Manserif think")\n   }, []),\n    "headline": {\n      "prefix": coalesce(headlinePrefix, ""),\n      "highlight": coalesce(headlineHighlight, ""),\n      "suffix": coalesce(headlineSuffix, "")\n    },\n    "contact": {\n      "label": coalesce(contactLabel, "Say Hello"),\n      "email": coalesce(contactEmail, ""),\n      "instagramUrl": coalesce(instagramUrl, "")\n    }\n  }\n': LandingHeroQueryResult;
     '*[\n  _type == "order"\n  && clerkUserId == $clerkUserId\n] | order(createdAt desc) {\n  _id,\n  orderNumber,\n  total,\n  status,\n  createdAt,\n  "itemCount": count(items),\n  "itemNames": items[].product->name,\n  "itemImages": items[].product->images[0].asset->url\n}': ORDERS_BY_USER_QUERY_RESULT;
     '*[\n  _type == "order"\n  && _id == $id\n][0] {\n  _id,\n  orderNumber,\n  clerkUserId,\n  email,\n  items[]{\n    _key,\n    quantity,\n    priceAtPurchase,\n    product->{\n      _id,\n      name,\n      "slug": slug.current,\n      "image": images[0]{\n        asset->{\n          _id,\n          url\n        }\n      }\n    }\n  },\n  total,\n  status,\n  address{\n    name,\n    line1,\n    line2,\n    city,\n    postcode,\n    country\n  },\n  stripePaymentId,\n  createdAt\n}': ORDER_BY_ID_QUERY_RESULT;
     '*[\n  _type == "order"\n] | order(createdAt desc) [0...$limit] {\n  _id,\n  orderNumber,\n  email,\n  total,\n  status,\n  createdAt\n}': RECENT_ORDERS_QUERY_RESULT;
     '*[\n  _type == "order"\n  && stripePaymentId == $stripePaymentId\n][0]{ _id }': ORDER_BY_STRIPE_PAYMENT_ID_QUERY_RESULT;
+    '\n  *[_type == "portfolio"][0]{\n    "header": {\n      "imageUrl": headerImage.asset->url,\n      "imageAlt": coalesce(headerImage.alt, "background"),\n      "firstText": headerFirstText,\n      "secondText": headerSecondText\n    },\n    "about": {\n      "heading": coalesce(aboutHeading, "About"),\n      "paragraphs": aboutParagraphs\n    }\n  }\n': PortfolioQueryResult;
     '*[\n  _type == "product"\n] | order(name asc) {\n  _id,\n  name,\n  "slug": slug.current,\n  description,\n  price,\n  "images": images[]{\n    _key,\n    asset->{\n      _id,\n      url\n    },\n    hotspot\n  },\n  category->{\n    _id,\n    title,\n    "slug": slug.current\n  },\n  material,\n  color,\n  dimensions,\n  stock,\n  featured,\n  assemblyRequired\n}': ALL_PRODUCTS_QUERY_RESULT;
     '*[\n  _type == "product"\n  && featured == true\n  && stock > 0\n] | order(name asc) [0...6] {\n  _id,\n  name,\n  "slug": slug.current,\n  description,\n  price,\n  "images": images[]{\n    _key,\n    asset->{\n      _id,\n      url\n    },\n    hotspot\n  },\n  category->{\n    _id,\n    title,\n    "slug": slug.current\n  },\n  stock\n}': FEATURED_PRODUCTS_QUERY_RESULT;
     '*[\n  _type == "product"\n  && category->slug.current == $categorySlug\n] | order(name asc) {\n  _id,\n  name,\n  "slug": slug.current,\n  price,\n  "image": images[0]{\n    asset->{\n      _id,\n      url\n    },\n    hotspot\n  },\n  category->{\n    _id,\n    title,\n    "slug": slug.current\n  },\n  material,\n  color,\n  stock\n}': PRODUCTS_BY_CATEGORY_QUERY_RESULT;

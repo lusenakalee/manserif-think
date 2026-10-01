@@ -28,13 +28,13 @@ interface IntroImage {
   isHero?: boolean;
 }
 
-const INTRO_IMAGES: IntroImage[] = [
-  { src: "/images/charcoal2.webp", alt: "Manserif think 1" },
-  { src: "/images/forgive1.webp", alt: "Manserif think 2" },
-  { src: "/images/ledivinclean.png", alt: "Manserif think 3", isHero: true },
-  { src: "/images/poetic1.webp", alt: "Manserif think 4" },
-  { src: "/images/poetic5.webp", alt: "Manserif think 5" },
-];
+interface AnimatedHeroProps {
+  images: { src: string | null; alt: string }[];
+  headline: { prefix: string; highlight: string; suffix: string };
+  contact: { label: string; email: string; instagramUrl: string };
+}
+
+const HERO_INDEX = 2; // middle image expands (matches timeline)
 
 const IMG_SCALE = 0.2;
 const IMG_GAP = 40; // px between thumbnail images
@@ -43,8 +43,9 @@ const IMG_ROTATIONS: number[] = [-15, 5, 7.5, 10, -2.5];
 // ---------------------------------------------------------------------------
 // Component
 // ---------------------------------------------------------------------------
-export default function AnimatedHero() {
-  // ── Refs ──────────────────────────────────────────────────────────────────
+export default function AnimatedHero({ images, headline, contact }: AnimatedHeroProps) {  
+    console.log("[AnimatedHero] render", { imagesLength: images?.length, headline, contact });
+
   const containerRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
   const preloaderRef = useRef<HTMLDivElement>(null);
@@ -56,6 +57,7 @@ export default function AnimatedHero() {
   //   • gsap.utils.selector / contextSafe all resolve within that container
   //   • Everything is automatically reverted on unmount — no tl.kill() needed
   //
+  
   useGSAP(
     () => {
       // ── 1. Layout calculations ──────────────────────────────────────────
@@ -201,6 +203,8 @@ export default function AnimatedHero() {
     { scope: containerRef }, // ← ties context to the container; auto-reverts on unmount
   );
 
+  
+
   // ── JSX ───────────────────────────────────────────────────────────────────
   return (
     // Outer wrapper that useGSAP uses as its scope
@@ -231,21 +235,23 @@ export default function AnimatedHero() {
       {/* ── Hero ────────────────────────────────────────────────────────── */}
       <section className="relative h-svh w-full overflow-hidden">
         {/* Intro images — absolutely stacked, each fills the section */}
-        {INTRO_IMAGES.map((image, i) => (
+       {images.map((image, i) => (
           <div
-            key={image.src}
-            ref={(el) => {
-              introImgRefs.current[i] = el;
-            }}
-            className="absolute inset-0 overflow-hidden rounded-lg will-change-transform"
-          >
-            <Image
-              src={image.src}
-              alt={image.alt}
-              fill
-              className="object-cover"
-              priority={image.isHero}
-            />
+            key={`${image.src}-${i}`}
+             ref={(el) => {
+               introImgRefs.current[i] = el;
+             }}
+             className="absolute inset-0 overflow-hidden rounded-lg will-change-transform"
+           >
+         {image.src && (
+              <Image
+                src={image.src}
+                alt={image.alt}
+                fill
+                className="object-cover"
+                priority={i === HERO_INDEX}
+              />
+            )}
           </div>
         ))}
 
@@ -254,23 +260,26 @@ export default function AnimatedHero() {
           {/* Headline */}
           <div data-split-header className="w-3/5 max-[1000px]:w-full">
             <h1 data-split className="text-white  md:pb-0 font-normal leading-[1.1] tracking-[-0.01em] text-[clamp(1.75rem,3vw,3rem)]">
-              Multidisciplinary <span className="bg-white text-black px-2 py-1">artist</span> sharing evolving work, products, and
-              journey.
+             {headline.prefix}{" "}
+              <span className="bg-white text-black px-2 py-1">{headline.highlight}</span>{" "}
+          {headline.suffix}
             </h1>
           </div>
 
           {/* Social / contact */}
           <div data-split-social className="flex flex-col gap-1  justify-end items-end">
-            <p data-split className="text-white no-underline font-normal tracking-[-0.01em] hidden  lg:block">Say Hello</p>
-            <a href="mailto:warren@manserifthink.com" data-split className="text-white no-underline font-normal tracking-[-0.01em] hidden  lg:block">
-              warren@manserifthink.com
-            </a>
-            <a href="mailto:warren@manserifthink.com" data-split className="text-white no-underline font-normal tracking-[-0.01em] block md:hidden">
-              <Mail className="inline-block   h-6 w-6" /> 
-            </a>
-             <a href="https://www.instagram.com/manserif.think/" data-split className="text-white no-underline font-normal tracking-[-0.01em] block md:hidden">
-              <img src="/images/instagram-white-icon.webp" className="inline-block  h-6 w-6"  /> 
-            </a>
+           <p data-split className="... hidden  lg:block">{contact.label}</p>
+            <a href={`mailto:${contact.email}`} data-split className="... hidden  lg:block">
+              {contact.email}
+             </a>
+             <a href={`mailto:${contact.email}`} data-split className="... block md:hidden">
+               <Mail className="inline-block   h-6 w-6" />
+             </a>
+             {contact.instagramUrl && (
+              <a href={contact.instagramUrl} data-split className="... block md:hidden">
+                <img src="/images/instagram-white-icon.webp" alt="Instagram" className="inline-block  h-6 w-6" />
+              </a>
+            )}
           </div>
         </div>
                 {/* <div className="w-full h-full  bg-black/40  absolute "/> */}
