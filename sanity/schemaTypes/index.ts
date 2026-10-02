@@ -11,7 +11,8 @@ import { heroSectionType } from './heroSectionType'
 import { exhibitType } from './exhibitType'
 import { portfolioType } from './portfolioType'
 import { landingHeroType } from './landingHeroType'
+import { textMaskType } from './textMaskType'
 
 export const schema: { types: SchemaTypeDefinition[] } = {
-  types: [blockContentType,  productType,  categoryType , orderType ,exhibitType, customerType , projectType , heroSectionType , portfolioType , landingHeroType],
+  types: [blockContentType,  productType,  categoryType , orderType ,exhibitType, customerType , projectType , heroSectionType , portfolioType , landingHeroType , textMaskType],
 }

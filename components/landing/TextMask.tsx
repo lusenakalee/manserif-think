@@ -3,7 +3,7 @@
 import { useRef, useEffect } from 'react';
 import './TextMask.css';
 
-export default function TextMask() {
+export default function TextMask({ videoUrl }: { videoUrl: string }) {
   const container = useRef<HTMLDivElement | null>(null);
   const stickyMask = useRef<HTMLDivElement | null>(null);
 
@@ -44,9 +44,9 @@ export default function TextMask() {
     <main className=" w-full min-h-screen " >
       <div ref={container} className="container ">
         <div ref={stickyMask} className="stickyMask">
-          <video autoPlay muted loop>
-            <source src="/images/exhibit.mp4" type="video/mp4" className="w-full h-full object-cover " />
-          </video>
+          <video key={videoUrl} autoPlay muted loop playsInline>
+         <source src={videoUrl} type="video/mp4" />
+           </video>
         </div>
       </div>
     </main>

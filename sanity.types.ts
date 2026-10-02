@@ -15,6 +15,26 @@
 export declare const internalGroqTypeReferenceTo: unique symbol;
 
 // Source: schema.json
+export type SanityFileAssetReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "sanity.fileAsset";
+};
+
+export type TextMask = {
+  _id: string;
+  _type: "textMask";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  video?: {
+    asset?: SanityFileAssetReference;
+    media?: unknown;
+    _type: "file";
+  };
+};
+
 export type SanityImageAssetReference = {
   _ref: string;
   _type: "reference";
@@ -148,13 +168,6 @@ export type Project = {
   note?: string;
   isFeatured?: boolean;
   order?: number;
-};
-
-export type SanityFileAssetReference = {
-  _ref: string;
-  _type: "reference";
-  _weak?: boolean;
-  [internalGroqTypeReferenceTo]?: "sanity.fileAsset";
 };
 
 export type ProductReference = {
@@ -459,6 +472,8 @@ export type Geopoint = {
 };
 
 export type AllSanitySchemaTypes =
+  | SanityFileAssetReference
+  | TextMask
   | SanityImageAssetReference
   | LandingHero
   | SanityImageCrop
@@ -467,7 +482,6 @@ export type AllSanitySchemaTypes =
   | HeroSection
   | Slug
   | Project
-  | SanityFileAssetReference
   | ProductReference
   | Exhibit
   | CustomerReference
@@ -1165,6 +1179,13 @@ export type SNIPPET_PRODUCTS_BY_CATEGORY_QUERY_RESULT = Array<{
   } | null;
 }>;
 
+// Source: lib/sanity/queries/textMask.ts
+// Variable: textMaskQuery
+// Query: *[_type == "textMask"][0]{    "videoUrl": coalesce(video.asset->url, "")  }
+export type TextMaskQueryResult = {
+  videoUrl: string | "";
+} | null;
+
 // Query TypeMap
 import "@sanity/client";
 declare module "@sanity/client" {
@@ -1199,5 +1220,6 @@ declare module "@sanity/client" {
     '*[\n  _type == "product"\n  && stock == 0\n] | order(name asc) {\n  _id,\n  name,\n  "slug": slug.current,\n  "image": images[0]{\n    asset->{\n      _id,\n      url\n    }\n  }\n}': OUT_OF_STOCK_PRODUCTS_QUERY_RESULT;
     '*[\n  _type == "product"\n  && (\n    $searchQuery == ""\n    || name match $searchQuery + "*"\n    || description match $searchQuery + "*"\n    || category->title match $searchQuery + "*"\n  )\n  && ($categorySlug == "" || category->slug.current == $categorySlug)\n  && ($material == "" || material == $material)\n  && ($color == "" || color == $color)\n  && ($minPrice == 0 || price >= $minPrice)\n  && ($maxPrice == 0 || price <= $maxPrice)\n] | order(name asc) [0...20] {\n  _id,\n  name,\n  "slug": slug.current,\n  description,\n  price,\n  "image": images[0]{\n    asset->{\n      _id,\n      url\n    }\n  },\n  category->{\n    _id,\n    title,\n    "slug": slug.current\n  },\n  material,\n  color,\n  dimensions,\n  stock,\n  featured,\n  assemblyRequired\n}': AI_SEARCH_PRODUCTS_QUERY_RESULT;
     '*[\n  _type == "product"\n  && category->slug.current == $categorySlug\n  && stock > 0\n] | order(featured desc, name asc) [0...4] {\n  _id,\n  name,\n  "slug": slug.current,\n  price,\n  featured,\n  material,\n  color,\n  dimensions,\n  "image": images[0]{\n    "url": asset->url,\n    "alt": coalesce(asset->altText, name)\n  }\n}': SNIPPET_PRODUCTS_BY_CATEGORY_QUERY_RESULT;
+    '\n  *[_type == "textMask"][0]{\n    "videoUrl": coalesce(video.asset->url, "")\n  }\n': TextMaskQueryResult;
   }
 }
