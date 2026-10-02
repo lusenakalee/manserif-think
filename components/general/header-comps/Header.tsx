@@ -9,6 +9,7 @@ import Nav from "./nav-comps/Nav";
 import Rounded from "@/components/general/RoundedButton2";
 import Magnetic from "@/components/general/Magnetic";
 import Link from "next/link";
+import Image from "next/image";
 
 // Shared custom easing curve, used throughout (replaces the SCSS cubic-bezier)
 const EASE = "ease-[cubic-bezier(0.76,0,0.24,1)]";
@@ -56,12 +57,13 @@ export default function Header() {
         className="absolute top-0 z-[1] box-border flex w-full items-center justify-between p-4 sm:p-6 md:p-[35px] font-light text-white"
       >
         {/* Logo */}
-        <div className="group/logo flex cursor-pointer">
-          <p
-            className={`m-0 transition-all duration-500 ${EASE} group-hover/logo:rotate-[360deg]`}
+        <div className="group/logo flex cursor-pointer justify-around items-center gap-[5px]">
+          <div
+            className={`m-0 transition-all duration-500 ${EASE} group-hover/logo:rotate-[-10deg]`}
           >
-            ©
-          </p>
+            <Image src="/images/manserif_white.svg" alt="Logo" width={40} height={40} />
+           
+          </div>
           <div
             className={`relative ml-[5px] flex overflow-hidden whitespace-nowrap transition-all duration-500 ${EASE} group-hover/logo:pr-[30px]`}
           >

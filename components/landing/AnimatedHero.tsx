@@ -266,8 +266,8 @@ export default function AnimatedHero({ images, headline, contact }: AnimatedHero
 
           {/* Social / contact */}
           <div data-split-social className="flex flex-col gap-1  justify-end items-end">
-           <p data-split className="... hidden  lg:block">{contact.label}</p>
-            <a href={`mailto:${contact.email}`} data-split className="... hidden  lg:block">
+           <p data-split className="... hidden  lg:block text-white">{contact.label}</p>
+            <a href={`mailto:${contact.email}`} data-split className="... hidden  lg:block text-white">
               {contact.email}
              </a>
              <a href={`mailto:${contact.email}`} data-split className="... block md:hidden">
