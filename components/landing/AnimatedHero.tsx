@@ -210,12 +210,10 @@ export default function AnimatedHero({ images, headline, contact }: AnimatedHero
     // Outer wrapper that useGSAP uses as its scope
     <div ref={containerRef}>
       {/* ── Preloader overlay ───────────────────────────────────────────── */}
-      <div
+      {/* <div
         ref={overlayRef}
         className="fixed inset-0 z-10 h-svh w-full bg-[#1a1a1a]"
-        style={{ clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)" }}
-      >
-        {/* Progress bar */}
+        style={{ clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)" }}  >
         <div
           ref={preloaderRef}
           className="absolute top-0 h-2 w-full origin-left scale-x-0 bg-white will-change-transform"
@@ -227,7 +225,7 @@ export default function AnimatedHero({ images, headline, contact }: AnimatedHero
             className="animate-pulse h-48 w-auto"
           />
         </div>
-      </div>
+      </div> */}
 
       {/* ── Navigation ──────────────────────────────────────────────────── */}
 
