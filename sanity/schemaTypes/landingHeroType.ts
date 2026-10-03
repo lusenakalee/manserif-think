@@ -5,35 +5,28 @@ export const landingHeroType = defineType({
   title: "Landing Hero",
   type: "document",
   groups: [
-    { name: "images", title: "Intro Images", default: true },
+    { name: "image", title: "Background Image", default: true },
     { name: "text", title: "Headline" },
     { name: "contact", title: "Contact" },
   ],
   fields: [
     defineField({
-      name: "introImages",
-      title: "Intro Images",
-      type: "array",
-      group: "images",
-      description:
-        "Exactly 5. Order matters: 1-2 exit left, 4-5 exit right, the 3rd (middle) expands to fill the hero.",
-      of: [
-        defineField({
-          name: "introImage",
-          type: "image",
-          options: { hotspot: true },
-          fields: [defineField({ name: "alt", title: "Alt text", type: "string" })],
-          validation: (Rule) => Rule.required(),
-        }),
+      name: "heroImage",
+      title: "Hero Background Image",
+      type: "image",
+      group: "image",
+      description: "Full-screen background image. Landscape, at least 2400px wide.",
+      options: { hotspot: true },
+      fields: [
+        defineField({ name: "alt", title: "Alt text", type: "string" }),
       ],
-      validation: (Rule) => Rule.required().length(5),
+      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "headlinePrefix",
       title: "Headline (before highlight)",
       type: "string",
       group: "text",
-      description: 'e.g. "Multidisciplinary"',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -41,7 +34,6 @@ export const landingHeroType = defineType({
       title: "Headline highlighted word",
       type: "string",
       group: "text",
-      description: 'Rendered white-on-black, e.g. "artist"',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -49,7 +41,6 @@ export const landingHeroType = defineType({
       title: "Headline (after highlight)",
       type: "string",
       group: "text",
-      description: 'e.g. "sharing evolving work, products, and journey."',
       validation: (Rule) => Rule.required(),
     }),
     defineField({
@@ -73,5 +64,8 @@ export const landingHeroType = defineType({
       group: "contact",
     }),
   ],
-  preview: { prepare: () => ({ title: "Landing Hero" }) },
+  preview: {
+    select: { media: "heroImage" },
+    prepare: ({ media }) => ({ title: "Landing Hero", media }),
+  },
 });

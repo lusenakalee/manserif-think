@@ -6,7 +6,6 @@ import ExhibitList from "@/components/exhibits/ExhibitList";
 import { client } from "@/sanity/lib/client";
 import { ProjectHoverSectionDemo } from "@/components/Projecthoversectiondemo";
 import { ProductHoverSectionDemo } from "@/components/ProductHoverSectionDemo";
-import AnimatedHero from "@/components/landing/AnimatedHero";
 import { ALL_EXHIBITS_QUERY } from "@/lib/sanity/queries/exhibits";
 import { landingHeroQuery } from "@/lib/sanity/queries/landingHero";
 import { textMaskQuery } from "@/lib/sanity/queries/textMask";
@@ -14,11 +13,11 @@ import { textMaskQuery } from "@/lib/sanity/queries/textMask";
 
 
 export default async function Home() {
-    const [exhibits, hero, textMask] = await Promise.all([
-     client.fetch(ALL_EXHIBITS_QUERY),
-     client.fetch(landingHeroQuery, {}, { next: { revalidate: 60 } }),
+     const [exhibits, hero, textMask] = await Promise.all([
+    client.fetch(ALL_EXHIBITS_QUERY),
+    client.fetch(landingHeroQuery, {}, { next: { revalidate: 60 } }),
     client.fetch(textMaskQuery, {}, { next: { revalidate: 60 } }),
-   ]);
+  ]);
 
 console.log("[Home] hero is null?", hero === null);
   console.log("[Home] image count:", hero?.images?.length);
@@ -30,8 +29,8 @@ console.log("[Home] hero is null?", hero === null);
   return (
     <div className="">
       <div>
-{hero && <AnimatedHero {...hero} />}
-        <ProductHoverSectionDemo />
+ {hero && <HeroSection {...hero} />}    
+     <ProductHoverSectionDemo />
       </div>
 
       <div className=" [scrollbar-width:none]  ">

@@ -2,10 +2,11 @@ import { defineQuery } from "next-sanity";
 
 export const landingHeroQuery = defineQuery(`
   *[_type == "landingHero"][0]{
-    "images": coalesce(introImages[defined(asset)]{
+    "image": heroImage{
       "src": asset->url,
-      "alt": coalesce(alt, "Manserif think")
-   }, []),
+      "alt": coalesce(alt, "Hero background"),
+      "lqip": asset->metadata.lqip
+    },
     "headline": {
       "prefix": coalesce(headlinePrefix, ""),
       "highlight": coalesce(headlineHighlight, ""),
