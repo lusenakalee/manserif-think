@@ -15,9 +15,10 @@ import Image from "next/image";
 const EASE = "ease-[cubic-bezier(0.76,0,0.24,1)]";
 
 const NAV_LINKS = [
-  { label: "Pieces", href: "/pieces" },
-  { label: "Exhibitions", href: "/exhibitions" },
+  { label: "Art exhibition", href: "/exhibitions" },
+  { label: "Communion", href: "/communion" },
   { label: "Portfolio", href: "/portfolio" },
+  { label: "Contact", href: "/contact" },
 ];
 
 

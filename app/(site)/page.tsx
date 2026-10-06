@@ -9,6 +9,10 @@ import { ProductHoverSectionDemo } from "@/components/ProductHoverSectionDemo";
 import { ALL_EXHIBITS_QUERY } from "@/lib/sanity/queries/exhibits";
 import { landingHeroQuery } from "@/lib/sanity/queries/landingHero";
 import { textMaskQuery } from "@/lib/sanity/queries/textMask";
+import GarmentsSnippet from "@/components/landing/GarmentsSnippet";
+import SiteFooter from "@/components/landing/SiteFooter";
+import SculpturesSnippet from "@/components/landing/SculpturesSnippet";
+import CategoryGrid from "@/components/landing/CategoryGrid";
 
 
 
@@ -30,16 +34,19 @@ console.log("[Home] hero is null?", hero === null);
     <div className="">
       <div>
  {hero && <HeroSection {...hero} />}    
-     <ProductHoverSectionDemo />
+       <CategoryGrid />    
+
+     {/* <ProductHoverSectionDemo /> */}
       </div>
 
       <div className=" [scrollbar-width:none]  ">
        {textMask?.videoUrl && <TextMask videoUrl={textMask.videoUrl} />}
       </div>
       <VideoSnippets exhibits={exhibits} />
-      {/* <SculpturesSnippet/> */}
+      <SculpturesSnippet/>
       {/* <GarmentsSnippet/>     */}
-      <CinematicFooter />
+      <SiteFooter/>
+      {/* <CinematicFooter /> */}
     </div>
   );
 }

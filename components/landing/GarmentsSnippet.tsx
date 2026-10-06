@@ -13,8 +13,8 @@ import { GarmentsSnippetSkeleton } from "@/components/landing/GarmentsSnippetSke
 const FALLBACK_GARMENTS: SnippetProduct[] = [
   {
     _id: "fallback-1",
-    name: "Basic Tee",
-    slug: "basic-tee-black",
+    name: "Art exhibition",
+    slug: "art-exhibition",
     price: 35,
     featured: false,
     material: null,
@@ -27,8 +27,8 @@ const FALLBACK_GARMENTS: SnippetProduct[] = [
   },
   {
     _id: "fallback-2",
-    name: "Basic Tee",
-    slug: "basic-tee-white",
+    name: "Communion",
+    slug: "communion",
     price: 35,
     featured: false,
     material: null,
@@ -41,8 +41,8 @@ const FALLBACK_GARMENTS: SnippetProduct[] = [
   },
   {
     _id: "fallback-3",
-    name: "Basic Tee",
-    slug: "basic-tee-charcoal",
+    name: "Pieces",
+    slug: "pieces",
     price: 35,
     featured: false,
     material: null,
@@ -53,20 +53,8 @@ const FALLBACK_GARMENTS: SnippetProduct[] = [
       alt: "Front of men's Basic Tee in dark gray.",
     },
   },
-  {
-    _id: "fallback-4",
-    name: "Artwork Tee",
-    slug: "artwork-tee-iso-dots",
-    price: 35,
-    featured: false,
-    material: null,
-    color: "Iso Dots",
-    dimensions: null,
-    image: {
-      url: "https://tailwindcss.com/plus-assets/img/ecommerce-images/product-page-01-related-product-04.jpg",
-      alt: "Front of men's Artwork Tee in peach.",
-    },
-  },
+ 
+  
 ];
 
 // ─── Inner async component ────────────────────────────────────────────────────
@@ -87,10 +75,10 @@ async function GarmentsSnippetInner() {
         <div className="flex items-end justify-between mb-8">
           <div>
             <p className="font-mono text-[10px] uppercase tracking-[0.3em] text-stone-500 mb-2">
-              Wearable Works
+             Creative Collection
             </p>
             <h2 className="font-serif text-3xl font-medium tracking-tight text-stone-900">
-              Garments
+              Collections
             </h2>
           </div>
           <a
@@ -143,7 +131,7 @@ async function GarmentsSnippetInner() {
               </div>
 
               {/* Add to cart */}
-              <div className="mt-4">
+              {/* <div className="mt-4">
                 <AddToCartButton
                   productId={product._id}
                   name={product.name}
@@ -152,7 +140,7 @@ async function GarmentsSnippetInner() {
                   stock={1} // swap for product.stock once field is added to SNIPPET_PRODUCTS_BY_CATEGORY_QUERY
                   className="font-mono text-xs tracking-widest uppercase"
                 />
-              </div>
+              </div> */}
             </div>
           ))}
         </div>

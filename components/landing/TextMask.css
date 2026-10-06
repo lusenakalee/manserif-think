@@ -15,7 +15,7 @@
     align-items: center;
     justify-content: center;
     -webkit-mask-image: url('/images/mask.svg');
-    mask-image: url('/images/mask.svg');
+    mask-image: url('/images/mask-2.svg');
     -webkit-mask-position: 50% center;
     mask-position: 50% center;
     -webkit-mask-repeat: no-repeat;

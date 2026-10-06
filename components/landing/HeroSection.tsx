@@ -38,7 +38,7 @@ export default function HeroSection({ image, headline, contact }: HeroProps) {
           </h1>
         </div>
 
-        <div className="flex flex-col items-end gap-1 text-white">
+        {/* <div className="flex flex-col items-end gap-1 text-white">
           <p className="hidden lg:block">{contact.label}</p>
           {contact.email && (
             <>
@@ -67,7 +67,7 @@ export default function HeroSection({ image, headline, contact }: HeroProps) {
               />
             </a>
           )}
-        </div>
+        </div> */}
       </div>
     </section>
   );
