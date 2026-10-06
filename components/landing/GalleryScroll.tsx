@@ -18,7 +18,7 @@ interface GalleryScrollProps {
     headingLine2?: string | null;
     subtext?: string | null;
     /** Art pieces chosen in Sanity (any number) */
-    images?: GalleryPiece[] | null;
+    images?: (GalleryPiece | null)[] | null;
     /** Change this number to get a different random arrangement */
     layoutSeed?: number | null;
 }
@@ -100,7 +100,9 @@ export default function GalleryScroll({
     const word = subtext || "with gsap";
 
     const slides = useMemo(() => {
-        const valid = (images ?? []).filter((img) => !!img?.src);
+        const valid = (images ?? []).filter(
+            (img): img is GalleryPiece => !!img?.src
+        );
         return valid.length ? valid : FALLBACK_IMAGES;
     }, [images]);
 

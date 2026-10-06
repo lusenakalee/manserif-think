@@ -41,7 +41,7 @@ export default function ExhibitPageClient({ exhibit, heroImageUrl }: ExhibitPage
       // ── Horizontal scroll timeline, split into 3 segments ──
       // A: Hero  →  Exhibit Details            (horizontal)
       // B: Exhibit Details content reveal       (horizontal movement locked, vertical)
-      // C: Exhibit Details  →  Featured Products / Gallery / Footer / CTA (horizontal)
+      // C: Exhibit Details  →  Featured Art / Gallery / Footer / CTA (horizontal)
       let detailsOffset = 0; // px the wrapper travels to bring Details flush left
       let detailsExtraHeight = 0; // px of Details content taller than the viewport
       let totalX = 0; // full horizontal travel distance across the whole page
@@ -175,7 +175,7 @@ export default function ExhibitPageClient({ exhibit, heroImageUrl }: ExhibitPage
   const location = exhibit.exhibitLocation;
   const partners = exhibit.partners ?? [];
   const images = exhibit.images ?? [];
-  const featuredProducts = exhibit.featuredProducts ?? [];
+  const featuredArt = exhibit.featuredArt ?? [];
 
   return (
     <main ref={containerRef} className="h-screen w-full overflow-hidden bg-[#F5F2ED]">
@@ -243,8 +243,8 @@ export default function ExhibitPageClient({ exhibit, heroImageUrl }: ExhibitPage
           artistDescription={exhibit.artistDescription ?? ''}
         />
 
-        {/* ── Featured Products ─────────────────────────────────────────── */}
-        {featuredProducts.length > 0 && (
+        {/* ── Featured Art ─────────────────────────────────────────── */}
+        {featuredArt.length > 0 && (
           <section className="h-screen w-max shrink-0 flex flex-col justify-center bg-[#1A1A1A] px-8 md:px-16 lg:px-24">
             <div className="mb-10">
               <div className="mb-2 overflow-hidden">
@@ -260,10 +260,10 @@ export default function ExhibitPageClient({ exhibit, heroImageUrl }: ExhibitPage
             </div>
 
             <div className="flex h-[55vh] gap-6">
-              {featuredProducts.map((product, index) => (
+              {featuredArt.map((piece, index) => (
                 <Link
-                  key={product._id}
-                  href={`/products/${product.slug?.current}`}
+                  key={piece._id}
+                  href={`/pieces/${piece.slug?.current}`}
                   className="reveal-text group relative flex h-full w-[28vw] min-w-[220px] max-w-[360px] flex-col justify-end overflow-hidden border border-white/10 bg-white/5 backdrop-blur-sm transition-all duration-500 hover:border-white/30 hover:bg-white/10"
                 >
                   {/* Index number */}
@@ -274,12 +274,12 @@ export default function ExhibitPageClient({ exhibit, heroImageUrl }: ExhibitPage
                   {/* Corner arrow accent */}
                   <ArrowUpRight className="absolute top-5 right-5 z-10 h-4 w-4 text-gray-400 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
-                  {/* Product image */}
-                  {product.images && (
+                  {/* Piece image */}
+                  {piece.images && (
                     <div className="absolute inset-0">
                       <Image
-                        src={urlFor(product.images).width(720).height(960).url()}
-                        alt={product.name ?? ''}
+                        src={urlFor(piece.images).width(720).height(960).url()}
+                        alt={piece.name ?? ''}
                         fill
                         className="object-cover transition-transform duration-700 group-hover:scale-105"
                         sizes="(max-width: 768px) 80vw, 28vw"
@@ -288,10 +288,10 @@ export default function ExhibitPageClient({ exhibit, heroImageUrl }: ExhibitPage
                     </div>
                   )}
 
-                  {/* Product info */}
+                  {/* Piece info */}
                   <div className="relative z-10 border-t border-white/10 p-6 transition-colors duration-300 group-hover:border-white/20">
                     <p className="mb-1 font-serif text-lg font-light leading-snug text-[#F5F2ED] transition-transform duration-300 group-hover:translate-x-1 md:text-xl">
-                      {product.name}
+                      {piece.name}
                     </p>
                     <span className="text-xs uppercase tracking-[0.2em] text-gray-500 transition-colors duration-300 group-hover:text-gray-400">
                       View Work
@@ -496,7 +496,7 @@ export default function ExhibitPageClient({ exhibit, heroImageUrl }: ExhibitPage
           </div>
           <div className="overflow-hidden">
             <Link
-              href="/exhibitions"
+              href="/exhibits"
               className="reveal-text group inline-flex items-center gap-2 border-b border-[#1A1A1A]/40 pb-1 text-xs font-medium uppercase tracking-[0.2em] text-[#1A1A1A] transition-opacity hover:opacity-60"
             >
               View All Exhibitions

@@ -45,12 +45,40 @@ export const CATEGORIES: CategoryItem[] = [
   },
 ];
 
+/**
+ * Loose shape accepted from Sanity. Generated query types mark most fields as
+ * nullable, so they're validated and narrowed to CategoryItem below.
+ */
+export interface CategoryInput {
+  id: string;
+  title?: string | null;
+  href?: string | null;
+  image?: string | null;
+  alt?: string | null;
+  lqip?: string | null;
+}
+
 interface CategoryGridProps {
-  categories?: CategoryItem[] | null;
+  categories?: CategoryInput[] | null;
 }
 
 export default function CategoryGrid({ categories }: CategoryGridProps) {
-  const items = categories?.length ? categories : CATEGORIES;
+  // Keep only complete categories from Sanity; otherwise use the fallback tiles
+  const fromCms = (categories ?? []).flatMap((c): CategoryItem[] =>
+    c.title && c.href && c.image
+      ? [
+          {
+            id: c.id,
+            title: c.title,
+            href: c.href,
+            image: c.image,
+            alt: c.alt || c.title,
+            lqip: c.lqip,
+          },
+        ]
+      : []
+  );
+  const items = fromCms.length ? fromCms : CATEGORIES;
   const isOdd = items.length % 2 === 1;
 
   return (

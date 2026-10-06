@@ -11,6 +11,6 @@ export const galleryScrollQuery = defineQuery(`
       "slug": slug.current,
       "src": images[0].asset->url,
       "lqip": images[0].asset->metadata.lqip
-    }[defined(src)]
+    }
   }
 `);
