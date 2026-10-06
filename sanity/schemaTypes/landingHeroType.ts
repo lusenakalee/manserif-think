@@ -11,16 +11,22 @@ export const landingHeroType = defineType({
   ],
   fields: [
     defineField({
-      name: "heroImage",
-      title: "Hero Background Image",
-      type: "image",
+      name: "heroImages",
+      title: "Hero Background Images",
+      type: "array",
       group: "image",
-      description: "Full-screen background image. Landscape, at least 2400px wide.",
-      options: { hotspot: true },
-      fields: [
-        defineField({ name: "alt", title: "Alt text", type: "string" }),
+      description:
+        "Full-screen background images that fade in and out. Landscape, at least 2400px wide. They play after the default local image (/images/communion.jpg). Drag to reorder.",
+      options: { layout: "grid" },
+      of: [
+        {
+          type: "image",
+          options: { hotspot: true },
+          fields: [
+            defineField({ name: "alt", title: "Alt text", type: "string" }),
+          ],
+        },
       ],
-      validation: (Rule) => Rule.required(),
     }),
     defineField({
       name: "headlinePrefix",
@@ -65,7 +71,7 @@ export const landingHeroType = defineType({
     }),
   ],
   preview: {
-    select: { media: "heroImage" },
+    select: { media: "heroImages.0" },
     prepare: ({ media }) => ({ title: "Landing Hero", media }),
   },
 });

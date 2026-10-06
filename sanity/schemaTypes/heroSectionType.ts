@@ -83,6 +83,30 @@ export const heroSectionType = defineType({
     // ─── Media ───────────────────────────────────────────────────────────────
 
     defineField({
+      name: "heroImages",
+      title: "Hero Images",
+      type: "array",
+      group: "media",
+      description:
+        "Background images that fade in and out in the hero. They play after the default local image (/images/communion.jpg). Drag to reorder.",
+      options: { layout: "grid" },
+      of: [
+        {
+          type: "image",
+          options: { hotspot: true },
+          fields: [
+            defineField({
+              name: "alt",
+              title: "Alt text",
+              type: "string",
+              description: "Briefly describe the image for accessibility",
+            }),
+          ],
+        },
+      ],
+    }),
+
+    defineField({
       name: "figureSvg",
       title: "Figure SVG",
       type: "image",

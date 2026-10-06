@@ -1,28 +1,28 @@
 import InfiniteGallery from '@/components/general/InfiniteGallery';
-import { client } from '@/sanity/lib/client'; // adjust to your actual client export
+import { client } from '@/sanity/lib/client';
 import { ALL_PRODUCTS_QUERY } from '@/lib/sanity/queries/products';
 
 export default async function page() {
-    const products = await client.fetch(ALL_PRODUCTS_QUERY);
+    // Fetches every document of type "art" (see products.ts)
+    const artPieces = await client.fetch(ALL_PRODUCTS_QUERY);
 
     // images[] is already dereferenced (asset->{ _id, url }) in the query,
     // so no image-url builder is needed here — just read .url directly.
     //
-    // NOTE: make sure ALL_PRODUCTS_QUERY projects a `slug` field, e.g.
-    //   "slug": slug.current
-    // otherwise `product.slug` will be undefined and the image won't link.
-    const sampleImages = products
-    .map((product) => {
-        const src = product?.images?.[0]?.asset?.url;
-        if (!src) return null;
+    // NOTE: ALL_PRODUCTS_QUERY projects "slug": slug.current, so
+    // `piece.slug` is a plain string.
+    const sampleImages = artPieces
+        .map((piece) => {
+            const src = piece?.images?.[0]?.asset?.url;
+            if (!src) return null;
 
-        return {
-            src,
-            alt: product.name || 'Piece image',
-            href: product.slug ? `/products/${product.slug}` : undefined,
-        };
-    })
-    .filter((image): image is NonNullable<typeof image> => image !== null);
+            return {
+                src,
+                alt: piece.name || 'Piece image',
+                href: piece.slug ? `/pieces/${piece.slug}` : undefined,
+            };
+        })
+        .filter((image): image is NonNullable<typeof image> => image !== null);
 
     return (
         <main className="min-h-screen bg-black">

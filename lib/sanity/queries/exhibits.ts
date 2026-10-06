@@ -117,7 +117,7 @@ export const EXHIBIT_BY_SLUG_QUERY = defineQuery(`
       country,
       mapsUrl
     },
-    featuredProducts[]-> {
+    featuredArt[]-> {
       _id,
       name,
       slug,

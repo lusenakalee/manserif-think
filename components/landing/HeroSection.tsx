@@ -1,28 +1,83 @@
+"use client";
+
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { Mail } from "lucide-react";
 
-interface HeroProps {
-  image?: { src: string | null; alt: string; lqip?: string | null };
-  headline: { prefix: string; highlight: string; suffix: string };
-  contact: { label: string; email: string; instagramUrl: string };
+export interface HeroImage {
+  src: string | null;
+  alt: string;
+  lqip?: string | null;
 }
 
-export default function HeroSection({ image, headline, contact }: HeroProps) {
+interface HeroProps {
+  /** Images uploaded in Sanity (heroImages). Optional. */
+images?: HeroImage[] | null;
+  headline: { prefix: string; highlight: string; suffix: string };
+  contact: { label: string; email: string; instagramUrl: string };
+  /** Time each image stays visible, in ms */
+  interval?: number;
+  /** Fade duration, in ms */
+  fadeDuration?: number;
+}
+
+// Always the first slide, and the only slide if Sanity has no images.
+const LOCAL_FIRST_IMAGE: HeroImage = {
+  src: "/images/communion.jpg",
+  alt: "Communion",
+};
+
+export default function HeroSection({
+  images,
+  headline,
+  contact,
+  interval = 5000,
+  fadeDuration = 1500,
+}: HeroProps) {
+  const slides = useMemo<HeroImage[]>(() => {
+    const remote = (images ?? []).filter((img) => !!img?.src);
+    return [LOCAL_FIRST_IMAGE, ...remote];
+  }, [images]);
+
+  const [active, setActive] = useState(0);
+
+  useEffect(() => {
+    if (slides.length < 2) return;
+
+    // Respect reduced-motion preferences: stay on the first image.
+    const reduceMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+    if (reduceMotion) return;
+
+    const id = setInterval(() => {
+      setActive((current) => (current + 1) % slides.length);
+    }, interval);
+
+    return () => clearInterval(id);
+  }, [slides.length, interval]);
+
   return (
     <section className="relative h-svh w-full overflow-hidden bg-[#1a1a1a]">
-      {image?.src && (
+      {slides.map((img, i) => (
         <Image
-          src={image.src}
-          alt={image.alt}
+          key={`${img.src}-${i}`}
+          src={img.src as string}
+          alt={img.alt}
           fill
-          priority
+          priority={i === 0}
           sizes="100vw"
-          className="object-cover"
-          {...(image.lqip
-            ? { placeholder: "blur" as const, blurDataURL: image.lqip }
+          aria-hidden={i !== active}
+          className="object-cover transition-opacity ease-in-out"
+          style={{
+            opacity: i === active ? 1 : 0,
+            transitionDuration: `${fadeDuration}ms`,
+          }}
+          {...(img.lqip
+            ? { placeholder: "blur" as const, blurDataURL: img.lqip }
             : {})}
         />
-      )}
+      ))}
 
       {/* Optional dark overlay for text legibility */}
       <div className="absolute inset-0 bg-black/30" />

@@ -15,10 +15,12 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { title: "Home", href: "/" },
-  { title: "Pieces", href: "/pieces" },
+  { title: "Communion", href: "/communion" },
   { title: "Exhibitions", href: "/exhibitions" },
   { title: "Portfolio", href: "/portfolio" },
+   { title: "Contact", href: "/contact" },
 ];
+
 
 export default function Nav() {
   const pathname = usePathname();

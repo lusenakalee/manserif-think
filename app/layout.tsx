@@ -1,9 +1,16 @@
 import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono, JetBrains_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { cn } from "@/lib/utils";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import CookieConsent from "@/components/general/CookieConsent";
+
+const kaftan = localFont({
+  src: "../fonts/kaftan-trial.otf", // relative to app/layout.tsx
+  variable: "--font-kaftan",
+  display: "swap",
+});
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
@@ -126,21 +133,21 @@ export default function RootLayout({
         "antialiased",
         geistSans.variable,
         geistMono.variable,
-        "font-mono",
         jetbrainsMono.variable,
+        kaftan.variable,
+        "font-[family-name:var(--font-kaftan)]", // site-wide font (replaces "font-mono")
       )}
     >
-        <body>
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
-      />
-      <TooltipProvider>
+      <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+        />
+        <TooltipProvider>
           {children}
-                  <CookieConsent />
- {/* no wrapper divs with positioning */}
-      </TooltipProvider>
-        </body>
+          <CookieConsent />
+        </TooltipProvider>
+      </body>
     </html>
   );
 }

@@ -2,7 +2,7 @@ import { defineQuery } from "next-sanity";
 
 export const landingHeroQuery = defineQuery(`
   *[_type == "landingHero"][0]{
-    "image": heroImage{
+    "images": heroImages[defined(asset)]{
       "src": asset->url,
       "alt": coalesce(alt, "Hero background"),
       "lqip": asset->metadata.lqip

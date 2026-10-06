@@ -151,19 +151,19 @@ export const exhibitType = defineType({
       ],
     }),
 
-    // ── Featured Products ──────────────────────────────────────────────────────
+    // ── Featured Art ──────────────────────────────────────────────────────
     defineField({
-      name: 'featuredProducts',
-      title: 'Featured Products',
+      name: 'featuredArt',
+      title: 'Featured Art',
       type: 'array',
-      description: 'Select the products that will be showcased in this exhibit.',
+      description: 'Select the art pieces that will be showcased in this exhibit.',
       of: [
         {
           type: 'reference',
-          to: [{ type: 'product' }],
+          to: [{ type: 'art' }],
         },
       ],
-      validation: (Rule) => Rule.unique().error('Each product can only be added once'),
+      validation: (Rule) => Rule.unique().error('Each piece can only be added once'),
     }),
 
     // ── Partners ───────────────────────────────────────────────────────────────

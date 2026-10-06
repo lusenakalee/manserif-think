@@ -1,18 +1,14 @@
+import CategoryGrid from "@/components/landing/CategoryGrid";
+import GalleryScroll from "@/components/landing/GalleryScroll";
 import HeroSection from "@/components/landing/HeroSection";
+import SculpturesSnippet from "@/components/landing/SculpturesSnippet";
+import SiteFooter from "@/components/landing/SiteFooter";
 import TextMask from "@/components/landing/TextMask";
 import VideoSnippets from "@/components/landing/VideoSnippets";
-import { CinematicFooter } from "@/components/motion-footer";
-import ExhibitList from "@/components/exhibits/ExhibitList";
-import { client } from "@/sanity/lib/client";
-import { ProjectHoverSectionDemo } from "@/components/Projecthoversectiondemo";
-import { ProductHoverSectionDemo } from "@/components/ProductHoverSectionDemo";
 import { ALL_EXHIBITS_QUERY } from "@/lib/sanity/queries/exhibits";
 import { landingHeroQuery } from "@/lib/sanity/queries/landingHero";
 import { textMaskQuery } from "@/lib/sanity/queries/textMask";
-import GarmentsSnippet from "@/components/landing/GarmentsSnippet";
-import SiteFooter from "@/components/landing/SiteFooter";
-import SculpturesSnippet from "@/components/landing/SculpturesSnippet";
-import CategoryGrid from "@/components/landing/CategoryGrid";
+import { client } from "@/sanity/lib/client";
 
 
 
@@ -33,7 +29,7 @@ console.log("[Home] hero is null?", hero === null);
   return (
     <div className="">
       <div>
- {hero && <HeroSection {...hero} />}    
+{hero && <HeroSection {...hero} interval={6000} fadeDuration={2000} />}
        <CategoryGrid />    
 
      {/* <ProductHoverSectionDemo /> */}
@@ -43,8 +39,8 @@ console.log("[Home] hero is null?", hero === null);
        {textMask?.videoUrl && <TextMask videoUrl={textMask.videoUrl} />}
       </div>
       <VideoSnippets exhibits={exhibits} />
-      <SculpturesSnippet/>
-      {/* <GarmentsSnippet/>     */}
+      <GalleryScroll />
+   
       <SiteFooter/>
       {/* <CinematicFooter /> */}
     </div>
