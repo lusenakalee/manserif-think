@@ -12,6 +12,12 @@ const kaftan = localFont({
   display: "swap",
 });
 
+const HappyTime = localFont({
+  src: "../fonts/HappyTime.otf", // relative to app/layout.tsx
+  variable: "--font-happy-time",
+  display: "swap",
+});
+
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
@@ -135,7 +141,7 @@ export default function RootLayout({
         geistMono.variable,
         jetbrainsMono.variable,
         kaftan.variable,
-        "font-[family-name:var(--font-kaftan)]", // site-wide font (replaces "font-mono")
+        "font-[family-name:var(--font-happy-time)]", // site-wide font (replaces "font-mono")
       )}
     >
       <body>
