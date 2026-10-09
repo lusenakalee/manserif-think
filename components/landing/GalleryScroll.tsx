@@ -1,9 +1,9 @@
 'use client';
 
-import { useLayoutEffect, useMemo, useRef } from "react";
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Image from "next/image";
+import { useLayoutEffect, useMemo, useRef } from "react";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -97,7 +97,7 @@ export default function GalleryScroll({
     images,
     layoutSeed,
 }: GalleryScrollProps) {
-    const word = subtext || "with gsap";
+    const word = subtext || "Manserif.Think";
 
     const slides = useMemo(() => {
         const valid = (images ?? []).filter(

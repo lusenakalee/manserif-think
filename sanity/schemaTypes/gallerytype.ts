@@ -24,7 +24,7 @@ export const galleryType = defineType({
       title: "Animated subtext",
       type: "string",
       description: "Each letter floats up at a different speed as you scroll.",
-      initialValue: "with gsap",
+      initialValue: "Manserif.Think",
     }),
     defineField({
       name: "pieces",

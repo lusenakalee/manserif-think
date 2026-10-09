@@ -4,7 +4,7 @@ export const galleryScrollQuery = defineQuery(`
   *[_type == "galleryScroll"][0]{
     "headingLine1": coalesce(headingLine1, "Parallax"),
     "headingLine2": coalesce(headingLine2, "Scroll"),
-    "subtext": coalesce(subtext, "with gsap"),
+    "subtext": coalesce(subtext, "Manserif.Think"),
     "layoutSeed": coalesce(layoutSeed, 1),
     "images": pieces[]->{
       "name": name,
