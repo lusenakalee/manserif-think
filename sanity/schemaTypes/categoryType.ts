@@ -1,6 +1,8 @@
 import { TagIcon } from "@sanity/icons";
 import { defineField, defineType } from "sanity";
 
+type LandingDoc = { showOnLanding?: boolean } | undefined;
+
 export const categoryType = defineType({
   name: "category",
   title: "Category",
@@ -10,6 +12,7 @@ export const categoryType = defineType({
     defineField({
       name: "title",
       type: "string",
+      description: "Shown as the tile heading on the landing grid.",
       validation: (rule) => [
         rule.required().error("Category title is required"),
       ],
@@ -17,6 +20,8 @@ export const categoryType = defineType({
     defineField({
       name: "slug",
       type: "slug",
+      description:
+        "Used for the category page URL. Clicking the tile opens this category's page.",
       options: {
         source: "title",
         maxLength: 96,
@@ -32,7 +37,7 @@ export const categoryType = defineType({
         hotspot: true,
       },
       description:
-        "Category image. Used as the full-bleed tile background on the landing grid, so use a landscape image, at least 2000px wide.",
+        "Used as the full-bleed tile background on the landing grid. Use a landscape image, at least 2000px wide. Set the hotspot to control the crop.",
       fields: [
         defineField({
           name: "alt",
@@ -43,7 +48,7 @@ export const categoryType = defineType({
       ],
       validation: (rule) =>
         rule.custom((value, context) => {
-          const doc = context.document as { showOnLanding?: boolean } | undefined;
+          const doc = context.document as LandingDoc;
           if (doc?.showOnLanding && !value?.asset) {
             return "An image is required when shown on the landing grid";
           }
@@ -56,34 +61,32 @@ export const categoryType = defineType({
       name: "showOnLanding",
       title: "Show on landing grid",
       type: "boolean",
-      description:
-        "Turn on to display this category as a tile in the landing page grid.",
+      description: "Turn on to display this category as a tile on the landing page.",
       initialValue: false,
-    }),
-    defineField({
-      name: "href",
-      title: "Tile link",
-      type: "string",
-      description:
-        'Where the tile goes when clicked, e.g. "/pieces" or "/communion".',
-      hidden: ({ document }) => !document?.showOnLanding,
-      validation: (rule) =>
-        rule.custom((value, context) => {
-          const doc = context.document as { showOnLanding?: boolean } | undefined;
-          if (!doc?.showOnLanding) return true;
-          if (!value) return "A link is required when shown on the landing grid";
-          if (!value.startsWith("/") && !/^https?:\/\//.test(value)) {
-            return 'Link must start with "/" or "https://"';
-          }
-          return true;
-        }),
     }),
     defineField({
       name: "order",
       title: "Grid order",
       type: "number",
-      description: "Lower numbers appear first in the grid.",
+      description: "Lower numbers appear first. Tiles without a number go last.",
       hidden: ({ document }) => !document?.showOnLanding,
+      validation: (rule) => rule.integer().min(0),
+    }),
+    defineField({
+      name: "customLink",
+      title: "Custom link (optional)",
+      type: "string",
+      description:
+        'Leave empty to open this category\'s page. Only fill in to send the tile somewhere else, e.g. "/pieces" or "https://example.com".',
+      hidden: ({ document }) => !document?.showOnLanding,
+      validation: (rule) =>
+        rule.custom((value) => {
+          if (!value) return true;
+          if (!value.startsWith("/") && !/^https?:\/\//.test(value)) {
+            return 'Link must start with "/" or "https://"';
+          }
+          return true;
+        }),
     }),
   ],
   orderings: [

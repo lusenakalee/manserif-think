@@ -40,19 +40,25 @@ export const CATEGORY_BY_SLUG_QUERY = defineQuery(`*[
 
 /**
  * Categories shown as tiles in the landing page grid.
- * Returns exactly the shape CategoryGrid expects (CategoryItem[]).
- * Only categories with "Show on landing grid" turned on, a link and an image.
+ * Returns the shape CategoryGrid expects (CategoryInput[]).
+ *
+ * - Only categories with "Show on landing grid" on, a slug and an image.
+ * - `href` opens the category page (/category/<slug>) unless a custom link is set.
+ *   If your category route is different (e.g. /categories/<slug>), change the
+ *   "/category/" prefix below.
+ * - Categories without a grid order go last.
  */
 export const LANDING_CATEGORIES_QUERY = defineQuery(`*[
   _type == "category"
   && showOnLanding == true
-  && defined(href)
+  && defined(slug.current)
   && defined(image.asset)
-] | order(order asc, title asc) {
+] | order(coalesce(order, 9999) asc, title asc) {
   "id": _id,
   title,
-  href,
+  "href": coalesce(customLink, "/category/" + slug.current),
   "image": image.asset->url,
   "lqip": image.asset->metadata.lqip,
-  "alt": coalesce(image.alt, title)
+  "alt": coalesce(image.alt, title),
+  "hotspot": image.hotspot{ x, y }
 }`);
