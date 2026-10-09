@@ -82,6 +82,14 @@ export default function CategoryGrid({ categories }: CategoryGridProps) {
   const isOdd = items.length % 2 === 1;
 
   return (
+    <>
+    <div className="flex ">
+      <div className=" bg-white w-1/3   h-4    "></div>
+            <div className=" bg-black w-1/3 h-4"></div>
+              <div className=" bg-white w-1/3 h-4"></div>
+
+      
+    </div>
     <nav
       aria-label="Studio Main Categories"
       className="w-full overflow-x-hidden"
@@ -152,5 +160,6 @@ export default function CategoryGrid({ categories }: CategoryGridProps) {
         })}
       </div>
     </nav>
+    </>
   );
 }
