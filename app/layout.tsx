@@ -17,6 +17,11 @@ const HappyTime = localFont({
   variable: "--font-happy-time",
   display: "swap",
 });
+const LEMONMILK = localFont({
+  src: "../fonts/LEMONMILK-Regular.otf",
+  variable: "--font-lemonmilk",
+  display: "swap",
+});
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
@@ -141,7 +146,8 @@ export default function RootLayout({
         geistMono.variable,
         jetbrainsMono.variable,
         kaftan.variable,
-        "font-[family-name:var(--font-happy-time)]", // site-wide font (replaces "font-mono")
+        LEMONMILK.variable,
+        "font-[family-name:var(--font-lemonmilk)]", // site-wide font (replaces "font-mono")
       )}
     >
       <body>
