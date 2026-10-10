@@ -92,9 +92,9 @@ export default function CategoryGrid({ categories }: CategoryGridProps) {
   return (
     <>
       <div className="flex">
-        <div className="bg-white w-1/3 h-4" />
-        <div className="bg-black w-1/3 h-4" />
-        <div className="bg-white w-1/3 h-4" />
+        <div className="bg-white w-1/2 h-4" />
+        {/* <div className="bg-black w-1/3 h-4" /> */}
+        <div className="bg-white w-1/2 h-4" />
       </div>
       <nav
         aria-label="Studio Main Categories"
