@@ -147,6 +147,7 @@ export default function RootLayout({
         jetbrainsMono.variable,
         kaftan.variable,
         LEMONMILK.variable,
+        HappyTime.variable,
         "font-[family-name:var(--font-lemonmilk)]", // site-wide font (replaces "font-mono")
       )}
     >

@@ -31,7 +31,7 @@ export default function SiteFooter() {
           </span>
         </Link>
       
-        <p className="mt-4 max-w-xs text-gray-400">
+        <p className=" font-happy text-2xl mt-4 max-w-xs text-gray-400">
           Multidisciplinary artist sharing evolving work.
         </p>
 

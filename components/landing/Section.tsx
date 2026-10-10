@@ -90,10 +90,10 @@ const Section: React.FC<{
           <span className="uppercase tracking-[0.2em] text-[10px] sm:text-xs text-white/70 font-light">
             {tag}
           </span>
-          <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl leading-tight">
+          <h1 className=" text-3xl sm:text-4xl md:text-5xl leading-tight">
             {title}
           </h1>
-          <p className="text-sm sm:text-base text-white/80 max-w-[50ch] leading-relaxed line-clamp-4">
+          <p className="font-happy text-sm sm:text-base text-white/80 max-w-[50ch] leading-relaxed line-clamp-4">
             {description}
           </p>
           <Link

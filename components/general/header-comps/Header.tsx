@@ -21,7 +21,6 @@ const NAV_LINKS = [
   { label: "Contact", href: "/contact" },
 ];
 
-
 export default function Header() {
   const header = useRef<HTMLDivElement>(null);
   const button = useRef<HTMLDivElement>(null);
@@ -41,10 +40,18 @@ export default function Header() {
         start: 0,
         end: window.innerHeight,
         onLeave: () => {
-          gsap.to(button.current, { scale: 1, duration: 0.25, ease: "power1.out" });
+          gsap.to(button.current, {
+            scale: 1,
+            duration: 0.25,
+            ease: "power1.out",
+          });
         },
         onEnterBack: () => {
-          gsap.to(button.current, { scale: 0, duration: 0.25, ease: "power1.out" });
+          gsap.to(button.current, {
+            scale: 0,
+            duration: 0.25,
+            ease: "power1.out",
+          });
           setIsActive(false);
         },
       },
@@ -62,47 +69,48 @@ export default function Header() {
           <div
             className={`m-0 transition-all duration-500 ${EASE} group-hover/logo:rotate-[-10deg]`}
           >
-            <Image src="/images/manserif_white.svg" alt="Logo" width={40} height={40} />
-           
+            <Image
+              src="/images/manserif_white.svg"
+              alt="Logo"
+              width={40}
+              height={40}
+            />
           </div>
           <div
-            className={`relative ml-[5px] flex overflow-hidden whitespace-nowrap transition-all duration-500 ${EASE} group-hover/logo:pr-[30px]`}
-          >
-            <Link href="/" className="flex">
-            <p
-              className={`relative m-0 transition-transform duration-500 ${EASE} group-hover/logo:-translate-x-full`}
-            >
-             Manserif
-            </p>
-            <p
-              className={`relative m-0 pl-[0.3em] transition-transform duration-500 ${EASE} group-hover/logo:-translate-x-[65px]`}
-            >
-              .Think
-            </p>
+            className={`relative ml-[5px] flex overflow-hidden whitespace-nowrap transition-all duration-500 ${EASE} group-hover/logo:pr-[30px]`} >
+            <Link href="/" className="flex font-happy text-lg ">
+              <p
+                className={`relative m-0 transition-transform duration-500 ${EASE} group-hover/logo:-translate-x-full font-happy`}
+              >
+                Manserif
+              </p>
+              <p
+                className={`font-happy relative m-0 pl-[0.3em] transition-transform duration-500 ${EASE} group-hover/logo:-translate-x-[65px]`}
+              >
+                .Think
+              </p>
             </Link>
             <p
               className={`absolute left-[120px] m-0 pl-[0.3em] transition-transform duration-500 ${EASE} group-hover/logo:-translate-x-[65px]`}
-            >
-              
-            </p>
+            ></p>
           </div>
         </div>
 
         {/* Nav links — hidden on mobile, the burger menu handles navigation there */}
         <div className="hidden md:flex md:items-center">
           {NAV_LINKS.map(({ label, href }) => (
-  <Magnetic key={label}>
-    <div className="group/el relative z-[1] flex flex-col p-[15px]">
-      <Link href={href} className="cursor-pointer">
-        {label}
-      </Link>
+            <Magnetic key={label}>
+              <div className="group/el relative z-[1] flex flex-col p-[15px]">
+                <Link href={href} className="cursor-pointer">
+                  {label}
+                </Link>
 
-      <div
-        className={`absolute left-1/2 top-[45px] h-[5px] w-[5px] -translate-x-1/2 scale-0 rounded-full bg-white transition-transform duration-200 ${EASE} group-hover/el:scale-100`}
-      />
-    </div>
-  </Magnetic>
-))}
+                <div
+                  className={`absolute left-1/2 top-[45px] h-[5px] w-[5px] -translate-x-1/2 scale-0 rounded-full bg-white transition-transform duration-200 ${EASE} group-hover/el:scale-100`}
+                />
+              </div>
+            </Magnetic>
+          ))}
         </div>
       </div>
 
