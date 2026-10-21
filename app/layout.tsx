@@ -5,6 +5,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import CookieConsent from "@/components/general/CookieConsent";
+import SmoothScrollProvider from "@/components/SmoothScrollProvider";
 
 const kaftan = localFont({
   src: "../fonts/kaftan-trial.otf", // relative to app/layout.tsx
@@ -157,7 +158,10 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
         />
         <TooltipProvider>
+           <SmoothScrollProvider>
           {children}
+
+           </SmoothScrollProvider>
           <CookieConsent />
         </TooltipProvider>
       </body>

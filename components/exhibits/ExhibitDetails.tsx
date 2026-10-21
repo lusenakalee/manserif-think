@@ -58,7 +58,7 @@ export default function ExhibitDetails({
                     key={index}
                     className="overflow-hidden mb-4 last:mb-0"
                   >
-                    <p className="reveal-text m-0 leading-relaxed">
+                    <p className="reveal-text font-happy  m-0 leading-relaxed">
                       {para}
                     </p>
                   </div>
@@ -80,7 +80,7 @@ export default function ExhibitDetails({
                     key={index}
                     className="overflow-hidden mb-4 last:mb-0"
                   >
-                    <p className="reveal-text m-0 leading-relaxed">
+                    <p className="reveal-text font-happy  m-0 leading-relaxed">
                       {para}
                     </p>
                   </div>
@@ -104,7 +104,7 @@ export default function ExhibitDetails({
                     Title
                   </span>
 
-                  <span className="reveal-text block text-sm uppercase tracking-wider font-medium">
+                  <span className="reveal-text  block text-sm uppercase tracking-wider font-medium">
                     {title}
                   </span>
                 </li>

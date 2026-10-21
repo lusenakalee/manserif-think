@@ -186,7 +186,7 @@ export default function GalleryScroll({
                 <h1 className="m-0 mt-2.5 text-[5vw] leading-[5vw] uppercase">
                     {headingLine2 || "Scroll"}
                 </h1>
-                <div>
+                {/* <div>
                     <p className="m-0 mt-2.5 text-[3vw] uppercase text-white">
                         {word.split("").map((letter, i) => (
                             <span
@@ -198,7 +198,7 @@ export default function GalleryScroll({
                             </span>
                         ))}
                     </p>
-                </div>
+                </div> */}
             </div>
 
             <div
