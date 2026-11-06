@@ -9,6 +9,7 @@ import { LOW_STOCK_THRESHOLD } from "@/lib/constants/stock";
 const PRODUCT_FILTER_CONDITIONS = `
   _type == "art"
   && ($categorySlug == "" || category->slug.current == $categorySlug)
+  && ($subcategorySlug == "" || subcategory->slug.current == $subcategorySlug)
   && ($color == "" || color == $color)
   && ($material == "" || material == $material)
   && ($minPrice == 0 || price >= $minPrice)
@@ -35,6 +36,11 @@ const FILTERED_PRODUCT_PROJECTION = `{
     title,
     "slug": slug.current
   },
+  subcategory->{
+    _id,
+    title,
+    "slug": slug.current
+  },
   material,
   color,
   stock
@@ -51,8 +57,8 @@ const RELEVANCE_SCORE = `score(
 // ============================================
 
 /**
- * Get all products with category expanded
- * Used on landing page
+ * Get all products with category and subcategory expanded.
+ * Used on landing page.
  */
 export const ALL_PRODUCTS_QUERY = defineQuery(`*[
   _type == "art"
@@ -75,6 +81,11 @@ export const ALL_PRODUCTS_QUERY = defineQuery(`*[
     title,
     "slug": slug.current
   },
+  subcategory->{
+    _id,
+    title,
+    "slug": slug.current
+  },
   material,
   color,
   dimensions,
@@ -84,7 +95,7 @@ export const ALL_PRODUCTS_QUERY = defineQuery(`*[
 }`);
 
 /**
- * Get featured products for homepage carousel
+ * Get featured products for homepage carousel.
  */
 export const FEATURED_PRODUCTS_QUERY = defineQuery(`*[
   _type == "art"
@@ -109,11 +120,16 @@ export const FEATURED_PRODUCTS_QUERY = defineQuery(`*[
     title,
     "slug": slug.current
   },
+  subcategory->{
+    _id,
+    title,
+    "slug": slug.current
+  },
   stock
 }`);
 
 /**
- * Get products by category slug
+ * Get products by category slug.
  */
 export const PRODUCTS_BY_CATEGORY_QUERY = defineQuery(`*[
   _type == "art"
@@ -135,14 +151,54 @@ export const PRODUCTS_BY_CATEGORY_QUERY = defineQuery(`*[
     title,
     "slug": slug.current
   },
+  subcategory->{
+    _id,
+    title,
+    "slug": slug.current
+  },
   material,
   color,
   stock
 }`);
 
 /**
- * Get single product by slug
- * Used on product detail page
+ * Get products by subcategory slug.
+ * Pass $subcategorySlug to filter within a subcategory.
+ */
+export const PRODUCTS_BY_SUBCATEGORY_QUERY = defineQuery(`*[
+  _type == "art"
+  && subcategory->slug.current == $subcategorySlug
+] | order(featured desc, name asc) {
+  _id,
+  name,
+  "slug": slug.current,
+  price,
+  "image": images[0]{
+    asset->{
+      _id,
+      url
+    },
+    hotspot
+  },
+  category->{
+    _id,
+    title,
+    "slug": slug.current
+  },
+  subcategory->{
+    _id,
+    title,
+    "slug": slug.current
+  },
+  material,
+  color,
+  stock,
+  featured
+}`);
+
+/**
+ * Get single product by slug.
+ * Used on product detail page.
  */
 export const PRODUCT_BY_SLUG_QUERY = defineQuery(`*[
   _type == "art"
@@ -166,6 +222,11 @@ export const PRODUCT_BY_SLUG_QUERY = defineQuery(`*[
     title,
     "slug": slug.current
   },
+  subcategory->{
+    _id,
+    title,
+    "slug": slug.current
+  },
   material,
   color,
   dimensions,
@@ -180,9 +241,9 @@ export const PRODUCT_BY_SLUG_QUERY = defineQuery(`*[
 // ============================================
 
 /**
- * Search products with relevance scoring
- * Uses score() + boost() for better ranking
- * Orders by relevance score descending
+ * Search products with relevance scoring.
+ * Uses score() + boost() for better ranking.
+ * Orders by relevance score descending.
  */
 export const SEARCH_PRODUCTS_QUERY = defineQuery(`*[
   _type == "art"
@@ -211,46 +272,47 @@ export const SEARCH_PRODUCTS_QUERY = defineQuery(`*[
     title,
     "slug": slug.current
   },
+  subcategory->{
+    _id,
+    title,
+    "slug": slug.current
+  },
   material,
   color,
   stock
 }`);
 
 /**
- * Filter products - ordered by name (A-Z)
- * Returns up to 4 images for hover preview in product cards
+ * Filter products - ordered by name (A-Z).
+ * Pass $subcategorySlug = "" to skip subcategory filtering.
  */
 export const FILTER_PRODUCTS_BY_NAME_QUERY = defineQuery(
   `*[${PRODUCT_FILTER_CONDITIONS}] | order(name asc) ${FILTERED_PRODUCT_PROJECTION}`
 );
 
 /**
- * Filter products - ordered by price ascending
- * Returns up to 4 images for hover preview in product cards
+ * Filter products - ordered by price ascending.
  */
 export const FILTER_PRODUCTS_BY_PRICE_ASC_QUERY = defineQuery(
   `*[${PRODUCT_FILTER_CONDITIONS}] | order(price asc) ${FILTERED_PRODUCT_PROJECTION}`
 );
 
 /**
- * Filter products - ordered by price descending
- * Returns up to 4 images for hover preview in product cards
+ * Filter products - ordered by price descending.
  */
 export const FILTER_PRODUCTS_BY_PRICE_DESC_QUERY = defineQuery(
   `*[${PRODUCT_FILTER_CONDITIONS}] | order(price desc) ${FILTERED_PRODUCT_PROJECTION}`
 );
 
 /**
- * Filter products - ordered by relevance (when searching)
- * Uses score() for search term matching
- * Returns up to 4 images for hover preview in product cards
+ * Filter products - ordered by relevance (when searching).
  */
 export const FILTER_PRODUCTS_BY_RELEVANCE_QUERY = defineQuery(
   `*[${PRODUCT_FILTER_CONDITIONS}] | ${RELEVANCE_SCORE} | order(_score desc, name asc) ${FILTERED_PRODUCT_PROJECTION}`
 );
 
 /**
- * Get products by IDs (for cart/checkout)
+ * Get products by IDs (for cart/checkout).
  */
 export const PRODUCTS_BY_IDS_QUERY = defineQuery(`*[
   _type == "art"
@@ -271,8 +333,8 @@ export const PRODUCTS_BY_IDS_QUERY = defineQuery(`*[
 }`);
 
 /**
- * Get low stock products (admin)
- * Uses LOW_STOCK_THRESHOLD constant for consistency
+ * Get low stock products (admin).
+ * Uses LOW_STOCK_THRESHOLD constant for consistency.
  */
 export const LOW_STOCK_PRODUCTS_QUERY = defineQuery(`*[
   _type == "art"
@@ -292,7 +354,7 @@ export const LOW_STOCK_PRODUCTS_QUERY = defineQuery(`*[
 }`);
 
 /**
- * Get out of stock products (admin)
+ * Get out of stock products (admin).
  */
 export const OUT_OF_STOCK_PRODUCTS_QUERY = defineQuery(`*[
   _type == "art"
@@ -311,12 +373,11 @@ export const OUT_OF_STOCK_PRODUCTS_QUERY = defineQuery(`*[
 
 // ============================================
 // AI Shopping Assistant Query
-// Uses score() + boost() with all filters for AI agent
 // ============================================
 
 /**
- * Search products for AI shopping assistant
- * Full-featured search with all filters and product details
+ * Search products for AI shopping assistant.
+ * Full-featured search with all filters and product details.
  */
 export const AI_SEARCH_PRODUCTS_QUERY = defineQuery(`*[
   _type == "art"
@@ -327,6 +388,7 @@ export const AI_SEARCH_PRODUCTS_QUERY = defineQuery(`*[
     || category->title match $searchQuery + "*"
   )
   && ($categorySlug == "" || category->slug.current == $categorySlug)
+  && ($subcategorySlug == "" || subcategory->slug.current == $subcategorySlug)
   && ($material == "" || material == $material)
   && ($color == "" || color == $color)
   && ($minPrice == 0 || price >= $minPrice)
@@ -348,6 +410,11 @@ export const AI_SEARCH_PRODUCTS_QUERY = defineQuery(`*[
     title,
     "slug": slug.current
   },
+  subcategory->{
+    _id,
+    title,
+    "slug": slug.current
+  },
   material,
   color,
   dimensions,
@@ -356,13 +423,10 @@ export const AI_SEARCH_PRODUCTS_QUERY = defineQuery(`*[
   assemblyRequired
 }`);
 
-
 // ============================================
 // Landing Page Snippet Queries
-// Featured products surface first; capped at 4 cards per section.
-// Used by ArtSnippet, GarmentsSnippet, SculpturesSnippet.
 // ============================================
- 
+
 /**
  * Shared type returned by SNIPPET_PRODUCTS_BY_CATEGORY_QUERY
  */
@@ -380,17 +444,10 @@ export interface SnippetProduct {
     alt?: string;
   } | null;
 }
- 
+
 /**
  * Fetch up to 4 products for a landing-page snippet section.
- *
  * Ordering: featured products always appear first, then by name.
- * Pass the category slug as $categorySlug (e.g. "art", "garments", "sculptures").
- *
- * @example
- * const products = await client.fetch(SNIPPET_PRODUCTS_BY_CATEGORY_QUERY, {
- *   categorySlug: "art",
- * });
  */
 export const SNIPPET_PRODUCTS_BY_CATEGORY_QUERY = defineQuery(`*[
   _type == "art"

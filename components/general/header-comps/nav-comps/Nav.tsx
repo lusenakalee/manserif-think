@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { menuSlide } from "@/lib/animation";
 import { motion } from "framer-motion";
 import { usePathname } from "next/navigation";
-import { menuSlide } from "@/lib/animation";
-import NavLink from "./NavLink";
+import { useState } from "react";
 import Curve from "./Curve";
 import NavFooter from "./NavFooter";
+import NavLink from "./NavLink";
 
 interface NavItem {
   title: string;
@@ -16,7 +16,7 @@ interface NavItem {
 const navItems: NavItem[] = [
   { title: "Home", href: "/" },
   { title: "Communion", href: "/communion" },
-  { title: "Exhibitions", href: "/exhibitions" },
+  { title: "Exhibitions", href: "/category/art-exhibition" },
   { title: "Portfolio", href: "/portfolio" },
    { title: "Contact", href: "/contact" },
 ];
@@ -32,6 +32,7 @@ export default function Nav() {
       initial="initial"
       animate="enter"
       exit="exit"
+      id="site-header"
       className="fixed right-0 top-0 z-[3] h-screen w-full overflow-hidden bg-[rgb(41,41,41)] text-white sm:w-[70vw] md:w-[50vw] lg:w-[500px]"
     >
       <div className="box-border flex h-full flex-col justify-between p-8 sm:p-12 md:p-16 ">

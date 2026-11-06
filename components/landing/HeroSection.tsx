@@ -86,9 +86,7 @@ export default function HeroSection({
         <div className="w-3/5 max-[1000px]:w-full">
           <h1 className="text-[clamp(1.75rem,3vw,3rem)] font-normal leading-[1.1] tracking-[-0.01em] text-white">
             {headline.prefix}{" "}
-            <span className="bg-white/0 md:bg-white px-2  text-white md:text-black">
-              {headline.highlight}
-            </span>{" "}
+            
             {headline.suffix}
           </h1>
         </div>

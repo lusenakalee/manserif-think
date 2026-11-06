@@ -1,21 +1,21 @@
 "use client";
 
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { usePathname } from "next/navigation";
+import Magnetic from "@/components/general/Magnetic";
+import Rounded from "@/components/general/RoundedButton2";
 import { AnimatePresence } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Nav from "./nav-comps/Nav";
-import Rounded from "@/components/general/RoundedButton2";
-import Magnetic from "@/components/general/Magnetic";
-import Link from "next/link";
 import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import Nav from "./nav-comps/Nav";
 
 // Shared custom easing curve, used throughout (replaces the SCSS cubic-bezier)
 const EASE = "ease-[cubic-bezier(0.76,0,0.24,1)]";
 
 const NAV_LINKS = [
-  { label: "Art exhibition", href: "/exhibitions" },
+  { label: "Art exhibition", href: "/category/art-exhibition" },
   { label: "Communion", href: "/communion" },
   { label: "Portfolio", href: "/portfolio" },
   { label: "Contact", href: "/contact" },

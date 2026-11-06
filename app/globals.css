@@ -131,6 +131,11 @@
   }
 }
 
+/* Hide the site header while the artwork lightbox is open */
+body.lightbox-open #site-header {
+  display: none !important;
+}
+
 @layer utilities {
   .split-line {
     position: relative;

@@ -48,6 +48,8 @@ export const artType = defineType({
         rule.positive().error("Price must be a positive number"),
       ],
     }),
+
+    // ── Classification ────────────────────────────────────────────────────────
     defineField({
       name: "category",
       type: "reference",
@@ -55,6 +57,29 @@ export const artType = defineType({
       group: "details",
       validation: (rule) => [rule.required().error("Category is required")],
     }),
+    defineField({
+      name: "subcategory",
+      title: "Subcategory",
+      type: "reference",
+      to: [{ type: "subcategory" }],
+      group: "details",
+      description:
+        "Optional. Select a category first — only subcategories belonging to that category will appear.",
+      options: {
+        filter: ({ document }) => {
+          const categoryRef = (
+            document as { category?: { _ref?: string } }
+          )?.category?._ref;
+          if (!categoryRef) return { filter: "false" };
+          return {
+            filter: "parentCategory._ref == $categoryRef",
+            params: { categoryRef },
+          };
+        },
+        disableNew: true,
+      },
+    }),
+
     defineField({
       name: "material",
       type: "string",

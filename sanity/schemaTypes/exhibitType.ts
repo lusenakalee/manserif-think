@@ -221,8 +221,36 @@ export const exhibitType = defineType({
     }),
 
     // ── Meta ───────────────────────────────────────────────────────────────────
-   
-   
+
+    defineField({
+      name: 'category',
+      title: 'Category',
+      type: 'reference',
+      to: [{ type: 'category' }],
+      description:
+        'Assign this exhibit to a category. The category must have "Exhibits" selected under Content Types.',
+    }),
+    defineField({
+      name: 'subcategory',
+      title: 'Subcategory',
+      type: 'reference',
+      to: [{ type: 'subcategory' }],
+      description:
+        'Optional. Select a category first — only subcategories belonging to that category will appear.',
+      options: {
+        filter: ({ document }) => {
+          const categoryRef = (
+            document as { category?: { _ref?: string } }
+          )?.category?._ref;
+          if (!categoryRef) return { filter: 'false' };
+          return {
+            filter: 'parentCategory._ref == $categoryRef',
+            params: { categoryRef },
+          };
+        },
+        disableNew: true,
+      },
+    }),
     defineField({
       name: 'isFeatured',
       title: 'Featured Exhibit',

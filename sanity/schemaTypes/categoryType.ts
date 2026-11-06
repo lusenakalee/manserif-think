@@ -3,6 +3,18 @@ import { defineField, defineType } from "sanity";
 
 type LandingDoc = { showOnLanding?: boolean } | undefined;
 
+/**
+ * The document types that can be assigned to a category.
+ * Add or remove entries here if you introduce new schema types later.
+ */
+export const CATEGORY_CONTENT_TYPES = [
+  { title: "Art Works",        value: "art"       },
+  { title: "Exhibits",         value: "exhibit"   },
+  { title: "Projects",         value: "project"   },
+] as const;
+
+export type CategoryContentType = (typeof CATEGORY_CONTENT_TYPES)[number]["value"];
+
 export const categoryType = defineType({
   name: "category",
   title: "Category",
@@ -30,6 +42,31 @@ export const categoryType = defineType({
         rule.required().error("Slug is required for URL generation"),
       ],
     }),
+
+    defineField({
+      name: "description",
+      title: "Description",
+      type: "text",
+      rows: 3,
+      description: "Short description of this category, shown on the category page.",
+    }),
+
+    // ── Content Types ─────────────────────────────────────────────────────────
+    defineField({
+      name: "contentTypes",
+      title: "Content Types",
+      type: "array",
+      description:
+        "Choose which document types belong to this category. Documents of the selected types that reference this category will appear on the category page.",
+      of: [{ type: "string" }],
+      options: {
+        list: [...CATEGORY_CONTENT_TYPES],
+        layout: "grid",
+      },
+      validation: (rule) =>
+        rule.unique().error("Each content type can only be selected once"),
+    }),
+
     defineField({
       name: "image",
       type: "image",
@@ -102,13 +139,28 @@ export const categoryType = defineType({
       media: "image",
       showOnLanding: "showOnLanding",
       order: "order",
+      contentTypes: "contentTypes",
     },
-    prepare: ({ title, media, showOnLanding, order }) => ({
-      title,
-      subtitle: showOnLanding
-        ? `On landing grid${order != null ? ` · #${order}` : ""}`
-        : "",
-      media,
-    }),
+    prepare: ({ title, media, showOnLanding, order, contentTypes }) => {
+      const typeLabels = (contentTypes as string[] | undefined)
+        ?.map(
+          (v) =>
+            CATEGORY_CONTENT_TYPES.find((t) => t.value === v)?.title ?? v
+        )
+        .join(", ");
+
+      return {
+        title,
+        subtitle: [
+          typeLabels,
+          showOnLanding
+            ? `Landing grid${order != null ? ` · #${order}` : ""}`
+            : null,
+        ]
+          .filter(Boolean)
+          .join(" · "),
+        media,
+      };
+    },
   },
 });

@@ -39,7 +39,6 @@ export default async function page() {
       <SlidingImages />
       <PortfolioVideos />
       <InstagramFeed postUrls={instagramPosts} />
-      <CinematicFooter />
     </div>
   );
 }
