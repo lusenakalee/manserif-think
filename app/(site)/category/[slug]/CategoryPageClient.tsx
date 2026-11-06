@@ -61,7 +61,6 @@ export default function CategoryPageClient({
       <div className="min-h-screen bg-stone-50 text-stone-900 selection:bg-stone-900 selection:text-stone-50 font-sans antialiased">
         <main>
           <CuratorialSection
-            categoryTitle={categoryTitle}
             shortDescription={shortDescription}
             fullDescription={fullDescription}
             subcategories={subcategories}
