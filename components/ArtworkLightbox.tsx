@@ -7,6 +7,7 @@ import {
   ArtDetail,
   ExhibitDetail,
   ProjectDetail,
+  ApparelDetail,
 } from '@/types/category';
 import {
   X,
@@ -43,7 +44,8 @@ function getStartYear(dt?: string | null): string | null {
 function getFigureLabel(item: CollageItem, index: number): string {
   const prefix =
     item._type === 'art'     ? 'Fig.'  :
-    item._type === 'exhibit' ? 'Exh.'  : 'Proj.';
+    item._type === 'exhibit' ? 'Exh.'  :
+    item._type === 'apparel' ? 'App.'  : 'Proj.';
   return `${prefix} ${(index + 1).toString().padStart(2, '0')}`;
 }
 
@@ -200,6 +202,105 @@ function ProjectDetailFields({ detail }: { detail: ProjectDetail }) {
   );
 }
 
+function ApparelDetailFields({ detail }: { detail: ApparelDetail }) {
+  const sizes = detail.availableSizes?.length
+    ? detail.availableSizes
+    : detail.shoeSizes?.length
+    ? detail.shoeSizes
+    : null;
+
+  const sizesLabel = detail.shoeSizes?.length ? 'Shoe Sizes' : 'Available Sizes';
+
+  return (
+    <>
+      {detail.apparelKind && (
+        <DetailRow label="Type">
+          <span className="capitalize">{detail.apparelKind}</span>
+          {detail.gender && detail.gender !== 'unisex' && (
+            <span className="text-stone-500 ml-1.5 capitalize">· {detail.gender}</span>
+          )}
+        </DetailRow>
+      )}
+
+      {detail.material && (
+        <DetailRow label="Material">
+          {detail.material}
+          {detail.materialDetail && (
+            <span className="text-stone-500 ml-1.5">— {detail.materialDetail}</span>
+          )}
+        </DetailRow>
+      )}
+
+      {sizes && (
+        <DetailRow label={sizesLabel}>
+          <div className="flex flex-wrap gap-1 mt-0.5">
+            {sizes.map((size) => (
+              <span
+                key={size}
+                className="inline-block px-2 py-0.5 text-[11px] font-mono border border-stone-200 rounded-sm bg-stone-50 text-stone-700"
+              >
+                {size}
+              </span>
+            ))}
+          </div>
+        </DetailRow>
+      )}
+
+      {detail.features && detail.features.length > 0 && (
+        <DetailRow label="Features">
+          <div className="flex flex-wrap gap-1 mt-0.5">
+            {detail.features.map((f) => (
+              <span
+                key={f}
+                className="inline-block px-2 py-0.5 text-[11px] border border-stone-200 rounded-sm bg-stone-50 text-stone-600"
+              >
+                {f}
+              </span>
+            ))}
+          </div>
+        </DetailRow>
+      )}
+
+      {detail.careInstructions && (
+        <DetailRow label="Care">{detail.careInstructions}</DetailRow>
+      )}
+
+      {detail.limitedEdition && (
+        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-stone-900 text-white text-[11px] uppercase tracking-widest rounded-sm font-sans w-fit">
+          Limited Edition
+        </div>
+      )}
+
+      {/* {typeof detail.price === 'number' && (
+        <DetailRow label="Price">
+          £{detail.price.toLocaleString('en-GB', { minimumFractionDigits: 0 })}
+        </DetailRow>
+      )} */}
+
+      {/* {typeof detail.stock === 'number' && (
+        <DetailRow label="Availability">
+          {detail.stock > 0 ? (
+            <span className="text-stone-700">{detail.stock} in stock</span>
+          ) : (
+            <span className="text-stone-400 italic">Sold Out</span>
+          )}
+        </DetailRow>
+      )} */}
+
+      {detail.description && (
+        <div className="pt-3 border-t border-stone-100">
+          <dt className="text-[11px] uppercase tracking-widest text-stone-500 font-medium font-sans mb-1.5">
+            Description
+          </dt>
+          <dd className="text-stone-700 text-xs sm:text-[13px] leading-relaxed">
+            {detail.description}
+          </dd>
+        </div>
+      )}
+    </>
+  );
+}
+
 // ─── Main component ───────────────────────────────────────────────────────────
 
 interface ArtworkLightboxProps {
@@ -258,19 +359,19 @@ export default function ArtworkLightbox({
   }, [selectedItem, onClose, handleNext, handlePrev]);
 
   // Lock body scroll
-useEffect(() => {
-  if (selectedItem) {
-    document.body.style.overflow = 'hidden';
-    document.body.classList.add('lightbox-open');
-  } else {
-    document.body.style.overflow = '';
-    document.body.classList.remove('lightbox-open');
-  }
-  return () => {
-    document.body.style.overflow = '';
-    document.body.classList.remove('lightbox-open');
-  };
-}, [selectedItem]);
+  useEffect(() => {
+    if (selectedItem) {
+      document.body.style.overflow = 'hidden';
+      document.body.classList.add('lightbox-open');
+    } else {
+      document.body.style.overflow = '';
+      document.body.classList.remove('lightbox-open');
+    }
+    return () => {
+      document.body.style.overflow = '';
+      document.body.classList.remove('lightbox-open');
+    };
+  }, [selectedItem]);
 
   if (!selectedItem) return null;
 
@@ -290,6 +391,7 @@ useEffect(() => {
     >
       {/* ── Top Utility Bar ─────────────────────────────────────────────────── */}
       <header className="px-4 sm:px-6 py-3 border-b border-stone-200 bg-white/95 backdrop-blur-xs flex items-center justify-between text-xs tracking-widest uppercase gap-3">
+
         {/* Left: figure label + title */}
         <div className="flex items-center gap-2 sm:gap-3 min-w-0">
           <span className="font-sans text-[11px] sm:text-xs text-stone-500 shrink-0">
@@ -453,6 +555,7 @@ useEffect(() => {
                 {detail._type === 'art'     && <ArtDetailFields     detail={detail} />}
                 {detail._type === 'exhibit' && <ExhibitDetailFields detail={detail} />}
                 {detail._type === 'project' && <ProjectDetailFields detail={detail} />}
+                {detail._type === 'apparel' && <ApparelDetailFields detail={detail} />}
               </dl>
             </div>
 

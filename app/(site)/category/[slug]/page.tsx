@@ -110,6 +110,38 @@ function normalizeToCollageItems(data: CategoryPagePayload): CollageItem[] {
     });
   }
 
+  for (const item of (data.apparel ?? [])) {
+  if (!item.slug || !item.heroImage?.url) continue;
+  all.push({
+    id:              item._id,
+    _type:           'apparel',
+    slug:            item.slug,
+    title:           item.title ?? 'Untitled',
+    image:           item.heroImage.url,
+    lqip:            item.heroImage.lqip,
+    hotspot:         item.heroImage.hotspot,
+    aspect:          'landscape',
+    colSpan:         '',
+    offsetClass:     '',
+    subcategorySlug: item.subcategorySlug,
+    detail: {
+      _type:            'apparel',
+      description:      item.description,
+      price:            item.price,
+      apparelKind:      item.apparelKind,
+      gender:           item.gender,
+      material:         item.material,
+      materialDetail:   item.materialDetail,
+      features:         item.features,
+      careInstructions: item.careInstructions,
+      availableSizes:   item.availableSizes,
+      shoeSizes:        item.shoeSizes,
+      stock:            item.stock,
+      limitedEdition:   item.limitedEdition,
+    },
+  });
+}
+
   all.forEach((item, idx) => {
     item.aspect      = ASPECTS[idx % ASPECTS.length];
     item.colSpan     = COL_SPANS[idx % COL_SPANS.length];

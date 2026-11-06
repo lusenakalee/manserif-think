@@ -10,8 +10,9 @@ import { textMaskType } from './textMaskType'
 import { artType } from './artType'
 import { galleryType } from './gallerytype'
 import { subcategoryType } from './subcategoryType'
+import { apparelType } from './apparelType'
 
 
 export const schema: { types: SchemaTypeDefinition[] } = {
-  types: [blockContentType, galleryType, artType, categoryType,  subcategoryType , exhibitType, heroSectionType, portfolioType, landingHeroType, textMaskType],
+  types: [blockContentType, galleryType, artType, apparelType , categoryType,  subcategoryType , exhibitType, heroSectionType, portfolioType, landingHeroType, textMaskType],
 }

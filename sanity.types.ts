@@ -463,12 +463,24 @@ export type ALL_EXHIBITS_FOR_SITEMAP_QUERY_RESULT = Array<{
 }>;
 
 // Source: lib/sanity/queries/categories.ts
+// Variable: ALL_SUBCATEGORIES_QUERY
+// Query: *[  _type == "subcategory"] | order(parentCategory->title asc, coalesce(order, 9999) asc, title asc) {  _id,  title,  "slug": slug.current,  description,  "parentCategory": parentCategory->{    _id,    title,    "slug": slug.current  },  order}
+export type ALL_SUBCATEGORIES_QUERY_RESULT = Array<never>;
+
+// Source: lib/sanity/queries/categories.ts
+// Variable: SUBCATEGORIES_BY_CATEGORY_QUERY
+// Query: *[  _type == "subcategory"  && parentCategory->slug.current == $categorySlug] | order(coalesce(order, 9999) asc, title asc) {  _id,  title,  "slug": slug.current,  description,  order}
+export type SUBCATEGORIES_BY_CATEGORY_QUERY_RESULT = Array<never>;
+
+// Source: lib/sanity/queries/categories.ts
 // Variable: ALL_CATEGORIES_QUERY
-// Query: *[  _type == "category"] | order(title asc) {  _id,  title,  "slug": slug.current,  "image": image{    asset->{      _id,      url    },    hotspot  }}
+// Query: *[  _type == "category"] | order(title asc) {  _id,  title,  "slug": slug.current,  description,  contentTypes,  "image": image{    asset->{      _id,      url    },    hotspot  }}
 export type ALL_CATEGORIES_QUERY_RESULT = Array<{
   _id: string;
   title: string | null;
   slug: string | null;
+  description: null;
+  contentTypes: null;
   image: {
     asset: {
       _id: string;
@@ -480,11 +492,13 @@ export type ALL_CATEGORIES_QUERY_RESULT = Array<{
 
 // Source: lib/sanity/queries/categories.ts
 // Variable: CATEGORY_BY_SLUG_QUERY
-// Query: *[  _type == "category"  && slug.current == $slug][0] {  _id,  title,  "slug": slug.current,  "image": image{    asset->{      _id,      url    },    hotspot  }}
+// Query: *[  _type == "category"  && slug.current == $slug][0] {  _id,  title,  "slug": slug.current,  description,  contentTypes,  "image": image{    asset->{      _id,      url    },    hotspot  }}
 export type CATEGORY_BY_SLUG_QUERY_RESULT = {
   _id: string;
   title: string | null;
   slug: string | null;
+  description: null;
+  contentTypes: null;
   image: {
     asset: {
       _id: string;
@@ -496,15 +510,95 @@ export type CATEGORY_BY_SLUG_QUERY_RESULT = {
 
 // Source: lib/sanity/queries/categories.ts
 // Variable: LANDING_CATEGORIES_QUERY
-// Query: *[  _type == "category"  && showOnLanding == true  && defined(href)  && defined(image.asset)] | order(order asc, title asc) {  "id": _id,  title,  href,  "image": image.asset->url,  "lqip": image.asset->metadata.lqip,  "alt": coalesce(image.alt, title)}
+// Query: *[  _type == "category"  && showOnLanding == true  && defined(slug.current)  && defined(image.asset)] | order(coalesce(order, 9999) asc, title asc) {  "id": _id,  title,  "href": coalesce(customLink, "/category/" + slug.current),  "image": image.asset->url,  "lqip": image.asset->metadata.lqip,  "alt": coalesce(image.alt, title),  "hotspot": image.hotspot{ x, y }}
 export type LANDING_CATEGORIES_QUERY_RESULT = Array<{
   id: string;
   title: string | null;
-  href: string;
+  href: string | null;
   image: string | null;
   lqip: string | null;
   alt: string | null;
+  hotspot: {
+    x: number | null;
+    y: number | null;
+  } | null;
 }>;
+
+// Source: lib/sanity/queries/categories.ts
+// Variable: CATEGORY_PAGE_QUERY
+// Query: *[_type == "category" && slug.current == $slug][0] {    _id,    title,    "slug": slug.current,    description,    contentTypes,    "image": image {      "url":     asset->url,      "lqip":    asset->metadata.lqip,      "alt":     coalesce(alt, title),      "hotspot": hotspot{ x, y }    },    // ── Subcategories belonging to this category ──────────────────────────────    "subcategories": *[      _type == "subcategory"      && parentCategory._ref == ^._id    ] | order(coalesce(order, 9999) asc, title asc) {      _id,      title,      "slug": slug.current,      description    },    // ── Art pieces ────────────────────────────────────────────────────────────    "art": *[      _type == "art"      && references(^._id)    ] | order(featured desc, name asc) {      "_type": _type,      _id,      "title": name,      "slug":  slug.current,      "heroImage": {        "url":     images[0].asset->url,        "lqip":    images[0].asset->metadata.lqip,        "alt":     coalesce(images[0].asset->altText, name),        "hotspot": images[0].hotspot{ x, y }      },      "subcategorySlug": subcategory->slug.current,      stock,      featured,      // Lightbox detail fields      description,      material,      dimensions,      price    },    // ── Exhibits ──────────────────────────────────────────────────────────────    "exhibits": *[      _type == "exhibit"      && references(^._id)    ] | order(order asc, startDateTime desc) {      "_type": _type,      _id,      "title": title,      "slug":  slug.current,      "heroImage": {        "url":     heroImage.asset->url,        "lqip":    heroImage.asset->metadata.lqip,        "alt":     coalesce(heroImage.alt, title),        "hotspot": heroImage.hotspot{ x, y }      },      subtitle,      "subcategorySlug": subcategory->slug.current,      startDateTime,      endDateTime,      // Lightbox detail fields      exhibitDescription,      "venueName":    exhibitLocation.venueName,      "venueCity":    exhibitLocation.city,      "venueCountry": exhibitLocation.country,      "venueMapsUrl": exhibitLocation.mapsUrl    },    // ── Projects ──────────────────────────────────────────────────────────────    "projects": *[      _type == "project"      && references(^._id)    ] | order(order asc) {      "_type": _type,      _id,      "title": title,      "slug":  slug.current,      "heroImage": {        "url":     heroImage.asset->url,        "lqip":    heroImage.asset->metadata.lqip,        "alt":     coalesce(heroImage.alt, title),        "hotspot": heroImage.hotspot{ x, y }      },      subtitle,      "subcategorySlug": subcategory->slug.current,      // Lightbox detail fields      description,      location,      note    },    // ── Apparel ───────────────────────────────────────────────────────────────    "apparel": *[      _type == "apparel"      && references(^._id)    ] | order(featured desc, name asc) {      "_type": _type,      _id,      "title": name,      "slug":  slug.current,      "heroImage": {        "url":     images[0].asset->url,        "lqip":    images[0].asset->metadata.lqip,        "alt":     coalesce(images[0].asset->altText, name),        "hotspot": images[0].hotspot{ x, y }      },      "subcategorySlug": subcategory->slug.current,      stock,      featured,      limitedEdition,      // Lightbox detail fields      description,      price,      apparelKind,      gender,      material,      materialDetail,      features,      careInstructions,      availableSizes,      shoeSizes    }  }
+export type CATEGORY_PAGE_QUERY_RESULT = {
+  _id: string;
+  title: string | null;
+  slug: string | null;
+  description: null;
+  contentTypes: null;
+  image: {
+    url: string | null;
+    lqip: string | null;
+    alt: string | null;
+    hotspot: {
+      x: number | null;
+      y: number | null;
+    } | null;
+  } | null;
+  subcategories: Array<never>;
+  art: Array<{
+    _type: "art";
+    _id: string;
+    title: string | null;
+    slug: string | null;
+    heroImage: {
+      url: string | null;
+      lqip: string | null;
+      alt: string | null;
+      hotspot: {
+        x: number | null;
+        y: number | null;
+      } | null;
+    };
+    subcategorySlug: null;
+    stock: number | null;
+    featured: boolean | null;
+    description: string | null;
+    material:
+      | "fabric"
+      | "glass"
+      | "leather"
+      | "metal"
+      | "paper"
+      | "wood"
+      | null;
+    dimensions: string | null;
+    price: number | null;
+  }>;
+  exhibits: Array<{
+    _type: "exhibit";
+    _id: string;
+    title: string | null;
+    slug: string | null;
+    heroImage: {
+      url: string | null;
+      lqip: string | null;
+      alt: string | null;
+      hotspot: {
+        x: number | null;
+        y: number | null;
+      } | null;
+    };
+    subtitle: string | null;
+    subcategorySlug: null;
+    startDateTime: string | null;
+    endDateTime: string | null;
+    exhibitDescription: string | null;
+    venueName: string | null;
+    venueCity: string | null;
+    venueCountry: string | null;
+    venueMapsUrl: string | null;
+  }>;
+  projects: Array<never>;
+  apparel: Array<never>;
+} | null;
 
 // Source: lib/sanity/queries/customers.ts
 // Variable: CUSTOMER_BY_EMAIL_QUERY
@@ -734,7 +828,7 @@ export type PortfolioQueryResult = {
 
 // Source: lib/sanity/queries/products.ts
 // Variable: ALL_PRODUCTS_QUERY
-// Query: *[  _type == "art"] | order(name asc) {  _id,  name,  "slug": slug.current,  description,  price,  "images": images[]{    _key,    asset->{      _id,      url    },    hotspot  },  category->{    _id,    title,    "slug": slug.current  },  material,  color,  dimensions,  stock,  featured,  assemblyRequired}
+// Query: *[  _type == "art"] | order(name asc) {  _id,  name,  "slug": slug.current,  description,  price,  "images": images[]{    _key,    asset->{      _id,      url    },    hotspot  },  category->{    _id,    title,    "slug": slug.current  },  subcategory->{    _id,    title,    "slug": slug.current  },  material,  color,  dimensions,  stock,  featured,  assemblyRequired}
 export type ALL_PRODUCTS_QUERY_RESULT = Array<{
   _id: string;
   name: string | null;
@@ -754,6 +848,7 @@ export type ALL_PRODUCTS_QUERY_RESULT = Array<{
     title: string | null;
     slug: string | null;
   } | null;
+  subcategory: null;
   material: "fabric" | "glass" | "leather" | "metal" | "paper" | "wood" | null;
   color: "black" | "grey" | "natural" | "oak" | "walnut" | "white" | null;
   dimensions: string | null;
@@ -764,7 +859,7 @@ export type ALL_PRODUCTS_QUERY_RESULT = Array<{
 
 // Source: lib/sanity/queries/products.ts
 // Variable: FEATURED_PRODUCTS_QUERY
-// Query: *[  _type == "art"  && featured == true  && stock > 0] | order(name asc) [0...6] {  _id,  name,  "slug": slug.current,  description,  price,  "images": images[]{    _key,    asset->{      _id,      url    },    hotspot  },  category->{    _id,    title,    "slug": slug.current  },  stock}
+// Query: *[  _type == "art"  && featured == true  && stock > 0] | order(name asc) [0...6] {  _id,  name,  "slug": slug.current,  description,  price,  "images": images[]{    _key,    asset->{      _id,      url    },    hotspot  },  category->{    _id,    title,    "slug": slug.current  },  subcategory->{    _id,    title,    "slug": slug.current  },  stock}
 export type FEATURED_PRODUCTS_QUERY_RESULT = Array<{
   _id: string;
   name: string | null;
@@ -784,12 +879,13 @@ export type FEATURED_PRODUCTS_QUERY_RESULT = Array<{
     title: string | null;
     slug: string | null;
   } | null;
+  subcategory: null;
   stock: number | null;
 }>;
 
 // Source: lib/sanity/queries/products.ts
 // Variable: PRODUCTS_BY_CATEGORY_QUERY
-// Query: *[  _type == "art"  && category->slug.current == $categorySlug] | order(name asc) {  _id,  name,  "slug": slug.current,  price,  "image": images[0]{    asset->{      _id,      url    },    hotspot  },  category->{    _id,    title,    "slug": slug.current  },  material,  color,  stock}
+// Query: *[  _type == "art"  && category->slug.current == $categorySlug] | order(name asc) {  _id,  name,  "slug": slug.current,  price,  "image": images[0]{    asset->{      _id,      url    },    hotspot  },  category->{    _id,    title,    "slug": slug.current  },  subcategory->{    _id,    title,    "slug": slug.current  },  material,  color,  stock}
 export type PRODUCTS_BY_CATEGORY_QUERY_RESULT = Array<{
   _id: string;
   name: string | null;
@@ -807,14 +903,42 @@ export type PRODUCTS_BY_CATEGORY_QUERY_RESULT = Array<{
     title: string | null;
     slug: string | null;
   } | null;
+  subcategory: null;
   material: "fabric" | "glass" | "leather" | "metal" | "paper" | "wood" | null;
   color: "black" | "grey" | "natural" | "oak" | "walnut" | "white" | null;
   stock: number | null;
 }>;
 
 // Source: lib/sanity/queries/products.ts
+// Variable: PRODUCTS_BY_SUBCATEGORY_QUERY
+// Query: *[  _type == "art"  && subcategory->slug.current == $subcategorySlug] | order(featured desc, name asc) {  _id,  name,  "slug": slug.current,  price,  "image": images[0]{    asset->{      _id,      url    },    hotspot  },  category->{    _id,    title,    "slug": slug.current  },  subcategory->{    _id,    title,    "slug": slug.current  },  material,  color,  stock,  featured}
+export type PRODUCTS_BY_SUBCATEGORY_QUERY_RESULT = Array<{
+  _id: string;
+  name: string | null;
+  slug: string | null;
+  price: number | null;
+  image: {
+    asset: {
+      _id: string;
+      url: string | null;
+    } | null;
+    hotspot: SanityImageHotspot | null;
+  } | null;
+  category: {
+    _id: string;
+    title: string | null;
+    slug: string | null;
+  } | null;
+  subcategory: null;
+  material: "fabric" | "glass" | "leather" | "metal" | "paper" | "wood" | null;
+  color: "black" | "grey" | "natural" | "oak" | "walnut" | "white" | null;
+  stock: number | null;
+  featured: boolean | null;
+}>;
+
+// Source: lib/sanity/queries/products.ts
 // Variable: PRODUCT_BY_SLUG_QUERY
-// Query: *[  _type == "art"  && slug.current == $slug][0] {  _id,  name,  "slug": slug.current,  description,  price,  "images": images[]{    _key,    asset->{      _id,      url    },    hotspot  },  category->{    _id,    title,    "slug": slug.current  },  material,  color,  dimensions,  stock,  featured,  assemblyRequired}
+// Query: *[  _type == "art"  && slug.current == $slug][0] {  _id,  name,  "slug": slug.current,  description,  price,  "images": images[]{    _key,    asset->{      _id,      url    },    hotspot  },  category->{    _id,    title,    "slug": slug.current  },  subcategory->{    _id,    title,    "slug": slug.current  },  material,  color,  dimensions,  stock,  featured,  assemblyRequired}
 export type PRODUCT_BY_SLUG_QUERY_RESULT = {
   _id: string;
   name: string | null;
@@ -834,6 +958,7 @@ export type PRODUCT_BY_SLUG_QUERY_RESULT = {
     title: string | null;
     slug: string | null;
   } | null;
+  subcategory: null;
   material: "fabric" | "glass" | "leather" | "metal" | "paper" | "wood" | null;
   color: "black" | "grey" | "natural" | "oak" | "walnut" | "white" | null;
   dimensions: string | null;
@@ -844,7 +969,7 @@ export type PRODUCT_BY_SLUG_QUERY_RESULT = {
 
 // Source: lib/sanity/queries/products.ts
 // Variable: SEARCH_PRODUCTS_QUERY
-// Query: *[  _type == "art"  && (    name match $searchQuery + "*"    || description match $searchQuery + "*"  )] | score(  boost(name match $searchQuery + "*", 3),  boost(description match $searchQuery + "*", 1)) | order(_score desc) {  _id,  _score,  name,  "slug": slug.current,  price,  "image": images[0]{    asset->{      _id,      url    },    hotspot  },  category->{    _id,    title,    "slug": slug.current  },  material,  color,  stock}
+// Query: *[  _type == "art"  && (    name match $searchQuery + "*"    || description match $searchQuery + "*"  )] | score(  boost(name match $searchQuery + "*", 3),  boost(description match $searchQuery + "*", 1)) | order(_score desc) {  _id,  _score,  name,  "slug": slug.current,  price,  "image": images[0]{    asset->{      _id,      url    },    hotspot  },  category->{    _id,    title,    "slug": slug.current  },  subcategory->{    _id,    title,    "slug": slug.current  },  material,  color,  stock}
 export type SEARCH_PRODUCTS_QUERY_RESULT = Array<{
   _id: string;
   _score: null;
@@ -863,6 +988,7 @@ export type SEARCH_PRODUCTS_QUERY_RESULT = Array<{
     title: string | null;
     slug: string | null;
   } | null;
+  subcategory: null;
   material: "fabric" | "glass" | "leather" | "metal" | "paper" | "wood" | null;
   color: "black" | "grey" | "natural" | "oak" | "walnut" | "white" | null;
   stock: number | null;
@@ -870,7 +996,7 @@ export type SEARCH_PRODUCTS_QUERY_RESULT = Array<{
 
 // Source: lib/sanity/queries/products.ts
 // Variable: FILTER_PRODUCTS_BY_NAME_QUERY
-// Query: *[  _type == "art"  && ($categorySlug == "" || category->slug.current == $categorySlug)  && ($color == "" || color == $color)  && ($material == "" || material == $material)  && ($minPrice == 0 || price >= $minPrice)  && ($maxPrice == 0 || price <= $maxPrice)  && ($searchQuery == "" || name match $searchQuery + "*" || description match $searchQuery + "*")  && ($inStock == false || stock > 0)] | order(name asc) {  _id,  name,  "slug": slug.current,  price,  "images": images[0...4]{    _key,    asset->{      _id,      url    }  },  category->{    _id,    title,    "slug": slug.current  },  material,  color,  stock}
+// Query: *[  _type == "art"  && ($categorySlug == "" || category->slug.current == $categorySlug)  && ($subcategorySlug == "" || subcategory->slug.current == $subcategorySlug)  && ($color == "" || color == $color)  && ($material == "" || material == $material)  && ($minPrice == 0 || price >= $minPrice)  && ($maxPrice == 0 || price <= $maxPrice)  && ($searchQuery == "" || name match $searchQuery + "*" || description match $searchQuery + "*")  && ($inStock == false || stock > 0)] | order(name asc) {  _id,  name,  "slug": slug.current,  price,  "images": images[0...4]{    _key,    asset->{      _id,      url    }  },  category->{    _id,    title,    "slug": slug.current  },  subcategory->{    _id,    title,    "slug": slug.current  },  material,  color,  stock}
 export type FILTER_PRODUCTS_BY_NAME_QUERY_RESULT = Array<{
   _id: string;
   name: string | null;
@@ -888,6 +1014,7 @@ export type FILTER_PRODUCTS_BY_NAME_QUERY_RESULT = Array<{
     title: string | null;
     slug: string | null;
   } | null;
+  subcategory: null;
   material: "fabric" | "glass" | "leather" | "metal" | "paper" | "wood" | null;
   color: "black" | "grey" | "natural" | "oak" | "walnut" | "white" | null;
   stock: number | null;
@@ -895,7 +1022,7 @@ export type FILTER_PRODUCTS_BY_NAME_QUERY_RESULT = Array<{
 
 // Source: lib/sanity/queries/products.ts
 // Variable: FILTER_PRODUCTS_BY_PRICE_ASC_QUERY
-// Query: *[  _type == "art"  && ($categorySlug == "" || category->slug.current == $categorySlug)  && ($color == "" || color == $color)  && ($material == "" || material == $material)  && ($minPrice == 0 || price >= $minPrice)  && ($maxPrice == 0 || price <= $maxPrice)  && ($searchQuery == "" || name match $searchQuery + "*" || description match $searchQuery + "*")  && ($inStock == false || stock > 0)] | order(price asc) {  _id,  name,  "slug": slug.current,  price,  "images": images[0...4]{    _key,    asset->{      _id,      url    }  },  category->{    _id,    title,    "slug": slug.current  },  material,  color,  stock}
+// Query: *[  _type == "art"  && ($categorySlug == "" || category->slug.current == $categorySlug)  && ($subcategorySlug == "" || subcategory->slug.current == $subcategorySlug)  && ($color == "" || color == $color)  && ($material == "" || material == $material)  && ($minPrice == 0 || price >= $minPrice)  && ($maxPrice == 0 || price <= $maxPrice)  && ($searchQuery == "" || name match $searchQuery + "*" || description match $searchQuery + "*")  && ($inStock == false || stock > 0)] | order(price asc) {  _id,  name,  "slug": slug.current,  price,  "images": images[0...4]{    _key,    asset->{      _id,      url    }  },  category->{    _id,    title,    "slug": slug.current  },  subcategory->{    _id,    title,    "slug": slug.current  },  material,  color,  stock}
 export type FILTER_PRODUCTS_BY_PRICE_ASC_QUERY_RESULT = Array<{
   _id: string;
   name: string | null;
@@ -913,6 +1040,7 @@ export type FILTER_PRODUCTS_BY_PRICE_ASC_QUERY_RESULT = Array<{
     title: string | null;
     slug: string | null;
   } | null;
+  subcategory: null;
   material: "fabric" | "glass" | "leather" | "metal" | "paper" | "wood" | null;
   color: "black" | "grey" | "natural" | "oak" | "walnut" | "white" | null;
   stock: number | null;
@@ -920,7 +1048,7 @@ export type FILTER_PRODUCTS_BY_PRICE_ASC_QUERY_RESULT = Array<{
 
 // Source: lib/sanity/queries/products.ts
 // Variable: FILTER_PRODUCTS_BY_PRICE_DESC_QUERY
-// Query: *[  _type == "art"  && ($categorySlug == "" || category->slug.current == $categorySlug)  && ($color == "" || color == $color)  && ($material == "" || material == $material)  && ($minPrice == 0 || price >= $minPrice)  && ($maxPrice == 0 || price <= $maxPrice)  && ($searchQuery == "" || name match $searchQuery + "*" || description match $searchQuery + "*")  && ($inStock == false || stock > 0)] | order(price desc) {  _id,  name,  "slug": slug.current,  price,  "images": images[0...4]{    _key,    asset->{      _id,      url    }  },  category->{    _id,    title,    "slug": slug.current  },  material,  color,  stock}
+// Query: *[  _type == "art"  && ($categorySlug == "" || category->slug.current == $categorySlug)  && ($subcategorySlug == "" || subcategory->slug.current == $subcategorySlug)  && ($color == "" || color == $color)  && ($material == "" || material == $material)  && ($minPrice == 0 || price >= $minPrice)  && ($maxPrice == 0 || price <= $maxPrice)  && ($searchQuery == "" || name match $searchQuery + "*" || description match $searchQuery + "*")  && ($inStock == false || stock > 0)] | order(price desc) {  _id,  name,  "slug": slug.current,  price,  "images": images[0...4]{    _key,    asset->{      _id,      url    }  },  category->{    _id,    title,    "slug": slug.current  },  subcategory->{    _id,    title,    "slug": slug.current  },  material,  color,  stock}
 export type FILTER_PRODUCTS_BY_PRICE_DESC_QUERY_RESULT = Array<{
   _id: string;
   name: string | null;
@@ -938,6 +1066,7 @@ export type FILTER_PRODUCTS_BY_PRICE_DESC_QUERY_RESULT = Array<{
     title: string | null;
     slug: string | null;
   } | null;
+  subcategory: null;
   material: "fabric" | "glass" | "leather" | "metal" | "paper" | "wood" | null;
   color: "black" | "grey" | "natural" | "oak" | "walnut" | "white" | null;
   stock: number | null;
@@ -945,7 +1074,7 @@ export type FILTER_PRODUCTS_BY_PRICE_DESC_QUERY_RESULT = Array<{
 
 // Source: lib/sanity/queries/products.ts
 // Variable: FILTER_PRODUCTS_BY_RELEVANCE_QUERY
-// Query: *[  _type == "art"  && ($categorySlug == "" || category->slug.current == $categorySlug)  && ($color == "" || color == $color)  && ($material == "" || material == $material)  && ($minPrice == 0 || price >= $minPrice)  && ($maxPrice == 0 || price <= $maxPrice)  && ($searchQuery == "" || name match $searchQuery + "*" || description match $searchQuery + "*")  && ($inStock == false || stock > 0)] | score(  boost(name match $searchQuery + "*", 3),  boost(description match $searchQuery + "*", 1)) | order(_score desc, name asc) {  _id,  name,  "slug": slug.current,  price,  "images": images[0...4]{    _key,    asset->{      _id,      url    }  },  category->{    _id,    title,    "slug": slug.current  },  material,  color,  stock}
+// Query: *[  _type == "art"  && ($categorySlug == "" || category->slug.current == $categorySlug)  && ($subcategorySlug == "" || subcategory->slug.current == $subcategorySlug)  && ($color == "" || color == $color)  && ($material == "" || material == $material)  && ($minPrice == 0 || price >= $minPrice)  && ($maxPrice == 0 || price <= $maxPrice)  && ($searchQuery == "" || name match $searchQuery + "*" || description match $searchQuery + "*")  && ($inStock == false || stock > 0)] | score(  boost(name match $searchQuery + "*", 3),  boost(description match $searchQuery + "*", 1)) | order(_score desc, name asc) {  _id,  name,  "slug": slug.current,  price,  "images": images[0...4]{    _key,    asset->{      _id,      url    }  },  category->{    _id,    title,    "slug": slug.current  },  subcategory->{    _id,    title,    "slug": slug.current  },  material,  color,  stock}
 export type FILTER_PRODUCTS_BY_RELEVANCE_QUERY_RESULT = Array<{
   _id: string;
   name: string | null;
@@ -963,6 +1092,7 @@ export type FILTER_PRODUCTS_BY_RELEVANCE_QUERY_RESULT = Array<{
     title: string | null;
     slug: string | null;
   } | null;
+  subcategory: null;
   material: "fabric" | "glass" | "leather" | "metal" | "paper" | "wood" | null;
   color: "black" | "grey" | "natural" | "oak" | "walnut" | "white" | null;
   stock: number | null;
@@ -1019,7 +1149,7 @@ export type OUT_OF_STOCK_PRODUCTS_QUERY_RESULT = Array<{
 
 // Source: lib/sanity/queries/products.ts
 // Variable: AI_SEARCH_PRODUCTS_QUERY
-// Query: *[  _type == "art"  && (    $searchQuery == ""    || name match $searchQuery + "*"    || description match $searchQuery + "*"    || category->title match $searchQuery + "*"  )  && ($categorySlug == "" || category->slug.current == $categorySlug)  && ($material == "" || material == $material)  && ($color == "" || color == $color)  && ($minPrice == 0 || price >= $minPrice)  && ($maxPrice == 0 || price <= $maxPrice)] | order(name asc) [0...20] {  _id,  name,  "slug": slug.current,  description,  price,  "image": images[0]{    asset->{      _id,      url    }  },  category->{    _id,    title,    "slug": slug.current  },  material,  color,  dimensions,  stock,  featured,  assemblyRequired}
+// Query: *[  _type == "art"  && (    $searchQuery == ""    || name match $searchQuery + "*"    || description match $searchQuery + "*"    || category->title match $searchQuery + "*"  )  && ($categorySlug == "" || category->slug.current == $categorySlug)  && ($subcategorySlug == "" || subcategory->slug.current == $subcategorySlug)  && ($material == "" || material == $material)  && ($color == "" || color == $color)  && ($minPrice == 0 || price >= $minPrice)  && ($maxPrice == 0 || price <= $maxPrice)] | order(name asc) [0...20] {  _id,  name,  "slug": slug.current,  description,  price,  "image": images[0]{    asset->{      _id,      url    }  },  category->{    _id,    title,    "slug": slug.current  },  subcategory->{    _id,    title,    "slug": slug.current  },  material,  color,  dimensions,  stock,  featured,  assemblyRequired}
 export type AI_SEARCH_PRODUCTS_QUERY_RESULT = Array<{
   _id: string;
   name: string | null;
@@ -1037,6 +1167,7 @@ export type AI_SEARCH_PRODUCTS_QUERY_RESULT = Array<{
     title: string | null;
     slug: string | null;
   } | null;
+  subcategory: null;
   material: "fabric" | "glass" | "leather" | "metal" | "paper" | "wood" | null;
   color: "black" | "grey" | "natural" | "oak" | "walnut" | "white" | null;
   dimensions: string | null;
@@ -1076,9 +1207,12 @@ declare module "@sanity/client" {
   interface SanityQueries {
     '*[\n  _type == "art"\n  && defined(slug.current)\n]{\n  "slug": slug.current,\n  _updatedAt,\n  "images": images[].asset->url\n}': ALL_ART_FOR_SITEMAP_QUERY_RESULT;
     '*[\n  _type == "exhibit"\n  && defined(slug.current)\n]{\n  "slug": slug.current,\n  _updatedAt,\n  "image": heroImage.asset->url\n}': ALL_EXHIBITS_FOR_SITEMAP_QUERY_RESULT;
-    '*[\n  _type == "category"\n] | order(title asc) {\n  _id,\n  title,\n  "slug": slug.current,\n  "image": image{\n    asset->{\n      _id,\n      url\n    },\n    hotspot\n  }\n}': ALL_CATEGORIES_QUERY_RESULT;
-    '*[\n  _type == "category"\n  && slug.current == $slug\n][0] {\n  _id,\n  title,\n  "slug": slug.current,\n  "image": image{\n    asset->{\n      _id,\n      url\n    },\n    hotspot\n  }\n}': CATEGORY_BY_SLUG_QUERY_RESULT;
-    '*[\n  _type == "category"\n  && showOnLanding == true\n  && defined(href)\n  && defined(image.asset)\n] | order(order asc, title asc) {\n  "id": _id,\n  title,\n  href,\n  "image": image.asset->url,\n  "lqip": image.asset->metadata.lqip,\n  "alt": coalesce(image.alt, title)\n}': LANDING_CATEGORIES_QUERY_RESULT;
+    '*[\n  _type == "subcategory"\n] | order(parentCategory->title asc, coalesce(order, 9999) asc, title asc) {\n  _id,\n  title,\n  "slug": slug.current,\n  description,\n  "parentCategory": parentCategory->{\n    _id,\n    title,\n    "slug": slug.current\n  },\n  order\n}': ALL_SUBCATEGORIES_QUERY_RESULT;
+    '*[\n  _type == "subcategory"\n  && parentCategory->slug.current == $categorySlug\n] | order(coalesce(order, 9999) asc, title asc) {\n  _id,\n  title,\n  "slug": slug.current,\n  description,\n  order\n}': SUBCATEGORIES_BY_CATEGORY_QUERY_RESULT;
+    '*[\n  _type == "category"\n] | order(title asc) {\n  _id,\n  title,\n  "slug": slug.current,\n  description,\n  contentTypes,\n  "image": image{\n    asset->{\n      _id,\n      url\n    },\n    hotspot\n  }\n}': ALL_CATEGORIES_QUERY_RESULT;
+    '*[\n  _type == "category"\n  && slug.current == $slug\n][0] {\n  _id,\n  title,\n  "slug": slug.current,\n  description,\n  contentTypes,\n  "image": image{\n    asset->{\n      _id,\n      url\n    },\n    hotspot\n  }\n}': CATEGORY_BY_SLUG_QUERY_RESULT;
+    '*[\n  _type == "category"\n  && showOnLanding == true\n  && defined(slug.current)\n  && defined(image.asset)\n] | order(coalesce(order, 9999) asc, title asc) {\n  "id": _id,\n  title,\n  "href": coalesce(customLink, "/category/" + slug.current),\n  "image": image.asset->url,\n  "lqip": image.asset->metadata.lqip,\n  "alt": coalesce(image.alt, title),\n  "hotspot": image.hotspot{ x, y }\n}': LANDING_CATEGORIES_QUERY_RESULT;
+    '\n  *[_type == "category" && slug.current == $slug][0] {\n    _id,\n    title,\n    "slug": slug.current,\n    description,\n    contentTypes,\n    "image": image {\n      "url":     asset->url,\n      "lqip":    asset->metadata.lqip,\n      "alt":     coalesce(alt, title),\n      "hotspot": hotspot{ x, y }\n    },\n\n    // \u2500\u2500 Subcategories belonging to this category \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n    "subcategories": *[\n      _type == "subcategory"\n      && parentCategory._ref == ^._id\n    ] | order(coalesce(order, 9999) asc, title asc) {\n      _id,\n      title,\n      "slug": slug.current,\n      description\n    },\n\n    // \u2500\u2500 Art pieces \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n    "art": *[\n      _type == "art"\n      && references(^._id)\n    ] | order(featured desc, name asc) {\n      "_type": _type,\n      _id,\n      "title": name,\n      "slug":  slug.current,\n      "heroImage": {\n        "url":     images[0].asset->url,\n        "lqip":    images[0].asset->metadata.lqip,\n        "alt":     coalesce(images[0].asset->altText, name),\n        "hotspot": images[0].hotspot{ x, y }\n      },\n      "subcategorySlug": subcategory->slug.current,\n      stock,\n      featured,\n      // Lightbox detail fields\n      description,\n      material,\n      dimensions,\n      price\n    },\n\n    // \u2500\u2500 Exhibits \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n    "exhibits": *[\n      _type == "exhibit"\n      && references(^._id)\n    ] | order(order asc, startDateTime desc) {\n      "_type": _type,\n      _id,\n      "title": title,\n      "slug":  slug.current,\n      "heroImage": {\n        "url":     heroImage.asset->url,\n        "lqip":    heroImage.asset->metadata.lqip,\n        "alt":     coalesce(heroImage.alt, title),\n        "hotspot": heroImage.hotspot{ x, y }\n      },\n      subtitle,\n      "subcategorySlug": subcategory->slug.current,\n      startDateTime,\n      endDateTime,\n      // Lightbox detail fields\n      exhibitDescription,\n      "venueName":    exhibitLocation.venueName,\n      "venueCity":    exhibitLocation.city,\n      "venueCountry": exhibitLocation.country,\n      "venueMapsUrl": exhibitLocation.mapsUrl\n    },\n\n    // \u2500\u2500 Projects \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n    "projects": *[\n      _type == "project"\n      && references(^._id)\n    ] | order(order asc) {\n      "_type": _type,\n      _id,\n      "title": title,\n      "slug":  slug.current,\n      "heroImage": {\n        "url":     heroImage.asset->url,\n        "lqip":    heroImage.asset->metadata.lqip,\n        "alt":     coalesce(heroImage.alt, title),\n        "hotspot": heroImage.hotspot{ x, y }\n      },\n      subtitle,\n      "subcategorySlug": subcategory->slug.current,\n      // Lightbox detail fields\n      description,\n      location,\n      note\n    },\n\n    // \u2500\u2500 Apparel \u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n    "apparel": *[\n      _type == "apparel"\n      && references(^._id)\n    ] | order(featured desc, name asc) {\n      "_type": _type,\n      _id,\n      "title": name,\n      "slug":  slug.current,\n      "heroImage": {\n        "url":     images[0].asset->url,\n        "lqip":    images[0].asset->metadata.lqip,\n        "alt":     coalesce(images[0].asset->altText, name),\n        "hotspot": images[0].hotspot{ x, y }\n      },\n      "subcategorySlug": subcategory->slug.current,\n      stock,\n      featured,\n      limitedEdition,\n      // Lightbox detail fields\n      description,\n      price,\n      apparelKind,\n      gender,\n      material,\n      materialDetail,\n      features,\n      careInstructions,\n      availableSizes,\n      shoeSizes\n    }\n  }\n': CATEGORY_PAGE_QUERY_RESULT;
     '*[\n  _type == "customer"\n  && email == $email\n][0]{\n  _id,\n  email,\n  name,\n  clerkUserId,\n  stripeCustomerId,\n  createdAt\n}': CUSTOMER_BY_EMAIL_QUERY_RESULT;
     '*[\n  _type == "customer"\n  && stripeCustomerId == $stripeCustomerId\n][0]{\n  _id,\n  email,\n  name,\n  clerkUserId,\n  stripeCustomerId,\n  createdAt\n}': CUSTOMER_BY_STRIPE_ID_QUERY_RESULT;
     '\n  *[_type == "exhibit"] | order(order asc, startDateTime desc) {\n    _id,\n    _createdAt,\n    title,\n    slug,\n    subtitle,\n    exhibitDescription,\n    artistDescription,\n    heroImage {\n      asset,\n      hotspot,\n      crop,\n      alt\n    },\n    heroVideo {\n      asset-> {\n        _id,\n        url,\n        mimeType,\n        originalFilename,\n        size\n      }\n    },\n    startDateTime,\n    endDateTime,\n    exhibitLocation {\n      venueName,\n      address,\n      city,\n      country,\n      mapsUrl\n    },\n    isFeatured,\n    order\n  }\n': ALL_EXHIBITS_QUERY_RESULT;
@@ -1091,19 +1225,20 @@ declare module "@sanity/client" {
     '*[\n  _type == "order"\n] | order(createdAt desc) [0...$limit] {\n  _id,\n  orderNumber,\n  email,\n  total,\n  status,\n  createdAt\n}': RECENT_ORDERS_QUERY_RESULT;
     '*[\n  _type == "order"\n  && stripePaymentId == $stripePaymentId\n][0]{ _id }': ORDER_BY_STRIPE_PAYMENT_ID_QUERY_RESULT;
     '\n  *[_type == "portfolio"][0]{\n    "header": {\n       "imageUrl": coalesce(headerImage.asset->url, ""),\n       "imageAlt": coalesce(headerImage.alt, "background"),\n      "firstText": coalesce(headerFirstText, ""),\n      "secondText": coalesce(headerSecondText, "")\n    },\n    "about": {\n      "heading": coalesce(aboutHeading, "About"),\n   "paragraphs": coalesce(aboutParagraphs, [])\n    }\n  }\n': PortfolioQueryResult;
-    '*[\n  _type == "art"\n] | order(name asc) {\n  _id,\n  name,\n  "slug": slug.current,\n  description,\n  price,\n  "images": images[]{\n    _key,\n    asset->{\n      _id,\n      url\n    },\n    hotspot\n  },\n  category->{\n    _id,\n    title,\n    "slug": slug.current\n  },\n  material,\n  color,\n  dimensions,\n  stock,\n  featured,\n  assemblyRequired\n}': ALL_PRODUCTS_QUERY_RESULT;
-    '*[\n  _type == "art"\n  && featured == true\n  && stock > 0\n] | order(name asc) [0...6] {\n  _id,\n  name,\n  "slug": slug.current,\n  description,\n  price,\n  "images": images[]{\n    _key,\n    asset->{\n      _id,\n      url\n    },\n    hotspot\n  },\n  category->{\n    _id,\n    title,\n    "slug": slug.current\n  },\n  stock\n}': FEATURED_PRODUCTS_QUERY_RESULT;
-    '*[\n  _type == "art"\n  && category->slug.current == $categorySlug\n] | order(name asc) {\n  _id,\n  name,\n  "slug": slug.current,\n  price,\n  "image": images[0]{\n    asset->{\n      _id,\n      url\n    },\n    hotspot\n  },\n  category->{\n    _id,\n    title,\n    "slug": slug.current\n  },\n  material,\n  color,\n  stock\n}': PRODUCTS_BY_CATEGORY_QUERY_RESULT;
-    '*[\n  _type == "art"\n  && slug.current == $slug\n][0] {\n  _id,\n  name,\n  "slug": slug.current,\n  description,\n  price,\n  "images": images[]{\n    _key,\n    asset->{\n      _id,\n      url\n    },\n    hotspot\n  },\n  category->{\n    _id,\n    title,\n    "slug": slug.current\n  },\n  material,\n  color,\n  dimensions,\n  stock,\n  featured,\n  assemblyRequired\n}': PRODUCT_BY_SLUG_QUERY_RESULT;
-    '*[\n  _type == "art"\n  && (\n    name match $searchQuery + "*"\n    || description match $searchQuery + "*"\n  )\n] | score(\n  boost(name match $searchQuery + "*", 3),\n  boost(description match $searchQuery + "*", 1)\n) | order(_score desc) {\n  _id,\n  _score,\n  name,\n  "slug": slug.current,\n  price,\n  "image": images[0]{\n    asset->{\n      _id,\n      url\n    },\n    hotspot\n  },\n  category->{\n    _id,\n    title,\n    "slug": slug.current\n  },\n  material,\n  color,\n  stock\n}': SEARCH_PRODUCTS_QUERY_RESULT;
-    '*[\n  _type == "art"\n  && ($categorySlug == "" || category->slug.current == $categorySlug)\n  && ($color == "" || color == $color)\n  && ($material == "" || material == $material)\n  && ($minPrice == 0 || price >= $minPrice)\n  && ($maxPrice == 0 || price <= $maxPrice)\n  && ($searchQuery == "" || name match $searchQuery + "*" || description match $searchQuery + "*")\n  && ($inStock == false || stock > 0)\n] | order(name asc) {\n  _id,\n  name,\n  "slug": slug.current,\n  price,\n  "images": images[0...4]{\n    _key,\n    asset->{\n      _id,\n      url\n    }\n  },\n  category->{\n    _id,\n    title,\n    "slug": slug.current\n  },\n  material,\n  color,\n  stock\n}': FILTER_PRODUCTS_BY_NAME_QUERY_RESULT;
-    '*[\n  _type == "art"\n  && ($categorySlug == "" || category->slug.current == $categorySlug)\n  && ($color == "" || color == $color)\n  && ($material == "" || material == $material)\n  && ($minPrice == 0 || price >= $minPrice)\n  && ($maxPrice == 0 || price <= $maxPrice)\n  && ($searchQuery == "" || name match $searchQuery + "*" || description match $searchQuery + "*")\n  && ($inStock == false || stock > 0)\n] | order(price asc) {\n  _id,\n  name,\n  "slug": slug.current,\n  price,\n  "images": images[0...4]{\n    _key,\n    asset->{\n      _id,\n      url\n    }\n  },\n  category->{\n    _id,\n    title,\n    "slug": slug.current\n  },\n  material,\n  color,\n  stock\n}': FILTER_PRODUCTS_BY_PRICE_ASC_QUERY_RESULT;
-    '*[\n  _type == "art"\n  && ($categorySlug == "" || category->slug.current == $categorySlug)\n  && ($color == "" || color == $color)\n  && ($material == "" || material == $material)\n  && ($minPrice == 0 || price >= $minPrice)\n  && ($maxPrice == 0 || price <= $maxPrice)\n  && ($searchQuery == "" || name match $searchQuery + "*" || description match $searchQuery + "*")\n  && ($inStock == false || stock > 0)\n] | order(price desc) {\n  _id,\n  name,\n  "slug": slug.current,\n  price,\n  "images": images[0...4]{\n    _key,\n    asset->{\n      _id,\n      url\n    }\n  },\n  category->{\n    _id,\n    title,\n    "slug": slug.current\n  },\n  material,\n  color,\n  stock\n}': FILTER_PRODUCTS_BY_PRICE_DESC_QUERY_RESULT;
-    '*[\n  _type == "art"\n  && ($categorySlug == "" || category->slug.current == $categorySlug)\n  && ($color == "" || color == $color)\n  && ($material == "" || material == $material)\n  && ($minPrice == 0 || price >= $minPrice)\n  && ($maxPrice == 0 || price <= $maxPrice)\n  && ($searchQuery == "" || name match $searchQuery + "*" || description match $searchQuery + "*")\n  && ($inStock == false || stock > 0)\n] | score(\n  boost(name match $searchQuery + "*", 3),\n  boost(description match $searchQuery + "*", 1)\n) | order(_score desc, name asc) {\n  _id,\n  name,\n  "slug": slug.current,\n  price,\n  "images": images[0...4]{\n    _key,\n    asset->{\n      _id,\n      url\n    }\n  },\n  category->{\n    _id,\n    title,\n    "slug": slug.current\n  },\n  material,\n  color,\n  stock\n}': FILTER_PRODUCTS_BY_RELEVANCE_QUERY_RESULT;
+    '*[\n  _type == "art"\n] | order(name asc) {\n  _id,\n  name,\n  "slug": slug.current,\n  description,\n  price,\n  "images": images[]{\n    _key,\n    asset->{\n      _id,\n      url\n    },\n    hotspot\n  },\n  category->{\n    _id,\n    title,\n    "slug": slug.current\n  },\n  subcategory->{\n    _id,\n    title,\n    "slug": slug.current\n  },\n  material,\n  color,\n  dimensions,\n  stock,\n  featured,\n  assemblyRequired\n}': ALL_PRODUCTS_QUERY_RESULT;
+    '*[\n  _type == "art"\n  && featured == true\n  && stock > 0\n] | order(name asc) [0...6] {\n  _id,\n  name,\n  "slug": slug.current,\n  description,\n  price,\n  "images": images[]{\n    _key,\n    asset->{\n      _id,\n      url\n    },\n    hotspot\n  },\n  category->{\n    _id,\n    title,\n    "slug": slug.current\n  },\n  subcategory->{\n    _id,\n    title,\n    "slug": slug.current\n  },\n  stock\n}': FEATURED_PRODUCTS_QUERY_RESULT;
+    '*[\n  _type == "art"\n  && category->slug.current == $categorySlug\n] | order(name asc) {\n  _id,\n  name,\n  "slug": slug.current,\n  price,\n  "image": images[0]{\n    asset->{\n      _id,\n      url\n    },\n    hotspot\n  },\n  category->{\n    _id,\n    title,\n    "slug": slug.current\n  },\n  subcategory->{\n    _id,\n    title,\n    "slug": slug.current\n  },\n  material,\n  color,\n  stock\n}': PRODUCTS_BY_CATEGORY_QUERY_RESULT;
+    '*[\n  _type == "art"\n  && subcategory->slug.current == $subcategorySlug\n] | order(featured desc, name asc) {\n  _id,\n  name,\n  "slug": slug.current,\n  price,\n  "image": images[0]{\n    asset->{\n      _id,\n      url\n    },\n    hotspot\n  },\n  category->{\n    _id,\n    title,\n    "slug": slug.current\n  },\n  subcategory->{\n    _id,\n    title,\n    "slug": slug.current\n  },\n  material,\n  color,\n  stock,\n  featured\n}': PRODUCTS_BY_SUBCATEGORY_QUERY_RESULT;
+    '*[\n  _type == "art"\n  && slug.current == $slug\n][0] {\n  _id,\n  name,\n  "slug": slug.current,\n  description,\n  price,\n  "images": images[]{\n    _key,\n    asset->{\n      _id,\n      url\n    },\n    hotspot\n  },\n  category->{\n    _id,\n    title,\n    "slug": slug.current\n  },\n  subcategory->{\n    _id,\n    title,\n    "slug": slug.current\n  },\n  material,\n  color,\n  dimensions,\n  stock,\n  featured,\n  assemblyRequired\n}': PRODUCT_BY_SLUG_QUERY_RESULT;
+    '*[\n  _type == "art"\n  && (\n    name match $searchQuery + "*"\n    || description match $searchQuery + "*"\n  )\n] | score(\n  boost(name match $searchQuery + "*", 3),\n  boost(description match $searchQuery + "*", 1)\n) | order(_score desc) {\n  _id,\n  _score,\n  name,\n  "slug": slug.current,\n  price,\n  "image": images[0]{\n    asset->{\n      _id,\n      url\n    },\n    hotspot\n  },\n  category->{\n    _id,\n    title,\n    "slug": slug.current\n  },\n  subcategory->{\n    _id,\n    title,\n    "slug": slug.current\n  },\n  material,\n  color,\n  stock\n}': SEARCH_PRODUCTS_QUERY_RESULT;
+    '*[\n  _type == "art"\n  && ($categorySlug == "" || category->slug.current == $categorySlug)\n  && ($subcategorySlug == "" || subcategory->slug.current == $subcategorySlug)\n  && ($color == "" || color == $color)\n  && ($material == "" || material == $material)\n  && ($minPrice == 0 || price >= $minPrice)\n  && ($maxPrice == 0 || price <= $maxPrice)\n  && ($searchQuery == "" || name match $searchQuery + "*" || description match $searchQuery + "*")\n  && ($inStock == false || stock > 0)\n] | order(name asc) {\n  _id,\n  name,\n  "slug": slug.current,\n  price,\n  "images": images[0...4]{\n    _key,\n    asset->{\n      _id,\n      url\n    }\n  },\n  category->{\n    _id,\n    title,\n    "slug": slug.current\n  },\n  subcategory->{\n    _id,\n    title,\n    "slug": slug.current\n  },\n  material,\n  color,\n  stock\n}': FILTER_PRODUCTS_BY_NAME_QUERY_RESULT;
+    '*[\n  _type == "art"\n  && ($categorySlug == "" || category->slug.current == $categorySlug)\n  && ($subcategorySlug == "" || subcategory->slug.current == $subcategorySlug)\n  && ($color == "" || color == $color)\n  && ($material == "" || material == $material)\n  && ($minPrice == 0 || price >= $minPrice)\n  && ($maxPrice == 0 || price <= $maxPrice)\n  && ($searchQuery == "" || name match $searchQuery + "*" || description match $searchQuery + "*")\n  && ($inStock == false || stock > 0)\n] | order(price asc) {\n  _id,\n  name,\n  "slug": slug.current,\n  price,\n  "images": images[0...4]{\n    _key,\n    asset->{\n      _id,\n      url\n    }\n  },\n  category->{\n    _id,\n    title,\n    "slug": slug.current\n  },\n  subcategory->{\n    _id,\n    title,\n    "slug": slug.current\n  },\n  material,\n  color,\n  stock\n}': FILTER_PRODUCTS_BY_PRICE_ASC_QUERY_RESULT;
+    '*[\n  _type == "art"\n  && ($categorySlug == "" || category->slug.current == $categorySlug)\n  && ($subcategorySlug == "" || subcategory->slug.current == $subcategorySlug)\n  && ($color == "" || color == $color)\n  && ($material == "" || material == $material)\n  && ($minPrice == 0 || price >= $minPrice)\n  && ($maxPrice == 0 || price <= $maxPrice)\n  && ($searchQuery == "" || name match $searchQuery + "*" || description match $searchQuery + "*")\n  && ($inStock == false || stock > 0)\n] | order(price desc) {\n  _id,\n  name,\n  "slug": slug.current,\n  price,\n  "images": images[0...4]{\n    _key,\n    asset->{\n      _id,\n      url\n    }\n  },\n  category->{\n    _id,\n    title,\n    "slug": slug.current\n  },\n  subcategory->{\n    _id,\n    title,\n    "slug": slug.current\n  },\n  material,\n  color,\n  stock\n}': FILTER_PRODUCTS_BY_PRICE_DESC_QUERY_RESULT;
+    '*[\n  _type == "art"\n  && ($categorySlug == "" || category->slug.current == $categorySlug)\n  && ($subcategorySlug == "" || subcategory->slug.current == $subcategorySlug)\n  && ($color == "" || color == $color)\n  && ($material == "" || material == $material)\n  && ($minPrice == 0 || price >= $minPrice)\n  && ($maxPrice == 0 || price <= $maxPrice)\n  && ($searchQuery == "" || name match $searchQuery + "*" || description match $searchQuery + "*")\n  && ($inStock == false || stock > 0)\n] | score(\n  boost(name match $searchQuery + "*", 3),\n  boost(description match $searchQuery + "*", 1)\n) | order(_score desc, name asc) {\n  _id,\n  name,\n  "slug": slug.current,\n  price,\n  "images": images[0...4]{\n    _key,\n    asset->{\n      _id,\n      url\n    }\n  },\n  category->{\n    _id,\n    title,\n    "slug": slug.current\n  },\n  subcategory->{\n    _id,\n    title,\n    "slug": slug.current\n  },\n  material,\n  color,\n  stock\n}': FILTER_PRODUCTS_BY_RELEVANCE_QUERY_RESULT;
     '*[\n  _type == "art"\n  && _id in $ids\n] {\n  _id,\n  name,\n  "slug": slug.current,\n  price,\n  "image": images[0]{\n    asset->{\n      _id,\n      url\n    },\n    hotspot\n  },\n  stock\n}': PRODUCTS_BY_IDS_QUERY_RESULT;
     '*[\n  _type == "art"\n  && stock > 0\n  && stock <= 5\n] | order(stock asc) {\n  _id,\n  name,\n  "slug": slug.current,\n  stock,\n  "image": images[0]{\n    asset->{\n      _id,\n      url\n    }\n  }\n}': LOW_STOCK_PRODUCTS_QUERY_RESULT;
     '*[\n  _type == "art"\n  && stock == 0\n] | order(name asc) {\n  _id,\n  name,\n  "slug": slug.current,\n  "image": images[0]{\n    asset->{\n      _id,\n      url\n    }\n  }\n}': OUT_OF_STOCK_PRODUCTS_QUERY_RESULT;
-    '*[\n  _type == "art"\n  && (\n    $searchQuery == ""\n    || name match $searchQuery + "*"\n    || description match $searchQuery + "*"\n    || category->title match $searchQuery + "*"\n  )\n  && ($categorySlug == "" || category->slug.current == $categorySlug)\n  && ($material == "" || material == $material)\n  && ($color == "" || color == $color)\n  && ($minPrice == 0 || price >= $minPrice)\n  && ($maxPrice == 0 || price <= $maxPrice)\n] | order(name asc) [0...20] {\n  _id,\n  name,\n  "slug": slug.current,\n  description,\n  price,\n  "image": images[0]{\n    asset->{\n      _id,\n      url\n    }\n  },\n  category->{\n    _id,\n    title,\n    "slug": slug.current\n  },\n  material,\n  color,\n  dimensions,\n  stock,\n  featured,\n  assemblyRequired\n}': AI_SEARCH_PRODUCTS_QUERY_RESULT;
+    '*[\n  _type == "art"\n  && (\n    $searchQuery == ""\n    || name match $searchQuery + "*"\n    || description match $searchQuery + "*"\n    || category->title match $searchQuery + "*"\n  )\n  && ($categorySlug == "" || category->slug.current == $categorySlug)\n  && ($subcategorySlug == "" || subcategory->slug.current == $subcategorySlug)\n  && ($material == "" || material == $material)\n  && ($color == "" || color == $color)\n  && ($minPrice == 0 || price >= $minPrice)\n  && ($maxPrice == 0 || price <= $maxPrice)\n] | order(name asc) [0...20] {\n  _id,\n  name,\n  "slug": slug.current,\n  description,\n  price,\n  "image": images[0]{\n    asset->{\n      _id,\n      url\n    }\n  },\n  category->{\n    _id,\n    title,\n    "slug": slug.current\n  },\n  subcategory->{\n    _id,\n    title,\n    "slug": slug.current\n  },\n  material,\n  color,\n  dimensions,\n  stock,\n  featured,\n  assemblyRequired\n}': AI_SEARCH_PRODUCTS_QUERY_RESULT;
     '*[\n  _type == "art"\n  && category->slug.current == $categorySlug\n  && stock > 0\n] | order(featured desc, name asc) [0...4] {\n  _id,\n  name,\n  "slug": slug.current,\n  price,\n  featured,\n  material,\n  color,\n  dimensions,\n  "image": images[0]{\n    "url": asset->url,\n    "alt": coalesce(asset->altText, name)\n  }\n}': SNIPPET_PRODUCTS_BY_CATEGORY_QUERY_RESULT;
     '\n  *[_type == "textMask"][0]{\n    "videoUrl": coalesce(video.asset->url, "")\n  }\n': TextMaskQueryResult;
   }

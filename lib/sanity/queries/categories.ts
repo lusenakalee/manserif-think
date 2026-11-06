@@ -120,11 +120,11 @@ export const CATEGORY_PAGE_QUERY = defineQuery(`
     description,
     contentTypes,
     "image": image {
-  "url":     asset->url,
-  "lqip":    asset->metadata.lqip,
-  "alt":     coalesce(alt, title),
-  "hotspot": hotspot{ x, y }
-},
+      "url":     asset->url,
+      "lqip":    asset->metadata.lqip,
+      "alt":     coalesce(alt, title),
+      "hotspot": hotspot{ x, y }
+    },
 
     // ── Subcategories belonging to this category ──────────────────────────────
     "subcategories": *[
@@ -210,6 +210,38 @@ export const CATEGORY_PAGE_QUERY = defineQuery(`
       description,
       location,
       note
+    },
+
+    // ── Apparel ───────────────────────────────────────────────────────────────
+    "apparel": *[
+      _type == "apparel"
+      && references(^._id)
+    ] | order(featured desc, name asc) {
+      "_type": _type,
+      _id,
+      "title": name,
+      "slug":  slug.current,
+      "heroImage": {
+        "url":     images[0].asset->url,
+        "lqip":    images[0].asset->metadata.lqip,
+        "alt":     coalesce(images[0].asset->altText, name),
+        "hotspot": images[0].hotspot{ x, y }
+      },
+      "subcategorySlug": subcategory->slug.current,
+      stock,
+      featured,
+      limitedEdition,
+      // Lightbox detail fields
+      description,
+      price,
+      apparelKind,
+      gender,
+      material,
+      materialDetail,
+      features,
+      careInstructions,
+      availableSizes,
+      shoeSizes
     }
   }
 `);

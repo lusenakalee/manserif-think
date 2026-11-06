@@ -11,6 +11,7 @@ export const CATEGORY_CONTENT_TYPES = [
   { title: "Art Works",        value: "art"       },
   { title: "Exhibits",         value: "exhibit"   },
   { title: "Projects",         value: "project"   },
+  { title: "Apparel",          value: "apparel"   },
 ] as const;
 
 export type CategoryContentType = (typeof CATEGORY_CONTENT_TYPES)[number]["value"];

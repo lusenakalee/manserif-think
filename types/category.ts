@@ -38,13 +38,29 @@ export interface ProjectDetail {
   note?: string | null;
 }
 
-export type ItemDetail = ArtDetail | ExhibitDetail | ProjectDetail;
+export interface ApparelDetail {
+  _type: 'apparel';
+  description?: string | null;
+  price?: number | null;
+  apparelKind?: string | null;
+  gender?: string | null;
+  material?: string | null;
+  materialDetail?: string | null;
+  features?: string[] | null;
+  careInstructions?: string | null;
+  availableSizes?: string[] | null;
+  shoeSizes?: string[] | null;
+  stock?: number | null;
+  limitedEdition?: boolean | null;
+}
+
+export type ItemDetail = ArtDetail | ExhibitDetail | ProjectDetail | ApparelDetail;
 
 // ─── Normalized collage item (AbstractArtCollage + ArtworkLightbox) ───────────
 
 export interface CollageItem {
   id: string;
-  _type: 'art' | 'exhibit' | 'project';
+  _type: 'art' | 'exhibit' | 'project' | 'apparel';
   slug: string;
   title: string;
   image: string;
@@ -111,6 +127,28 @@ export interface SanityProjectItem {
   note?: string | null;
 }
 
+export interface SanityApparelItem {
+  _type: 'apparel';
+  _id: string;
+  title: string | null;        // mapped from name in GROQ
+  slug: string | null;
+  heroImage: SanityHeroImage | null;
+  subcategorySlug?: string | null;
+  stock?: number | null;
+  featured?: boolean | null;
+  limitedEdition?: boolean | null;
+  description?: string | null;
+  price?: number | null;
+  apparelKind?: string | null;
+  gender?: string | null;
+  material?: string | null;
+  materialDetail?: string | null;
+  features?: string[] | null;
+  careInstructions?: string | null;
+  availableSizes?: string[] | null;
+  shoeSizes?: string[] | null;
+}
+
 // ─── Full GROQ payload ────────────────────────────────────────────────────────
 
 export interface CategoryPagePayload {
@@ -129,4 +167,5 @@ export interface CategoryPagePayload {
   art: SanityArtItem[];
   exhibits: SanityExhibitItem[];
   projects: SanityProjectItem[];
+  apparel: SanityApparelItem[];
 }
