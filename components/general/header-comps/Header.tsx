@@ -16,7 +16,7 @@ const EASE = "ease-[cubic-bezier(0.76,0,0.24,1)]";
 
 const NAV_LINKS = [
   { label: "Art exhibition", href: "/category/art-exhibition" },
-  { label: "Communion", href: "/communion" },
+  { label: "Communion", href: "/category/communion" },
   { label: "Portfolio", href: "/portfolio" },
   { label: "Contact", href: "/contact" },
 ];
