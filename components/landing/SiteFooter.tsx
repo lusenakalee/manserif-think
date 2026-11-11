@@ -8,7 +8,7 @@ const EMAIL_URL = "mailto:warren@manserifthink.com";
 const QUICK_LINKS = [
   { label: "Art exhibition", href: "/art-exhibition" },
   { label: "Communion", href: "/category/communion" },
-  { label: "Portfolio", href: "/portfolio" },
+  { label: "Bio", href: "/portfolio" },
   { label: "Contact", href: EMAIL_URL },
 ];
 

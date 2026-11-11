@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { useEffect, useRef } from 'react';
@@ -111,9 +110,9 @@ export default function AbstractArtCollage({
               className={`${item.colSpan} ${item.offsetClass} group relative cursor-pointer`}
               onClick={() => onSelectItem(item)}
             >
-              {/* Artwork Frame */}
+              {/* Frameless artwork: no border, background, radius or shadow */}
               <div
-                className={`relative ${composition.width} ${composition.align} overflow-hidden bg-stone-200 border border-stone-200/80 rounded-xs transition-shadow duration-500 group-hover:shadow-xl`}
+                className={`relative ${composition.width} ${composition.align}`}
               >
                 <div
                   className={`artwork-img-container relative w-full ${aspectClass} transition-transform duration-700 ease-out group-hover:scale-[1.025]`}
@@ -134,13 +133,13 @@ export default function AbstractArtCollage({
                   <div className="absolute inset-0 bg-stone-950/0 group-hover:bg-stone-950/20 transition-colors duration-500" />
 
                   {/* Fullscreen Icon */}
-                  <div className="absolute top-4 right-4 p-2 bg-stone-900/60 backdrop-blur-xs text-white opacity-0 group-hover:opacity-100 transition-all duration-300 rounded-xs transform translate-y-1 group-hover:translate-y-0">
+                  <div className="absolute top-4 right-4 p-2 bg-stone-900/60 backdrop-blur-xs text-white opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-1 group-hover:translate-y-0">
                     <Maximize2 className="w-4 h-4" />
                   </div>
 
                   {/* Type Badge */}
                   {item._type !== 'art' && (
-                    <div className="absolute bottom-3 left-3 px-2 py-0.5 bg-stone-900/70 backdrop-blur-xs text-white text-[10px] uppercase tracking-widest rounded-xs opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <div className="absolute bottom-3 left-3 px-2 py-0.5 bg-stone-900/70 backdrop-blur-xs text-white text-[10px] uppercase tracking-widest opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       {item._type}
                     </div>
                   )}

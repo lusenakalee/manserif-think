@@ -17,7 +17,7 @@ const navItems: NavItem[] = [
   { title: "Home", href: "/" },
   { title: "Communion", href: "/category/communion" },
   { title: "Exhibitions", href: "/category/art-exhibition" },
-  { title: "Portfolio", href: "/portfolio" },
+  { title: "Bio", href: "/portfolio" },
    { title: "Contact", href: "/contact" },
 ];
 

@@ -4,6 +4,7 @@ import Header from "@/components/general/header-comps/Header";
 import { CartStoreProvider } from "@/lib/store/cart-store-provider";
 import { CartSheet } from "@/components/general/CartSheet";
 import { SanityLive } from "@/sanity/lib/live";
+import SiteFooter from "@/components/landing/SiteFooter";
 
 export default function SiteLayout({
   children,
@@ -17,6 +18,8 @@ export default function SiteLayout({
   <Header />
 </div>
         <main className="relative z-0 overflow-x-0  ">{children}</main>
+              <SiteFooter />
+
         <CartSheet />
         <Toaster position="bottom-center" />
         <SanityLive />

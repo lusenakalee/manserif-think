@@ -26,7 +26,7 @@ export function Header() {
            <Button asChild>
                   <Link href="/portfolio" className="flex items-center gap-2">
                     <ShoppingCart className="h-5 w-5" />
-                    <span className="text-sm font-medium">Portfolio</span>
+                    <span className="text-sm font-medium">Bio</span>
                   </Link>
                 </Button>
            <Button asChild>

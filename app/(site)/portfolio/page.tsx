@@ -1,11 +1,5 @@
 import type { Metadata } from "next";
-import { CinematicFooter } from "@/components/motion-footer";
-import AboutMeSec from "@/components/portfolio/AboutMeSec";
-import InstagramFeed from "@/components/portfolio/InstagramFeed";
-import PinSection from "@/components/portfolio/PinSection";
-import PortfolioHeader from "@/components/portfolio/PortfolioHeader";
-import PortfolioVideos from "@/components/portfolio/PortfolioVideos";
-import SlidingImages from "@/components/portfolio/SlidingImages";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { client } from "@/sanity/lib/client"; // adjust to your client path
 import { portfolioQuery } from "@/lib/sanity/queries/portfolio";
@@ -16,29 +10,53 @@ export const metadata: Metadata = {
     "Browse the portfolio of Kenyan artist Warren Kamau — conceptual paintings, collage, sculpture and large-scale art installations from the Manserif.Think studio. Explore original artwork, behind-the-scenes process videos and recent creative projects.",
 };
 
-const instagramPosts = [
-  "https://www.instagram.com/p/DW4Cgm8jGSR/?img_index=1",
-  "https://www.instagram.com/p/DL7k3-us0ZS/?img_index=1",
-  "https://www.instagram.com/p/C55cI6Si9CQ/?img_index=1",
-];
-export default async function page() {
+export default async function Page() {
   const data = await client.fetch(
     portfolioQuery,
     {},
     { next: { revalidate: 60 } },
   );
+
   if (!data) notFound();
+
+  const { header, about } = data;
+  const paragraphs: string[] = about?.paragraphs ?? [];
+
   return (
-    <div>
-      <PortfolioHeader {...data.header} />
-   <AboutMeSec {...data.about} />
-      {/* <div className="relative mt-20">
-                   <PinSection />
-                   </div> */}
-      {/* <ProjectsList/> */}
-      <SlidingImages />
-      <PortfolioVideos />
-      <InstagramFeed postUrls={instagramPosts} />
-    </div>
+    <main className="min-h-screen w-full bg-white text-black">
+      <div className="mx-auto max-w-[1600px] px-6 pb-24 pt-28 md:px-12 md:pt-32 lg:px-16">
+        {/* Heading */}
+        <h1 className="mb-10 text-5xl font-bold uppercase tracking-tight md:mb-14 md:text-7xl">
+          {about?.heading || "Bio"}
+        </h1>
+
+        <div className="grid grid-cols-1 gap-10 md:grid-cols-12 md:gap-12 lg:gap-16">
+          {/* Image */}
+          <div className="md:col-span-6 lg:col-span-5">
+            {header?.imageUrl && (
+              <div className="relative aspect-[4/5] w-full overflow-hidden bg-neutral-100 md:sticky md:top-28">
+                <Image
+                  src={header.imageUrl}
+                  alt={header.imageAlt || "Portfolio image"}
+                  fill
+                  priority
+                  sizes="(min-width: 1024px) 40vw, (min-width: 768px) 50vw, 100vw"
+                  className="object-cover object-top"
+                />
+              </div>
+            )}
+          </div>
+
+          {/* Description */}
+          <div className="md:col-span-6 lg:col-span-6 lg:col-start-7">
+            <div className="max-w-[560px] space-y-4 text-[15px] leading-[1.6] text-neutral-900 md:text-base">
+              {paragraphs.map((text, i) => (
+                <p key={i}>{text}</p>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
   );
 }

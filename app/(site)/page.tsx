@@ -46,7 +46,6 @@ export default async function Home() {
 
       <GalleryScroll {...gallery} />
 
-      <SiteFooter />
       {/* <CinematicFooter /> */}
     </div>
   );

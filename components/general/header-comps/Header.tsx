@@ -17,7 +17,7 @@ const EASE = "ease-[cubic-bezier(0.76,0,0.24,1)]";
 const NAV_LINKS = [
   { label: "Art exhibition", href: "/category/art-exhibition" },
   { label: "Communion", href: "/category/communion" },
-  { label: "Portfolio", href: "/portfolio" },
+  { label: "Bio", href: "/portfolio" },
   { label: "Contact", href: "/contact" },
 ];
 
@@ -26,6 +26,7 @@ export default function Header() {
   const button = useRef<HTMLDivElement>(null);
   const [isActive, setIsActive] = useState(false);
   const pathname = usePathname();
+  const isPortfolio = pathname === "/portfolio";
 
   useEffect(() => {
     if (isActive) setIsActive(false);
@@ -62,7 +63,7 @@ export default function Header() {
     <>
       <div
         ref={header}
-        className="absolute top-0 z-[1] box-border flex w-full items-center justify-between p-4 sm:p-6 md:p-[35px] font-light text-white"
+        className={`absolute top-0 z-[1] box-border flex w-full items-center justify-between p-4 sm:p-6 md:p-[35px] font-light transition-colors duration-300 ${isPortfolio ? "text-black" : "text-white"}`}
       >
         {/* Logo */}
         <div className="group/logo flex cursor-pointer justify-around items-center gap-[5px]">
@@ -74,6 +75,7 @@ export default function Header() {
               alt="Logo"
               width={40}
               height={40}
+              className={isPortfolio ? "invert" : ""}
             />
           </div>
           <div
@@ -106,7 +108,7 @@ export default function Header() {
                 </Link>
 
                 <div
-                  className={`absolute left-1/2 top-[45px] h-[5px] w-[5px] -translate-x-1/2 scale-0 rounded-full bg-white transition-transform duration-200 ${EASE} group-hover/el:scale-100`}
+                  className={`absolute left-1/2 top-[45px] h-[5px] w-[5px] -translate-x-1/2 scale-0 rounded-full ${isPortfolio ? "bg-black" : "bg-white"} transition-transform duration-200 ${EASE} group-hover/el:scale-100`}
                 />
               </div>
             </Magnetic>
