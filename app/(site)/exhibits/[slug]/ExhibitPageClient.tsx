@@ -496,7 +496,7 @@ export default function ExhibitPageClient({ exhibit, heroImageUrl }: ExhibitPage
           </div>
           <div className="overflow-hidden">
             <Link
-              href="/exhibits"
+              href="/category/art-exhibition"
               className="reveal-text group inline-flex items-center gap-2 border-b border-[#1A1A1A]/40 pb-1 text-xs font-medium uppercase tracking-[0.2em] text-[#1A1A1A] transition-opacity hover:opacity-60"
             >
               View All Exhibitions

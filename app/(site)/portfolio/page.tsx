@@ -26,7 +26,7 @@ export default async function Page() {
     <main className="min-h-screen w-full bg-white text-black">
       <div className="mx-auto max-w-[1600px] px-6 pb-24 pt-28 md:px-12 md:pt-32 lg:px-16">
         {/* Heading */}
-        <h1 className="mb-10 text-5xl font-bold uppercase tracking-tight md:mb-14 md:text-7xl">
+        <h1 className="mb-10 text-5xl font-bold uppercase tracking-tight md:mb-14 md:text-7xl ">
           {about?.heading || "Bio"}
         </h1>
 
@@ -48,7 +48,7 @@ export default async function Page() {
           </div>
 
           {/* Description */}
-          <div className="md:col-span-6 lg:col-span-6 lg:col-start-7">
+          <div className="md:col-span-6 lg:col-span-6 lg:col-start-7 font-happy">
             <div className="max-w-[560px] space-y-4 text-[15px] leading-[1.6] text-neutral-900 md:text-base">
               {paragraphs.map((text, i) => (
                 <p key={i}>{text}</p>
